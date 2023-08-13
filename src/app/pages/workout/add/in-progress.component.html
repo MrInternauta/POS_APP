@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="medium" (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>Exercises</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar class="sm:mx-[25%] sm:w-auto"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
+      <ion-list *ngIf="data$ | async as data; else loadingData">
+        <ion-item *ngFor="let workout of data" detail="true" class="w-full">
+          <ion-avatar slot="start">
+            <img
+              alt="Silhouette of a person's head"
+              src="https://ionicframework.com/docs/img/demos/avatar.svg"
+            />
+          </ion-avatar>
+          <ion-label>
+            <h3>Text Item</h3>
+            <p>Detail set to true - detail arrow displays on both modes</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <ng-template #loadingData>
+        <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+          <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
+            <h2
+              class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
+            >
+              Lorem ipsum dolor sit amet consectetur
+            </h2>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+  <ion-fab-button (click)="crateWorkout()">
+    <ion-icon name="add-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+</ion-content>

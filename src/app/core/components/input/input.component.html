@@ -1,0 +1,26 @@
+<div>
+  <label [for]="id" class="block text-sm font-medium leading-6 text-gray-900">{{
+    label
+  }}</label>
+  <div class="mt-2">
+    <input
+      [placeholder]="placeholder"
+      [(ngModel)]="inputValue"
+      (ngModelChange)="handleChange($event)"
+      [id]="id"
+      [name]="id"
+      [type]="type"
+      [autocomplete]="type"
+      [required]="required"
+      [disabled]="disabled"
+      [max]="maxLength"
+      [ngClass]="{ 'ring-red-600 focus:ring-red-600': hasError }"
+      class="block w-full rounded-md border-0 px-4 py-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+    />
+    <label
+      *ngIf="hasError"
+      class="mt-2 ml-2 block text-sm font-medium leading-6 text-red-600"
+      >{{ hasError }}</label
+    >
+  </div>
+</div>

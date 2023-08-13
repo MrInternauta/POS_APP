@@ -1,0 +1,23 @@
+<button
+  [disabled]="disabled"
+  (click)="click()"
+  class="relative disabled:opacity-70 disabled:cursor-not-allowed rounded-lg hover:opacity-80 transition w-full"
+  [ngClass]="{
+    'bg-white border-red-500 text-red-500': outline,
+    'bg-red-500 border-red-500 text-white': !outline,
+    'py-1 text-sm font-light border-[1px]': size === 'small',
+    'py-3 text-md font-semibold border-2': size !== 'small'
+  }"
+>
+  <ion-icon
+    *ngIf="icon"
+    [name]="icon"
+    [size]="size"
+    class="absolute left-4 top-3"
+    [ngClass]="{
+      'left-2 top-[5px]': size === 'small',
+      'left-4 top-2': size !== 'small'
+    }"
+  ></ion-icon>
+  {{ label }}
+</button>

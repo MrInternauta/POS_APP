@@ -1,0 +1,117 @@
+<ion-content [fullscreen]="true">
+  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+      <img
+        class="mx-auto h-14 w-auto"
+        src="assets/images/logo.png"
+        alt="Your Company"
+      />
+      <h2
+        class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
+      >
+        Create new Account
+      </h2>
+    </div>
+
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
+      <div class="mt-4 w-full">
+        <app-input
+          [id]="'name'"
+          [type]="'text'"
+          [label]="'Name'"
+          [placeholder]="'John'"
+          [required]="true"
+          [maxLength]="100"
+          class="w-100"
+          [hasError]="hasError.name"
+          (inputValueChange)="handleName($event)"
+        ></app-input>
+      </div>
+      <div class="mt-4 w-full">
+        <app-input
+          [id]="'lastName'"
+          [type]="'text'"
+          [label]="'Last Name'"
+          [placeholder]="'Doe'"
+          [required]="true"
+          [maxLength]="100"
+          [hasError]="hasError.lastName"
+          (inputValueChange)="handleLastname($event)"
+        ></app-input>
+      </div>
+      <div class="flex mt-4 w-full">
+        <div class="w-1/2 mr-4">
+          <app-input
+            [id]="'email'"
+            [type]="'email'"
+            [label]="'Email address'"
+            [placeholder]="'email@email.com'"
+            [required]="true"
+            [maxLength]="100"
+            [hasError]="hasError.email"
+            (inputValueChange)="handleEmail($event)"
+          ></app-input>
+        </div>
+
+        <div class="w-1/2">
+          <app-input
+            [id]="'phone'"
+            [type]="'text'"
+            [label]="'Phone number'"
+            [placeholder]="'+52 991 168 2222'"
+            [required]="true"
+            [maxLength]="100"
+            [hasError]="hasError.phone"
+            (inputValueChange)="handlePhone($event)"
+          ></app-input>
+        </div>
+      </div>
+      <div class="mt-4 w-full">
+        <app-input
+          [id]="'password'"
+          [type]="'password'"
+          [label]="'Password'"
+          [placeholder]="'********'"
+          [required]="true"
+          [maxLength]="100"
+          [hasError]="hasError.password"
+          (inputValueChange)="handlePassword($event)"
+        ></app-input>
+      </div>
+      <div class="mt-4 w-full">
+        <app-input
+          [id]="'password2'"
+          [type]="'password'"
+          [label]="'Password confirmation'"
+          [placeholder]="'********'"
+          [required]="true"
+          [maxLength]="100"
+          [hasError]="hasError.password2"
+          (inputValueChange)="handlePassword2($event)"
+        ></app-input>
+      </div>
+      <label
+        *ngIf="hasError?.general"
+        class="mt-2 ml-2 block text-sm font-medium leading-6 text-red-600"
+        >{{hasError.general}}</label
+      >
+      <div class="mt-4 text-center text-sm text-gray-500">
+        <app-button
+          [label]="'Signup'"
+          size="large"
+          (click)="onSubmit()"
+        ></app-button>
+      </div>
+
+      <div class="mt-10 text-center text-sm text-gray-500">
+        Do you have an account?
+        <p
+          (click)="loginRedirect()"
+          class="font-semibold leading-6 text-red-600 hover:text-indigo-500"
+        >
+          Login
+        </p>
+      </div>
+    </div>
+  </div>
+</ion-content>

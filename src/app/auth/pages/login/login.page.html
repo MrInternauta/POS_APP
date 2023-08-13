@@ -1,0 +1,74 @@
+<ion-content [fullscreen]="true">
+  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+      <img
+        class="mx-auto h-14 w-auto"
+        src="assets/images/logo.png"
+        alt="Your Company"
+      />
+      <h2
+        class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
+      >
+        Sign in to your account
+      </h2>
+    </div>
+
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
+      <form class="space-y-6" (submit)="onSubmit()">
+        <app-input
+          [id]="'email'"
+          [type]="'email'"
+          [label]="'Email address'"
+          [placeholder]="'Email address'"
+          [required]="true"
+          [maxLength]="100"
+          [hasError]="hasError.email"
+          (inputValueChange)="handleEmail($event)"
+        ></app-input>
+        <div>
+          <div class="flex items-center justify-end">
+            <div class="text-sm">
+              <p
+                (click)="resetPassword()"
+                class="font-semibold text-red-600 hover:text-indigo-500"
+              >
+                Forgot password?
+              </p>
+            </div>
+          </div>
+          <app-input
+            [id]="'password'"
+            [type]="'password'"
+            [label]="'Password'"
+            [placeholder]="'Password'"
+            [required]="true"
+            [maxLength]="100"
+            [hasError]="hasError.password"
+            (inputValueChange)="handlePassword($event)"
+          ></app-input>
+        </div>
+        <label
+          *ngIf="hasError?.login"
+          class="mt-2 ml-2 block text-sm font-medium leading-6 text-red-600"
+          >{{hasError.login}}</label
+        >
+        <div>
+          <app-button
+            [label]="'Login'"
+            (onClick)="onSubmit()"
+            size="large"
+          ></app-button>
+        </div>
+      </form>
+      <div class="mt-10 text-center text-sm text-gray-500">
+        Do you have an account?
+        <p
+          (click)="siginupRedirect()"
+          class="font-semibold leading-6 text-red-600 hover:text-indigo-500"
+        >
+          Signup
+        </p>
+      </div>
+    </div>
+  </div>
+</ion-content>
