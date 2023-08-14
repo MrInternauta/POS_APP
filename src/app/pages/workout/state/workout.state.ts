@@ -4,7 +4,7 @@ import { IExercise } from '@gymTrack/core';
 
 export const ExerciseFeatureKey = 'Exercise';
 export interface ExerciseState {
-  [ExerciseFeatureKey]: Array<IExercise> | null;
+  [ExerciseFeatureKey]: any | null;
 }
 
 export const exerciseInitialState: ExerciseState = {

@@ -1,10 +1,11 @@
 import { Action, createReducer, on } from '@ngrx/store';
 
 import { setUser, unUser } from './auth.actions';
-import { Id, Token, User } from '../../core/models/index';
+import { Id, Token } from '../../core/models/index';
+import { IUser } from '../model/user';
 
 export interface IAuthState {
-  user: User | null;
+  user: IUser | null;
   id: Id;
   token: Token;
 }

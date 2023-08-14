@@ -49,7 +49,6 @@ export class LoginPage extends ComponentBase implements OnInit, OnDestroy {
   }
   handlePassword(value: string) {
     this.password = value;
-    console.log(value);
   }
   onSubmit() {
     if (!this.email) {
@@ -57,10 +56,6 @@ export class LoginPage extends ComponentBase implements OnInit, OnDestroy {
       return;
     }
 
-    if (!isEmail(this.email)) {
-      this.hasError.email = 'Wrong email address format';
-      return;
-    }
 
     if (!this.password) {
       this.hasError.password = 'Password is needed';
@@ -72,20 +67,27 @@ export class LoginPage extends ComponentBase implements OnInit, OnDestroy {
       password: this.password,
     };
     this._authService.login(auth, this.recuerdame).subscribe(
-      () => {
+      (res) => {
         this.hasError = {
           email: '',
           password: '',
           login: '',
         };
+        if (!res) {
+          this.hasError.login = 'Something is wrong!';
+          return;
+        }
         this.router.navigate(['tabs'], { replaceUrl: true });
       },
       (login) => {
+        console.log(login);
+
         this.hasError = {
           email: '',
           password: '',
           login,
         };
+        this.hasError.login = 'Something is wrong!';
       }
     );
   }

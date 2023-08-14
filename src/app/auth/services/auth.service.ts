@@ -5,16 +5,17 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map, take } from 'rxjs/operators';
 
-import { Auth, CreateUser, User } from '../../core/models/usuario.model';
+import { Auth, CreateUser } from '../../core/models/usuario.model';
 import { IAuthState, setUser, unUser } from '../state';
 import { ConstantsHelper } from '../../core/constants/constants.helper';
 import { AppState } from '../../core/state/app.reducer';
 import { StorageService } from '../../core/services/storage.service';
-import { AuthSuccess } from '../model/Auth';
-import { GenericResponse, UserCreatedResponse } from '@gymTrack/core';
-import { isGenericResponse } from '@gymTrack/core/util/helpers';
+import { UserCreatedResponse } from '@gymTrack/core';
+import { environment } from '@gymTrack/environment';
+import { API_PREFIX } from '../../core/constants/api-prefix';
+import { IUser } from '../model/user';
 
-const API_URL = `api/`;
+const API_URL = `${environment.url}${API_PREFIX}usuario.php`;
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +34,6 @@ export class AuthService {
       .select(ConstantsHelper.USER_DATA_KEY_STORAGE)
       .subscribe((auth) => {
         this._auth = auth;
-        console.log(this._auth);
       });
   }
 
@@ -53,18 +53,17 @@ export class AuthService {
     }
 
     return this.http
-      .post<GenericResponse<null> | GenericResponse<AuthSuccess>>(
-        `${API_URL}auth`,
-        user
-      )
+      .post<any>(`${API_URL}`, user, {
+        params: {
+          op: 'verificar',
+        },
+      })
       .pipe(
-        map((response: any) => {
-          if (!isGenericResponse(response)) {
-            return;
-          }
-          const resp = response?.data;
-          if (resp && resp.access_token && resp.user) {
-            this.saveStorage(resp?.user?.id, resp?.access_token, resp.user);
+        map((resp: IUser) => {
+          console.log(resp);
+
+          if (resp && resp.idusuario && resp.nombre) {
+            this.saveStorage(resp?.idusuario, resp?.nombre, resp);
             return true;
           }
           return false;
@@ -103,21 +102,21 @@ export class AuthService {
 
     if (localStorageAuth?.user && localStorageAuth?.token) {
       // this.token = localStorageAuth.token;
-      const user: User = JSON.parse(localStorageAuth.user);
+      const user: IUser = JSON.parse(localStorageAuth.user);
       if (!user) {
         return;
       }
       this.store.dispatch(
         setUser({
           user,
-          id: user?.id ?? 0,
+          id: user?.idusuario ?? 0,
           token: localStorageAuth.token,
         })
       );
     }
   }
 
-  saveStorage(id: number, token: string, usuario: User) {
+  saveStorage(id: string, token: string, usuario: IUser) {
     this.storage.setLocal(ConstantsHelper.USER_DATA_KEY_STORAGE, {
       id,
       token,

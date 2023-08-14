@@ -9,6 +9,8 @@ import { AppComponent } from './app.component';
 import { EffectsModule } from '@ngrx/effects';
 import { CoreModule } from '@gymTrack/core';
 import { AuthModule } from '@gymTrack/auth';
+import { ExercisesEffects } from './pages/workout/state/workout.effects';
+import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,9 +19,13 @@ import { AuthModule } from '@gymTrack/auth';
     IonicModule.forRoot(),
     AppRoutingModule,
     CoreModule,
-    AuthModule, //EffectsModule.forRoot([]),
+    AuthModule,
+    EffectsModule.forRoot([ExercisesEffects]),
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    BarcodeScanner,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

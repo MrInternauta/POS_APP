@@ -6,6 +6,7 @@ import { Tab3Page } from './tab3.page';
 
 import { Tab3PageRoutingModule } from './tab3-routing.module';
 import { ComponentsModule } from '../../core/components/components.module';
+import { CoreModule } from '../../core/core.module';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { ComponentsModule } from '../../core/components/components.module';
     FormsModule,
     Tab3PageRoutingModule,
     ComponentsModule,
+    // CoreModule,
   ],
   declarations: [Tab3Page],
 })

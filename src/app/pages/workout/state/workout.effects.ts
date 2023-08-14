@@ -11,10 +11,10 @@ export class ExercisesEffects {
     this.actions$.pipe(
       ofType(loadExerciseType),
       mergeMap(() =>
-        this.exercisesService.getExercises().pipe(
-          map((Exercises) => ({
+        this.exercisesService.getProducts().pipe(
+          map((response) => ({
             type: loadedExerciseType,
-            payload: Exercises,
+            Exercise: response,
           })),
           catchError(() => EMPTY)
         )

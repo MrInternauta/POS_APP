@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { AuthService } from '../../auth/services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-tab3',

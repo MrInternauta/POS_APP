@@ -11,20 +11,22 @@
 <ion-content [fullscreen]="true">
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-      <app-avatar [size]="'large'"></app-avatar>
+      <app-avatar [size]="'large'" [img]="(authService.user?.imagen  || '')"></app-avatar>
       <h2
         *ngIf="!editMode"
         class="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
       >
-        {{authService.user?.customer?.name}}
-        {{authService.user?.customer?.lastName}}
+        {{authService.user?.nombre}}
       </h2>
+      <h3 class=" text-center text-xl font-normal leading-9 tracking-tight text-gray-900">
+        ({{authService.user?.cargo}})
+      </h3>
     </div>
 
     <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
       <div class="mt-4 w-full">
         <app-input
-          [inputValue]="authService.user?.customer?.name ?? ''"
+          [inputValue]="authService.user?.nombre ?? ''"
           [disabled]="!editMode"
           [id]="'name'"
           [type]="'text'"
@@ -32,17 +34,6 @@
           [required]="true"
           [maxLength]="100"
           class="w-100"
-        ></app-input>
-      </div>
-      <div class="mt-4 w-full">
-        <app-input
-          [inputValue]="authService.user?.customer?.lastName ?? ''"
-          [disabled]="!editMode"
-          [id]="'lastName'"
-          [type]="'text'"
-          [label]="'Last Name'"
-          [required]="true"
-          [maxLength]="100"
         ></app-input>
       </div>
       <div class="flex mt-4 w-full">
@@ -60,7 +51,7 @@
 
         <div class="w-1/2">
           <app-input
-            [inputValue]="authService.user?.customer?.phone ?? ''"
+            [inputValue]="authService.user?.telefono ?? ''"
             [disabled]="!editMode"
             [id]="'phone'"
             [type]="'text'"
@@ -143,14 +134,7 @@
       </div>
       <div class="mt-4 text-center text-sm text-gray-500">
         <app-button
-          [label]="'Upgrade to PRO'"
-          size="large"
-          (click)="upgradePro()"
-        ></app-button>
-      </div>
-      <div class="mt-4 text-center text-sm text-gray-500">
-        <app-button
-          [outline]="true"
+          [outline]="false"
           [label]="'Logout'"
           size="large"
           (click)="authService.logout()"

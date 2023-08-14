@@ -54,6 +54,8 @@ export class AuthInterceptor implements HttpInterceptor {
     }
     return next.handle(request).pipe(
       catchError((error) => {
+        console.log(error);
+
         if (error instanceof HttpErrorResponse) {
           if (error.status === StatusCodes.UNAUTHORIZED) {
             // check for unauthorized error and redirect to login page.

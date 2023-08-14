@@ -15,14 +15,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./auth/pages/login/login.module').then((m) => m.LoginPageModule),
   },
-  {
-    canActivate: [LogoutGuard],
-    path: 'signup',
-    loadChildren: () =>
-      import('./auth/pages/signup/signup.module').then(
-        (m) => m.SignupPageModule
-      ),
-  },
   { path: '**', redirectTo: '' },
 ];
 @NgModule({

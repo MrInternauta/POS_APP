@@ -5,6 +5,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StorageService } from './services';
 import { AuthInterceptor } from './interceptors';
 import { AppStoreModule } from './state/store.module';
+import { GetProfile } from './pipes/getProfile.pipe';
 
 @NgModule({
   declarations: [SafeHtmlPipe],

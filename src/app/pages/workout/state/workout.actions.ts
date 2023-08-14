@@ -7,5 +7,5 @@ export const loadExercise = createAction(loadExerciseType);
 export const loadedExerciseType = '[Exercise] Loaded Exercise Success';
 export const loadedExercise = createAction(
   loadedExerciseType,
-  props<{ Exercise: Array<IExercise> }>()
+  props<{ Exercise: any }>()
 );

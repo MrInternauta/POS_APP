@@ -15,8 +15,8 @@ export const selectExerciseFeature = (state: AppState) => state.exercises;
 //concatename selectors
 export const selectListExercise: MemoizedSelector<
   AppState,
-  Array<IExercise> | null,
-  DefaultProjectorFn<Array<IExercise> | null>
+  Array<any> | null,
+  DefaultProjectorFn<any | null>
 > = createSelector(
   selectExerciseFeature,
   (state: ExerciseState) => state[ExerciseFeatureKey]
