@@ -1,51 +1,102 @@
-<ion-header [translucent]="false" class="ion-no-border">
+<ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-title> Workout History </ion-title>
-    <ion-buttons slot="end">
+    <!-- <ion-buttons slot="end">
       <ion-button class="pr-4" color="primary">Filter</ion-button>
-    </ion-buttons>
+    </ion-buttons> -->
+    </ion-toolbar>
+    <ion-toolbar>
+      <ion-searchbar (search)="searchFunction($event || '')" show-cancel-button="focus" show-clear-button="never"
+        cancel-button-icon="trash" (ionCancel)="hideSearch()" class="sm:mx-[25%] sm:w-auto"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-  <ng-container *ngIf="$observable | async as observableResult">
-    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-      <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-        <div
-          *ngIf="!observableResult || !observableResult.Exercise"
-          class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8"
-        >
-          <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-            <h2
-              class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
-            >
-              Lorem ipsum dolor sit amet consectetur
-            </h2>
+  <ng-container *ngIf="tempProduc$ else listProduct">
+    <ng-container *ngIf="tempProduc$ | async as observableResult">
+      <div class="flex min-h-full flex-col justify-start px-6 py-12 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
+          <div *ngIf="!observableResult || !observableResult.length"
+            class="flex min-h-full flex-col justify-start px-6 py-12 lg:px-8">
+            <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
+              <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                Lorem ipsum dolor sit amet consectetur
+              </h2>
+            </div>
           </div>
-        </div>
-        <ion-list *ngIf="observableResult  && observableResult.Exercise">
-          <ion-item *ngFor="let workout of observableResult.Exercise?.aaData" detail="true" class="w-full">
-            <ion-avatar slot="start">
-              <app-avatar [size]="'small'" [img]="(workout?.imagen  || '')" [type]="'article'"></app-avatar>
-
+          <ion-list *ngIf="observableResult">
+            <ion-item *ngFor="let workout of observableResult" detail="true" class="w-full">
+              <ion-avatar slot="start">
+                <app-avatar [size]="'small'" [img]="(workout?.imagen  || '')" [type]="'article'"
+                  [hiddenBorder]="true"></app-avatar>
               </ion-avatar>
               <ion-label>
                 <h3 class="uppercase">{{workout?.nombre}}</h3>
-                <p class="font-semibold">Stock: <span class="font-normal">{{workout?.stock}}</span></p>
-                <p class="font-semibold">Categoria: <span class="font-normal">{{workout?.categoria}}</span></p>
-                <p *ngIf="workout?.descripcion" class="font-semibold">Descripción: <span
-                    class="font-normal">{{workout?.descripcion}}</span></p>
-
-
+                <p class="font-semibold">
+                  Stock: <span class="font-normal">{{workout?.stock}}</span>
+                </p>
+                <p class="font-semibold">
+                  Categoria:
+                  <span class="font-normal">{{workout?.categoria}}</span>
+                </p>
+                <p *ngIf="workout?.descripcion" class="font-semibold">
+                  Descripción:
+                  <span class="font-normal">{{workout?.descripcion}}</span>
+                </p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+      </div>
+      <ion-fab *ngIf="observableResult" slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button (click)="scanCode()">
+          <ion-icon name="play-outline"></ion-icon>
+        </ion-fab-button>
+        <!-- <ion-icon name="play-outline"></ion-icon> -->
+      </ion-fab>
+    </ng-container>
+  </ng-container>
+  
+  <ng-template #listProduct>
+    <ng-container *ngIf="$observable | async as observableResult">
+      <div class="flex min-h-full flex-col justify-start px-6 py-12 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
+          <div *ngIf="!observableResult || !observableResult.Exercise"
+            class="flex min-h-full flex-col justify-start px-6 py-12 lg:px-8">
+            <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
+              <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                Lorem ipsum dolor sit amet consectetur
+              </h2>
+              </div>
+              </div>
+              <ion-list *ngIf="observableResult  && observableResult.Exercise">
+                <ion-item *ngFor="let workout of observableResult.Exercise?.aaData" detail="true" class="w-full">
+                  <ion-avatar slot="start">
+                <app-avatar [size]="'small'" [img]="(workout?.imagen  || '')" [type]="'article'" [hiddenBorder]="true"></app-avatar>
+              </ion-avatar>
+              <ion-label>
+                <h3 class="uppercase">{{workout?.nombre}}</h3>
+                <p class="font-semibold">
+                  Stock: <span class="font-normal">{{workout?.stock}}</span>
+                </p>
+                <p class="font-semibold">
+                  Categoria:
+                  <span class="font-normal">{{workout?.categoria}}</span>
+                </p>
+                <p *ngIf="workout?.descripcion" class="font-semibold">
+                  Descripción:
+                  <span class="font-normal">{{workout?.descripcion}}</span>
+                </p>
                 </ion-label>
                 </ion-item>
                 </ion-list>
                 </div>
                 </div>
-    <ion-fab *ngIf="observableResult" slot="fixed" vertical="bottom" horizontal="end">
-      <ion-fab-button (click)="scanCode()">
-        <ion-icon name="play-outline"></ion-icon>
-      </ion-fab-button>
-      <!-- <ion-icon name="play-outline"></ion-icon> -->
-    </ion-fab>
-  </ng-container>
+      <ion-fab *ngIf="observableResult" slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button (click)="scanCode()">
+          <ion-icon name="play-outline"></ion-icon>
+        </ion-fab-button>
+        <!-- <ion-icon name="play-outline"></ion-icon> -->
+      </ion-fab>
+      </ng-container>
+  </ng-template>
 </ion-content>

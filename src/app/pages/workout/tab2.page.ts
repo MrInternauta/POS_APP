@@ -12,7 +12,16 @@ import {
   loadedExercise,
 } from './state/workout.actions';
 import { ConstantsHelper } from '@gymTrack/core/constants/constants.helper';
-import { Observable, Subscription, take } from 'rxjs';
+import {
+  Observable,
+  Subscription,
+  filter,
+  find,
+  map,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
 
 @Component({
   selector: 'app-tab2',
@@ -22,7 +31,7 @@ import { Observable, Subscription, take } from 'rxjs';
 export class Tab2Page implements OnDestroy, OnInit {
   $susctiption!: Subscription;
   public $observable!: Observable<any>;
-
+  public tempProduc$!: Observable<any> | null;
   message =
     'This modal example uses the modalController to present and dismiss modals.';
   public historyWorkout!: Array<any>;
@@ -61,6 +70,8 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   scanCode() {
+    this.startWorkout();
+    return;
     this.barcodeScanner
       .scan()
       .then((barcodeData) => {
@@ -69,5 +80,47 @@ export class Tab2Page implements OnDestroy, OnInit {
       .catch((err) => {
         console.log('Error', err);
       });
+  }
+
+  searchFunction($termSearch: any) {
+    const value = $termSearch?.target?.value;
+    if (!value || value?.length < 3) {
+      this.tempProduc$ = null;
+      return;
+    }
+    this.tempProduc$ = this.$observable.pipe(
+      map((item_) =>
+        item_?.Exercise?.aaData.filter(
+          (item: any) =>
+            String(item.nombre)
+              .toLocaleLowerCase()
+              .includes(String(value).toLocaleLowerCase()) ||
+            String(item.descripcion)
+              .toLocaleLowerCase()
+              .includes(String(value).toLocaleLowerCase())
+        )
+      ),
+
+      tap(console.log)
+    );
+  }
+
+  searchbyCode(code: string) {
+    if (!code || code?.length < 3) {
+      this.tempProduc$ = null;
+      return;
+    }
+
+    this.tempProduc$ = this.$observable.pipe(
+      filter((value) => {
+        return String(value.codigo)
+          .toLocaleLowerCase()
+          .includes(code.toLocaleLowerCase());
+      })
+    );
+  }
+
+  hideSearch() {
+    this.tempProduc$ = null;
   }
 }
