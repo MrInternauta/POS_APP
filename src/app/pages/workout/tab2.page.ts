@@ -32,6 +32,7 @@ export class Tab2Page implements OnDestroy, OnInit {
   $susctiption!: Subscription;
   public $observable!: Observable<any>;
   public tempProduc$!: Observable<any> | null;
+  public searchValue!: string | null;
   message =
     'This modal example uses the modalController to present and dismiss modals.';
   public historyWorkout!: Array<any>;
@@ -69,17 +70,19 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.$susctiption.unsubscribe();
   }
 
-  scanCode() {
-    this.startWorkout();
-    return;
-    this.barcodeScanner
-      .scan()
-      .then((barcodeData) => {
-        console.log('Barcode data', barcodeData);
-      })
-      .catch((err) => {
-        console.log('Error', err);
-      });
+  async scanCode() {
+    try {
+      const barcodeData = await this.barcodeScanner.scan();
+      console.log('Barcode data', barcodeData);
+      if (!barcodeData.text) {
+        console.log('Invalid code');
+      }
+      this.searchValue = barcodeData.text;
+
+      this.searchbyCode(this.searchValue);
+    } catch (error) {
+      console.log('Error', error);
+    }
   }
 
   searchFunction($termSearch: any) {
@@ -99,28 +102,31 @@ export class Tab2Page implements OnDestroy, OnInit {
               .toLocaleLowerCase()
               .includes(String(value).toLocaleLowerCase())
         )
-      ),
-
-      tap(console.log)
+      )
     );
   }
 
   searchbyCode(code: string) {
     if (!code || code?.length < 3) {
+      this.searchValue = null;
       this.tempProduc$ = null;
       return;
     }
 
     this.tempProduc$ = this.$observable.pipe(
-      filter((value) => {
-        return String(value.codigo)
-          .toLocaleLowerCase()
-          .includes(code.toLocaleLowerCase());
-      })
+      map((item_) =>
+        item_?.Exercise?.aaData.filter((item: any) =>
+          String(item.codigo)
+            .toLocaleLowerCase()
+            .includes(String(code).toLocaleLowerCase())
+        )
+      ),
+      tap(console.log)
     );
   }
 
   hideSearch() {
+    this.searchValue = null;
     this.tempProduc$ = null;
   }
 }
