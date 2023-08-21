@@ -1,17 +1,11 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { InProgressComponent } from './add/in-progress.component';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../core/state/app.reducer';
 import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
 
-import {
-  loadExercise,
-  loadExerciseType,
-  loadedExercise,
-} from './state/workout.actions';
-import { ConstantsHelper } from '@gymTrack/core/constants/constants.helper';
+import { loadExercise } from './state/workout.actions';
 import {
   Observable,
   Subscription,
@@ -22,6 +16,8 @@ import {
   take,
   tap,
 } from 'rxjs';
+import { Article } from './models';
+import { AddProductCart } from '../cart/state/cart.actions';
 
 @Component({
   selector: 'app-tab2',
@@ -43,25 +39,6 @@ export class Tab2Page implements OnDestroy, OnInit {
   ) {
     this.store.dispatch(loadExercise());
     this.$observable = this.store.select('exercises');
-    this.getArticle();
-  }
-
-  async startWorkout() {
-    const modal = await this.modalCtrl.create({
-      component: InProgressComponent,
-    });
-    modal.present();
-
-    const { data, role } = await modal.onWillDismiss();
-
-    if (role === 'confirm') {
-      this.message = `Hello, ${data}!`;
-    }
-  }
-  async getArticle() {
-    this.$susctiption = this.$observable.subscribe((data) => {
-      console.log(data);
-    });
   }
 
   ngOnInit(): void {}
@@ -123,6 +100,10 @@ export class Tab2Page implements OnDestroy, OnInit {
       ),
       tap(console.log)
     );
+  }
+
+  addToCard(article: Article, quantity: number) {
+    this.store.dispatch(AddProductCart({ article, quantity }));
   }
 
   hideSearch() {

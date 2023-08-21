@@ -1,0 +1,47 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title> Cart list </ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="pr-4" color="primary">Clean up</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <ng-container *ngIf="$observable">
+    <ng-container *ngIf="$observable | async as observableResult">
+      <div class="flex min-h-full flex-col justify-start px-4 py-4 lg:px-6">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
+          <div *ngIf="!observableResult || !observableResult.length" class="flex min-h-full flex-col justify-start">
+            <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
+              <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                The product list is empty
+              </h2>
+            </div>
+          </div>
+          <ion-list *ngIf="observableResult">
+            <ion-item *ngFor="let workout of observableResult" class="w-full item-text-wrap">
+              <ng-container *ngIf="workout.article as product">
+                <ion-avatar slot="start">
+                  <app-avatar [size]="'small'" [img]="(product?.imagen  || '')" [type]="'article'"
+                    [hiddenBorder]="true"></app-avatar>
+                </ion-avatar>
+                <ion-label>
+                  <h3 class="uppercase item-text-wrap">{{product?.nombre}}</h3>
+                  <p class="font-semibold">
+                    Quantity:
+                    <span class="font-normal">{{workout?.quantity}}</span>
+                  </p>
+                </ion-label>
+              </ng-container>
+            </ion-item>
+          </ion-list>
+        </div>
+      </div>
+      <ion-fab *ngIf="observableResult.length" slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button>
+          <ion-icon name="checkmark-outline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </ng-container>
+  </ng-container>
+</ion-content>

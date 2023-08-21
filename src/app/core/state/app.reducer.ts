@@ -1,14 +1,17 @@
 import { ActionReducerMap } from '@ngrx/store';
 
 import * as auth from '../../auth/state/auth.state';
-import * as exercise from '../../pages/workout/state/workout.state';
+import * as product from '../../pages/workout/state/workout.state';
+import * as cart from '../../pages/cart/state/cart.state';
 
 export interface AppState {
   session_data: auth.IAuthState;
-  exercises: exercise.ExerciseState;
+  exercises: product.ExerciseState;
+  cart: cart.CartState;
 }
 
 export const appReducers: ActionReducerMap<AppState> = {
   session_data: auth.authReducer,
-  exercises: exercise.ExerciseReducer,
+  exercises: product.ExerciseReducer,
+  cart: cart.CartReducer,
 };

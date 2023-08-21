@@ -23,8 +23,13 @@ const routes: Routes = [
           import('./profile/tab3.module').then((m) => m.Tab3PageModule),
       },
       {
+        path: 'tab4',
+        loadChildren: () =>
+          import('./cart/cart.module').then((m) => m.Tab2PageModule),
+      },
+      {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/tabs/tab2',
         pathMatch: 'full',
       },
     ],
