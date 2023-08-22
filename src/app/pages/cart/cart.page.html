@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title> Cart list </ion-title>
     <ion-buttons slot="end">
-      <ion-button class="pr-4" color="primary">Clean up</ion-button>
+      <ion-button class="pr-4" color="primary" (click)="clean()">Clean up</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -13,32 +13,28 @@
         <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
           <div *ngIf="!observableResult || !observableResult.length" class="flex min-h-full flex-col justify-start">
             <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-              <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+              <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white">
                 The product list is empty
               </h2>
             </div>
           </div>
-          <ion-list *ngIf="observableResult">
-            <ion-item *ngFor="let workout of observableResult" class="w-full item-text-wrap">
-              <ng-container *ngIf="workout.article as product">
-                <ion-avatar slot="start">
-                  <app-avatar [size]="'small'" [img]="(product?.imagen  || '')" [type]="'article'"
-                    [hiddenBorder]="true"></app-avatar>
-                </ion-avatar>
-                <ion-label>
-                  <h3 class="uppercase item-text-wrap">{{product?.nombre}}</h3>
-                  <p class="font-semibold">
-                    Quantity:
-                    <span class="font-normal">{{workout?.quantity}}</span>
-                  </p>
-                </ion-label>
-              </ng-container>
-            </ion-item>
+          <ion-list *ngIf="observableResult.length">
+            <ion-item-sliding *ngFor="let workout of observableResult">
+              <app-product-item [detailed]="false" [name]="workout.article?.nombre" [category]="workout.article?.categoria"
+                [price]="workout?.article?.precio_venta" [quantity]="workout.quantity">
+              </app-product-item>
+          
+              <ion-item-options>
+                <ion-item-option (click)="removeProduct(workout.article?.codigo)" color="danger"> <ion-icon slot="start"
+                    name="trash"></ion-icon>
+                  Delete</ion-item-option>
+              </ion-item-options>
+            </ion-item-sliding>
           </ion-list>
         </div>
       </div>
       <ion-fab *ngIf="observableResult.length" slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button>
+        <ion-fab-button (click)="checkout()">
           <ion-icon name="checkmark-outline"></ion-icon>
         </ion-fab-button>
       </ion-fab>

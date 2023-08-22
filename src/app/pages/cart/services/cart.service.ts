@@ -9,13 +9,13 @@ const API_URL = `${environment.url}${API_PREFIX}articulo.php`;
 @Injectable({
   providedIn: 'root',
 })
-export class WorkoutService {
+export class CartService {
   constructor(public http: HttpClient) {}
 
-  checkoutProducts() {
+  checkoutProducts(products: any) {
     return this.http.post<any | null>(
       API_URL,
-      {},
+      { products },
       {
         params: {
           op: 'listar',

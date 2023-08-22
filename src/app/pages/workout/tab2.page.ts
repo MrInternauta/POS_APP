@@ -1,6 +1,6 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../core/state/app.reducer';
 import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
@@ -33,7 +33,7 @@ export class Tab2Page implements OnDestroy, OnInit {
     'This modal example uses the modalController to present and dismiss modals.';
   public historyWorkout!: Array<any>;
   constructor(
-    private modalCtrl: ModalController,
+    private toastController: ToastController,
     private store: Store<AppState>,
     private barcodeScanner: BarcodeScanner
   ) {
@@ -104,10 +104,20 @@ export class Tab2Page implements OnDestroy, OnInit {
 
   addToCard(article: Article, quantity: number) {
     this.store.dispatch(AddProductCart({ article, quantity }));
+    this.presentToast();
   }
 
   hideSearch() {
     this.searchValue = null;
     this.tempProduc$ = null;
+  }
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: 'Product added',
+      duration: 1500,
+      position: 'top',
+    });
+
+    await toast.present();
   }
 }

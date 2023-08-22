@@ -8,14 +8,20 @@ export const AddProductCart = createAction(
 );
 
 export const RemoveProductCartType = '[Cart] Remove product from cart';
-export const RemoveProductCart = createAction(RemoveProductCartType);
+export const RemoveProductCart = createAction(
+  RemoveProductCartType,
+  props<{ code: string }>()
+);
 
 export const CheckOutType = "[CheckOut] Buy product's cart";
 export const CheckOut = createAction(CheckOutType);
 
+export const CheckedOutType = "[CheckOut] Buy product's cart";
+export const CheckedOut = createAction(
+  CheckedOutType,
+  props<{ response: any }>()
+);
+
 export const CleanCartType = '[CleanCart] Clean up the cart';
 export const CleanCart = createAction(CleanCartType);
 
-//Efect
-export const AddedProductCartType = '[Cart] Added product to cart';
-export const AddedProductCart = createAction(AddedProductCartType);

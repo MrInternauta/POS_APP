@@ -7,6 +7,7 @@ import { InputComponent } from './input/input.component';
 import { FormsModule } from '@angular/forms';
 import { AlertComponent } from './alert/alert.component';
 import { GetProfile } from '../pipes/getProfile.pipe';
+import { ProductItemComponent } from './product-item/product-item.component';
 
 @NgModule({
   declarations: [
@@ -15,8 +16,15 @@ import { GetProfile } from '../pipes/getProfile.pipe';
     InputComponent,
     AlertComponent,
     GetProfile,
+    ProductItemComponent,
   ],
   imports: [FormsModule, CommonModule, IonicModule],
-  exports: [ButtonComponent, AvatarComponent, InputComponent, AlertComponent],
+  exports: [
+    ButtonComponent,
+    AvatarComponent,
+    InputComponent,
+    AlertComponent,
+    ProductItemComponent,
+  ],
 })
 export class ComponentsModule {}

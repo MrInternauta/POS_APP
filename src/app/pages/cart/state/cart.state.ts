@@ -1,8 +1,14 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { AddProductCart } from './cart.actions';
+import {
+  AddProductCart,
+  CheckedOut,
+  CheckedOutType,
+  CleanCart,
+  RemoveProductCart,
+} from './cart.actions';
 import { Article } from '../../workout/models/index';
 
-interface CartInfo {
+export interface CartInfo {
   article: Article;
   quantity: number;
 }
@@ -66,6 +72,26 @@ const _CartReducer = createReducer(
         [article.codigo]: { article, quantity: newQuantity },
       },
     };
+  }),
+  on(CleanCart, (state) => ({ ...state, Cart: null })),
+  on(RemoveProductCart, (state, { code }) => {
+    if (!state?.Cart || !state?.Cart[code]) {
+      {
+        return { ...state };
+      }
+    }
+    const newCart = { ...state.Cart };
+    console.log(newCart);
+
+    delete newCart[code];
+    return {
+      ...state,
+      Cart: newCart,
+    };
+  }),
+  on(CheckedOut, (state, { response }) => {
+    console.log(CheckedOutType, response);
+    return { ...state, Cart: null };
   })
 );
 

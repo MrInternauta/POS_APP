@@ -1,7 +1,7 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../core/state/app.reducer';
+import { Store, select } from '@ngrx/store';
+import { AppState, appReducers } from '../../core/state/app.reducer';
 
 import {
   Observable,
@@ -13,6 +13,14 @@ import {
   take,
   tap,
 } from 'rxjs';
+import {
+  AddProductCart,
+  CheckOut,
+  CleanCart,
+  RemoveProductCart,
+} from './state/cart.actions';
+import { Article } from '../workout/models';
+import { selectListCart, selectTotal } from './state/cart.selector';
 
 @Component({
   selector: 'app-cart',
@@ -41,8 +49,21 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.$susctiption?.unsubscribe();
   }
 
-  clean() {}
-  checkout() {}
-  update() {}
-  removeProduct() {}
+  clean() {
+    this.store.dispatch(CleanCart());
+  }
+
+  checkout() {
+    this.store.pipe(select(selectTotal)).subscribe((ba) => console.log(ba));
+    //
+    //this.store.dispatch(CheckOut());
+  }
+
+  update(article: Article, quantity: number) {
+    this.store.dispatch(AddProductCart({ article, quantity }));
+  }
+
+  removeProduct(code: string) {
+    this.store.dispatch(RemoveProductCart({ code }));
+  }
 }

@@ -19,7 +19,7 @@ export class WorkoutService {
       {},
       {
         params: {
-          op: 'listar',
+          op: 'listarArticulosVenta',
         },
       }
     );

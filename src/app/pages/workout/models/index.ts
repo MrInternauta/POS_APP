@@ -15,4 +15,5 @@ export interface Article {
   descripcion: string;
   imagen: string;
   condicion: string;
+  precio_venta?: string;
 }

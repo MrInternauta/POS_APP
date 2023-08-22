@@ -1,0 +1,32 @@
+<ion-item [detail]="detailed" class="w-full" [ngClass]="{'cursor-pointer': detailed}">
+  <ion-avatar slot="start">
+    <ion-icon name="beer-outline" size="large"></ion-icon>
+  </ion-avatar>
+  <ion-label>
+    <h3 class="uppercase">{{name}}</h3>
+    <p class="font-semibold" *ngIf="stock">
+      Stock: <span class="font-normal">{{stock}}</span>
+    </p>
+    <p class="font-semibold" *ngIf="price">
+      Price: <span class="font-normal">{{price | currency}}</span>
+    </p>
+    <p class="font-semibold" *ngIf="category">
+      Category:
+      <span class="font-normal">{{category}}</span>
+    </p>
+    <p *ngIf="description" class="font-semibold">
+      Description:
+      <span class="font-normal">{{description}}</span>
+    </p>
+    <p *ngIf="quantity" class="font-semibold">
+      Quantity:
+      <span class="font-normal">{{quantity}}</span>
+    </p>
+
+    <p *ngIf="quantity && price" class="font-semibold">
+      Subtotal:
+      <span class="font-normal">{{subtotal}}</span>
+    </p>
+  </ion-label>
+
+</ion-item>
