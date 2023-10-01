@@ -9,6 +9,13 @@
 <ion-content [fullscreen]="true">
   <ng-container *ngIf="$observable">
     <ng-container *ngIf="$observable | async as observableResult">
+      <div *ngIf="$total | async as total" class="fixed z-10 flex flex-col justify-start px-4 py-4 lg:px-6">
+        <div *ngIf="total" class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
+          <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white">
+            Total: {{total}}
+          </h2>
+        </div>
+      </div>
       <div class="flex min-h-full flex-col justify-start px-4 py-4 lg:px-6">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
           <div *ngIf="!observableResult || !observableResult.length" class="flex min-h-full flex-col justify-start">
@@ -23,10 +30,10 @@
               <app-product-item [detailed]="false" [name]="workout.article?.nombre" [category]="workout.article?.categoria"
                 [price]="workout?.article?.precio_venta" [quantity]="workout.quantity">
               </app-product-item>
-          
+
               <ion-item-options>
-                <ion-item-option (click)="removeProduct(workout.article?.codigo)" color="danger"> <ion-icon slot="start"
-                    name="trash"></ion-icon>
+                <ion-item-option (click)="removeProduct(workout.article?.codigo)" color="danger">
+                  <ion-icon slot="start" name="trash"></ion-icon>
                   Delete</ion-item-option>
               </ion-item-options>
             </ion-item-sliding>

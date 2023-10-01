@@ -8,4 +8,10 @@ export interface IUser {
   cargo: string;
   imagen: string;
   login: string;
+  direccion: string;
+}
+
+export interface Permissions {
+  idpermiso?: string;
+  nombre?: string;
 }

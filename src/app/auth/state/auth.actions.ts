@@ -8,3 +8,13 @@ export const setUser = createAction(
 );
 
 export const unUser = createAction('[Auth] unUser');
+
+
+export const loadPermissionsType = '[Auth] loadPermissions Success';
+export const loadPermissions = createAction(loadPermissionsType);
+
+export const loadedPermissionsType = '[Auth] Loaded Permissions Success';
+export const loadedPermissions = createAction(
+  loadedPermissionsType,
+  props<{ Permissions: Array<Permissions> }>()
+);

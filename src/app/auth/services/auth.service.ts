@@ -60,8 +60,6 @@ export class AuthService {
       })
       .pipe(
         map((resp: IUser) => {
-          console.log(resp);
-
           if (resp && resp.idusuario && resp.nombre) {
             this.saveStorage(resp?.idusuario, resp?.nombre, resp);
             return true;
@@ -123,5 +121,18 @@ export class AuthService {
       user: JSON.stringify(usuario),
     });
     this.store.dispatch(setUser({ user: usuario, id, token }));
+  }
+
+  getPerssions(userId: string) {
+    return this.http.post<Array<Permissions> | null>(
+      API_URL,
+      {},
+      {
+        params: {
+          op: 'permisos',
+          id: userId,
+        },
+      }
+    );
   }
 }

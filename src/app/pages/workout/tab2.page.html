@@ -3,7 +3,10 @@
     <ion-title> Product List </ion-title>
   </ion-toolbar>
   <ion-toolbar>
-    <ion-searchbar (search)="searchFunction($event || '')" [ngModel]="searchValue" show-cancel-button="focus"
+    <ion-searchbar
+      (search)="searchFunction($event || '')"
+      [ngModel]="searchValue"
+      show-cancel-button="focus"
       show-clear-button="never"
       cancel-button-icon="trash"
       (ionCancel)="hideSearch()"
@@ -16,22 +19,49 @@
     <ng-container *ngIf="tempProduc$ | async as observableResult">
       <div class="flex min-h-full flex-col justify-start px-4 py-4 lg:px-6">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-          <div *ngIf="!observableResult || !observableResult.length" class="flex min-h-full flex-col justify-start">
+          <div
+            *ngIf="!observableResult || !observableResult.length"
+            class="flex min-h-full flex-col justify-start"
+          >
             <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-              <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+              <h2
+                class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
+              >
                 The product list is empty
               </h2>
             </div>
           </div>
           <ion-list *ngIf="observableResult">
-            <app-product-item *ngFor="let workout of observableResult" [detailed]="true" (click)="addToCard(workout, 1)"
-              [name]="workout?.nombre" [stock]="workout?.stock" [category]="workout?.categoria" [description]="workout?.descripcion"
-              [price]="workout?.precio_venta">
-            </app-product-item>
+            <ion-item-sliding *ngFor="let workout of observableResult">
+              <app-product-item
+                [detailed]="true"
+                [name]="workout?.nombre"
+                [stock]="workout?.stock"
+                [category]="workout?.categoria"
+                [description]="workout?.descripcion"
+                [price]="workout?.precio_venta"
+              >
+              </app-product-item>
+
+              <ion-item-options>
+                <ion-item-option
+                  (click)="addToCard(workout, 1)"
+                  color="tertiary"
+                >
+                  <ion-icon slot="start" name="cart-outline"></ion-icon>
+                  Add to Cart</ion-item-option
+                >
+              </ion-item-options>
+            </ion-item-sliding>
           </ion-list>
         </div>
       </div>
-      <ion-fab *ngIf="observableResult.length" slot="fixed" vertical="bottom" horizontal="end">
+      <ion-fab
+        *ngIf="observableResult.length"
+        slot="fixed"
+        vertical="bottom"
+        horizontal="end"
+      >
         <ion-fab-button (click)="scanCode()">
           <ion-icon name="barcode-outline"></ion-icon>
         </ion-fab-button>
@@ -43,22 +73,50 @@
     <ng-container *ngIf="$observable | async as observableResult">
       <div class="flex min-h-full flex-col justify-start px-4 py-4 lg:px-6">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-          <div *ngIf="!observableResult || !observableResult.Exercise" class="flex min-h-full flex-col justify-start">
+          <div
+            *ngIf="!observableResult || !observableResult.Exercise"
+            class="flex min-h-full flex-col justify-start"
+          >
             <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-              <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white">
+              <h2
+                class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white"
+              >
                 The product list is empty
               </h2>
             </div>
-            </div>
-            <ion-list *ngIf="observableResult  && observableResult.Exercise">
-            <app-product-item *ngFor="let workout of observableResult.Exercise?.aaData" [detailed]="true"
-              (click)="addToCard(workout, 1)" [name]="workout?.nombre" [stock]="workout?.stock" [category]="workout?.categoria"
-              [price]="workout?.precio_venta" [description]="workout?.descripcion">
-            </app-product-item>
-            </ion-list>
-            </div>
-            </div>
-      <ion-fab *ngIf="observableResult.Exercise" slot="fixed" vertical="bottom" horizontal="end">
+          </div>
+          <ion-list *ngIf="observableResult  && observableResult.Exercise">
+            <ion-item-sliding
+              *ngFor="let workout of observableResult.Exercise?.aaData"
+            >
+              <app-product-item
+                [detailed]="true"
+                [name]="workout?.nombre"
+                [stock]="workout?.stock"
+                [category]="workout?.categoria"
+                [price]="workout?.precio_venta"
+                [description]="workout?.descripcion"
+              >
+              </app-product-item>
+              <ion-item-options>
+                <ion-item-option
+                  (click)="addToCard(workout, 1)"
+                  color="tertiary"
+                >
+                  <ion-icon slot="start" name="cart-outline"></ion-icon>
+                  Add to Cart</ion-item-option
+                >
+              </ion-item-options>
+            </ion-item-sliding>
+          </ion-list>
+        </div>
+      </div>
+      <ion-fab
+        *ngIf="observableResult.Exercise"
+        slot="fixed"
+        vertical="bottom"
+        horizontal="end"
+      >
         <ion-fab-button (click)="scanCode()">
           <ion-icon name="barcode-outline"></ion-icon>
         </ion-fab-button>

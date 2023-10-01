@@ -1,24 +1,24 @@
 <ion-header [translucent]="false" class="ion-no-border">
   <ion-toolbar>
     <ion-title> Profile </ion-title>
-    <!-- <ion-buttons slot="end">
-      <ion-button class="pr-4" (click)="editProfile()" color="primary"
-        >{{ editMode ? 'Update' : 'Edit'}}</ion-button
-      >
-    </ion-buttons> -->
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-      <app-avatar [size]="'large'" [img]="(authService.user?.imagen  || '')"></app-avatar>
+      <app-avatar
+        [size]="'large'"
+        [img]="(authService.user?.imagen  || '')"
+      ></app-avatar>
       <h2
         *ngIf="!editMode"
         class="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white"
       >
         {{authService.user?.nombre}}
       </h2>
-      <h3 class=" text-center text-xl font-normal leading-9 tracking-tight text-gray-900 dark:text-white">
+      <h3
+        class="text-center text-xl font-normal leading-9 tracking-tight text-gray-900 dark:text-white"
+      >
         ({{authService.user?.cargo}})
       </h3>
     </div>
@@ -39,7 +39,7 @@
       <div class="flex mt-4 w-full">
         <div class="w-1/2 mr-4">
           <app-input
-            [inputValue]="authService.user?.email ?? ''"
+            [inputValue]="authService.user?.email || ''"
             [disabled]="true"
             [id]="'email'"
             [type]="'email'"
@@ -51,7 +51,7 @@
 
         <div class="w-1/2">
           <app-input
-            [inputValue]="authService.user?.telefono ?? ''"
+            [inputValue]="authService.user?.telefono || ''"
             [disabled]="!editMode"
             [id]="'phone'"
             [type]="'text'"
@@ -61,77 +61,60 @@
           ></app-input>
         </div>
       </div>
+
+
       <div class="flex mt-4 w-full">
-        <div class="w-1/2 mr-4">
+        <div class="w-full">
           <app-input
             [disabled]="!editMode"
             [id]="'birthday'"
-            [type]="'number'"
-            [label]="'Birthday'"
-            [placeholder]="'Birthday'"
-            [required]="true"
-            [maxLength]="100"
-          ></app-input>
-        </div>
-
-        <div class="w-1/2">
-          <app-input
-            [disabled]="!editMode"
-            [id]="'gender'"
-            [type]="'number'"
-            [label]="'Gender'"
-            [placeholder]="'Gender'"
+            [type]="'text'"
+            [label]="authService.user?.tipo_documento || 'Tipo Documento'"
+            [inputValue]="authService.user?.num_documento || 'Sin Número'"
             [required]="true"
             [maxLength]="100"
           ></app-input>
         </div>
       </div>
-
-      <!-- <div class="flex mt-4 w-full">
-        <label
-          class="mr-4 w-1/2 rounded-md border-0 px-2 py-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          >Height</label
-        >
-        <label
-          class="w-1/2 rounded-md border-0 px-2 py-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          >Weight</label
-        >
-      </div> -->
 
       <div class="flex mt-4 w-full">
-        <div class="w-1/2 mr-4">
+        <div class="w-full">
           <app-input
             [disabled]="!editMode"
-            [id]="'height'"
-            [type]="'number'"
-            [label]="'Height'"
-            [placeholder]="'Height'"
-            [required]="true"
-            [maxLength]="100"
-          ></app-input>
-        </div>
-
-        <div class="w-1/2">
-          <app-input
-            [disabled]="!editMode"
-            [id]="'weight'"
-            [type]="'number'"
-            [label]="'Weight'"
-            [placeholder]="'Weight'"
+            [id]="'birthday'"
+            [type]="'text'"
+            [label]="'Dirección'"
+            [inputValue]="authService.user?.direccion || 'Sin dirección'"
             [required]="true"
             [maxLength]="100"
           ></app-input>
         </div>
       </div>
 
-      <div class="mt-4 text-center text-sm text-gray-500">
+      <div class="flex mt-4 w-full" *ngIf="$observable | async as permissions">
+        <div class="w-full">
+          <label
+            class="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
+            >{{ 'Permisos'}}</label
+          >
+          <div class="mt-2 max-h-40 overflow-y-auto">
+            <ion-list [inset]="true">
+              <ion-item *ngFor="let item of permissions">
+                <ion-label> {{item.nombre}}</ion-label>
+              </ion-item>
+            </ion-list>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="mt-4 text-center text-sm text-gray-500">
         <app-button
           [outline]="true"
           [label]="'Reset password'"
           size="large"
           (click)="sendResetPassword()"
         ></app-button>
-      </div>
+      </div> -->
       <div class="mt-4 text-center text-sm text-gray-500">
         <app-button
           [outline]="false"
@@ -143,51 +126,3 @@
     </div>
   </div>
 </ion-content>
-
-      <!-- <div class="flex mt-4 w-full">
-        <div class="w-1/2 mr-4">
-          <app-input
-            [id]="'height'"
-            [type]="'number'"
-            [label]="'Height'"
-            [placeholder]="'180 CM'"
-            [required]="true"
-            [maxLength]="100"
-          ></app-input>
-        </div>
-
-        <div class="w-1/2">
-          <app-input
-            [id]="'weight'"
-            [type]="'number'"
-            [label]="'Weight'"
-            [placeholder]="'80 KG'"
-            [required]="true"
-            [maxLength]="100"
-          ></app-input>
-        </div>
-      </div> -->
-
-            <!-- <div class="flex mt-4 w-full">
-        <div class="w-1/2 mr-4">
-          <app-input
-            [id]="'birthday'"
-            [type]="'number'"
-            [label]="'Birthday'"
-            [placeholder]="'1995/02/21'"
-            [required]="true"
-            [maxLength]="100"
-          ></app-input>
-        </div>
-
-        <div class="w-1/2">
-          <app-input
-            [id]="'gender'"
-            [type]="'number'"
-            [label]="'Gender'"
-            [placeholder]="'M'"
-            [required]="true"
-            [maxLength]="100"
-          ></app-input>
-        </div>
-      </div> -->

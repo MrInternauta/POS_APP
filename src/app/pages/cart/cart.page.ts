@@ -30,17 +30,23 @@ import { selectListCart, selectTotal } from './state/cart.selector';
 export class Tab2Page implements OnDestroy, OnInit {
   $susctiption!: Subscription;
   public $observable!: Observable<any>;
+  public $total!: Observable<number>;
+
   message =
     'This modal example uses the modalController to present and dismiss modals.';
   public historyWorkout!: Array<any>;
 
   constructor(private store: Store<AppState>) {
     this.$observable = this.store.select('cart').pipe(
+      tap((val) => {
+        console.log(val.total);
+      }),
       map((item) => {
         return Object.values(item?.Cart || {});
       }),
       tap(console.log)
     );
+    //this.store.pipe(select(selectTotal))
   }
 
   ngOnInit(): void {}
@@ -54,7 +60,6 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   checkout() {
-    this.store.pipe(select(selectTotal)).subscribe((ba) => console.log(ba));
     //
     //this.store.dispatch(CheckOut());
   }

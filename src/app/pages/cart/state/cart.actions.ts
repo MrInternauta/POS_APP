@@ -7,6 +7,13 @@ export const AddProductCart = createAction(
   props<{ article: Article; quantity: number }>()
 );
 
+export const setTotalType = '[Cart] Set total to cart';
+export const setTotal = createAction(
+  setTotalType,
+  props<{ total: number | null }>()
+);
+
+
 export const RemoveProductCartType = '[Cart] Remove product from cart';
 export const RemoveProductCart = createAction(
   RemoveProductCartType,

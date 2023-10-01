@@ -5,6 +5,8 @@ import {
   CheckedOutType,
   CleanCart,
   RemoveProductCart,
+  setTotal,
+  setTotalType,
 } from './cart.actions';
 import { Article } from '../../workout/models/index';
 
@@ -16,10 +18,12 @@ export interface CartInfo {
 export const CartFeatureKey = 'Cart';
 export interface CartState {
   [CartFeatureKey]: Record<string, CartInfo> | null;
+  total?: number | null;
 }
 
 export const CartInitialState: CartState = {
   [CartFeatureKey]: null,
+  total: null,
 };
 
 const _CartReducer = createReducer(
@@ -92,6 +96,9 @@ const _CartReducer = createReducer(
   on(CheckedOut, (state, { response }) => {
     console.log(CheckedOutType, response);
     return { ...state, Cart: null };
+  }),
+  on(setTotal, (state, { total }) => {
+    return { ...state, total };
   })
 );
 

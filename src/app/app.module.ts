@@ -12,6 +12,7 @@ import { AuthModule } from '@gymTrack/auth';
 import { ExercisesEffects } from './pages/workout/state/workout.effects';
 import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
 import { CartEffects } from './pages/cart/state/cart.effects';
+import { PermissionsEffects } from './auth/state/permissions.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,7 +22,7 @@ import { CartEffects } from './pages/cart/state/cart.effects';
     AppRoutingModule,
     CoreModule,
     AuthModule,
-    EffectsModule.forRoot([ExercisesEffects, CartEffects]),
+    EffectsModule.forRoot([ExercisesEffects, CartEffects, PermissionsEffects]),
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

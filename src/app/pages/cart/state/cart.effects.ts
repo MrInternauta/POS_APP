@@ -1,9 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { EMPTY } from 'rxjs';
-import { map, mergeMap, catchError, take } from 'rxjs/operators';
+import { map, mergeMap, catchError, take, tap } from 'rxjs/operators';
 import { CartService } from '../services/cart.service';
-import { CheckOutType, CheckedOutType } from './cart.actions';
+import {
+  AddProductCartType,
+  CheckOutType,
+  CheckedOutType,
+  CleanCartType,
+  RemoveProductCartType,
+  setTotalType,
+} from './cart.actions';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../core/state/app.reducer';
+import { selectTotal } from './cart.selector';
 
 @Injectable()
 export class CartEffects {
@@ -22,5 +32,30 @@ export class CartEffects {
     )
   );
 
-  constructor(private actions$: Actions, private cartService: CartService) {}
+  loadtotalByAdd$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        AddProductCartType,
+        RemoveProductCartType,
+        CleanCartType,
+        CheckedOutType
+      ),
+      mergeMap(() =>
+        this.store.select(selectTotal).pipe(
+          tap(console.log),
+          map((response) => ({
+            type: setTotalType,
+            response: response,
+          })),
+          catchError(() => EMPTY)
+        )
+      )
+    )
+  );
+
+  constructor(
+    private actions$: Actions,
+    private cartService: CartService,
+    private store: Store<AppState>
+  ) {}
 }
