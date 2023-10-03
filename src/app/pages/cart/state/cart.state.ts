@@ -5,6 +5,7 @@ import {
   CheckedOutType,
   CleanCart,
   RemoveProductCart,
+  UpdateProductCart,
   setTotal,
   setTotalType,
 } from './cart.actions';
@@ -54,7 +55,63 @@ const _CartReducer = createReducer(
       };
     }
 
-    const newQuantity = state.Cart[article.codigo]?.quantity || 0 + quantity;
+    const newQuantity =
+      Number(state.Cart[article.codigo]?.quantity) + Number(quantity || 1);
+
+    console.log('Already exists');
+
+    if (newQuantity <= 0) {
+      let newStateCart = {
+        ...state.Cart,
+        [article.codigo]: { article, quantity: newQuantity },
+      };
+
+      delete newStateCart[article.codigo];
+
+      return {
+        ...state,
+        Cart: newStateCart,
+      };
+    }
+
+    return {
+      ...state,
+      Cart: {
+        ...state.Cart,
+        [article.codigo]: { article, quantity: newQuantity },
+      },
+    };
+  }),
+  on(UpdateProductCart, (state, { article, quantity }) => {
+    if (!article || !article.codigo) {
+      return {
+        ...state,
+      };
+    }
+
+    if (!state.Cart) {
+      return {
+        ...state,
+        Cart: {
+          [article.codigo]: { article, quantity },
+        },
+      };
+    }
+
+    if (!state.Cart[article.codigo]) {
+      return {
+        ...state,
+        Cart: {
+          ...state.Cart,
+          [article.codigo]: { article, quantity },
+        },
+      };
+    }
+
+    const newQuantity = Number(quantity || 1);
+
+    console.log('Already exists');
+
     if (newQuantity <= 0) {
       let newStateCart = {
         ...state.Cart,
@@ -94,7 +151,6 @@ const _CartReducer = createReducer(
     };
   }),
   on(CheckedOut, (state, { response }) => {
-    console.log(CheckedOutType, response);
     return { ...state, Cart: null };
   }),
   on(setTotal, (state, { total }) => {

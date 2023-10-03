@@ -42,7 +42,6 @@ export class CartEffects {
       ),
       mergeMap(() =>
         this.store.select(selectTotal).pipe(
-          tap(console.log),
           map((response) => ({
             type: setTotalType,
             response: response,

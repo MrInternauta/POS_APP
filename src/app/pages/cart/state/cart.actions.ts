@@ -7,6 +7,13 @@ export const AddProductCart = createAction(
   props<{ article: Article; quantity: number }>()
 );
 
+
+export const UpdateProductCartType = '[Cart] Update product cart';
+export const UpdateProductCart = createAction(
+  AddProductCartType,
+  props<{ article: Article; quantity: number }>()
+);
+
 export const setTotalType = '[Cart] Set total to cart';
 export const setTotal = createAction(
   setTotalType,

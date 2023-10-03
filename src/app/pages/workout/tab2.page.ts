@@ -17,7 +17,8 @@ import {
   tap,
 } from 'rxjs';
 import { Article } from './models';
-import { AddProductCart } from '../cart/state/cart.actions';
+import { AddProductCart, setTotal } from '../cart/state/cart.actions';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tab2',
@@ -35,7 +36,8 @@ export class Tab2Page implements OnDestroy, OnInit {
   constructor(
     private toastController: ToastController,
     private store: Store<AppState>,
-    private barcodeScanner: BarcodeScanner
+    private barcodeScanner: BarcodeScanner,
+    public router: Router
   ) {
     this.store.dispatch(loadExercise());
     this.$observable = this.store.select('exercises');
@@ -44,7 +46,7 @@ export class Tab2Page implements OnDestroy, OnInit {
   ngOnInit(): void {}
 
   ngOnDestroy(): void {
-    this.$susctiption.unsubscribe();
+    this.$susctiption?.unsubscribe();
   }
 
   async scanCode() {
@@ -54,9 +56,7 @@ export class Tab2Page implements OnDestroy, OnInit {
       if (!barcodeData.text) {
         console.log('Invalid code');
       }
-      this.searchValue = barcodeData.text;
-
-      this.searchbyCode(this.searchValue);
+      this.searchbyCode(this.searchValue || '');
     } catch (error) {
       console.log('Error', error);
     }
@@ -90,7 +90,7 @@ export class Tab2Page implements OnDestroy, OnInit {
       return;
     }
 
-    this.tempProduc$ = this.$observable.pipe(
+    this.$observable.pipe(
       map((item_) =>
         item_?.Exercise?.aaData.filter((item: any) =>
           String(item.codigo)
@@ -98,13 +98,19 @@ export class Tab2Page implements OnDestroy, OnInit {
             .includes(String(code).toLocaleLowerCase())
         )
       ),
-      tap(console.log)
+      tap((products: Array<Article> | null) => {
+        if (!products?.length || !products[0]) {
+          return;
+        }
+        this.addToCard(products[0], 1);
+      })
     );
   }
 
   addToCard(article: Article, quantity: number) {
     this.store.dispatch(AddProductCart({ article, quantity }));
     this.presentToast();
+    this.router.navigate(['tabs', 'tab4'], { replaceUrl: true });
   }
 
   hideSearch() {

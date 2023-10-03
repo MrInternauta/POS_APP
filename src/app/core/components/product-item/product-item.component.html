@@ -25,7 +25,7 @@
 
     <p *ngIf="quantity && price" class="font-semibold">
       Subtotal:
-      <span class="font-normal">{{subtotal}}</span>
+      <span class="font-normal">{{subtotal | currency }}</span>
     </p>
   </ion-label>
 

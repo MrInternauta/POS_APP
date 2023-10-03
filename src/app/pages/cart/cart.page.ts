@@ -18,6 +18,7 @@ import {
   CheckOut,
   CleanCart,
   RemoveProductCart,
+  UpdateProductCart,
 } from './state/cart.actions';
 import { Article } from '../workout/models';
 import { selectListCart, selectTotal } from './state/cart.selector';
@@ -38,15 +39,11 @@ export class Tab2Page implements OnDestroy, OnInit {
 
   constructor(private store: Store<AppState>) {
     this.$observable = this.store.select('cart').pipe(
-      tap((val) => {
-        console.log(val.total);
-      }),
       map((item) => {
         return Object.values(item?.Cart || {});
-      }),
-      tap(console.log)
+      })
     );
-    //this.store.pipe(select(selectTotal))
+    this.$total = this.store.select(selectTotal).pipe(tap(console.log));
   }
 
   ngOnInit(): void {}
@@ -65,10 +62,17 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   update(article: Article, quantity: number) {
-    this.store.dispatch(AddProductCart({ article, quantity }));
+    this.store.dispatch(UpdateProductCart({ article, quantity }));
   }
 
   removeProduct(code: string) {
     this.store.dispatch(RemoveProductCart({ code }));
+  }
+
+  valueChange(quantity: number, article: Article) {
+    if (quantity > 100 || quantity <= 0) {
+      return;
+    }
+    this.update(article, quantity);
   }
 }

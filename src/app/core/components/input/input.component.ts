@@ -23,6 +23,7 @@ export class InputComponent implements OnInit {
   @Input() legend!: string;
   @Input() icon: string = '';
   @Output() inputValueChange: EventEmitter<any> = new EventEmitter<any>();
+  @Output() inputValueEnter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() {}
 
@@ -30,5 +31,9 @@ export class InputComponent implements OnInit {
 
   handleChange(event: any) {
     this.inputValueChange.emit(event);
+  }
+
+  handleChangeEnter(event: any) {
+    this.inputValueEnter.emit(this.inputValue);
   }
 }
