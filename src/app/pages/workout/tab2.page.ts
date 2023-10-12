@@ -1,6 +1,12 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ModalController, ToastController } from '@ionic/angular';
+import {
+  AlertButton,
+  AlertController,
+  AlertInput,
+  ModalController,
+  ToastController,
+} from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../core/state/app.reducer';
 import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
@@ -27,17 +33,21 @@ import { Router } from '@angular/router';
 })
 export class Tab2Page implements OnDestroy, OnInit {
   $susctiption!: Subscription;
+  $susctiptionSearch!: Subscription;
+
   public $observable!: Observable<any>;
   public tempProduc$!: Observable<any> | null;
   public searchValue!: string | null;
   message =
     'This modal example uses the modalController to present and dismiss modals.';
+
   public historyWorkout!: Array<any>;
   constructor(
     private toastController: ToastController,
     private store: Store<AppState>,
     private barcodeScanner: BarcodeScanner,
-    public router: Router
+    public router: Router,
+    private alertController: AlertController
   ) {
     this.store.dispatch(loadExercise());
     this.$observable = this.store.select('exercises');
@@ -47,6 +57,7 @@ export class Tab2Page implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     this.$susctiption?.unsubscribe();
+    this.$susctiptionSearch?.unsubscribe();
   }
 
   async scanCode() {
@@ -56,7 +67,7 @@ export class Tab2Page implements OnDestroy, OnInit {
       if (!barcodeData.text) {
         console.log('Invalid code');
       }
-      this.searchbyCode(this.searchValue || '');
+      this.searchbyCode(barcodeData.text || '');
     } catch (error) {
       console.log('Error', error);
     }
@@ -90,21 +101,22 @@ export class Tab2Page implements OnDestroy, OnInit {
       return;
     }
 
-    this.$observable.pipe(
-      map((item_) =>
-        item_?.Exercise?.aaData.filter((item: any) =>
-          String(item.codigo)
-            .toLocaleLowerCase()
-            .includes(String(code).toLocaleLowerCase())
+    this.$susctiptionSearch = this.$observable
+      .pipe(
+        map((item_) =>
+          item_?.Exercise?.aaData.filter((item: any) =>
+            String(item.codigo)
+              .toLocaleLowerCase()
+              .includes(String(code).toLocaleLowerCase())
+          )
         )
-      ),
-      tap((products: Array<Article> | null) => {
+      )
+      .subscribe((products: Array<Article> | null) => {
         if (!products?.length || !products[0]) {
           return;
         }
         this.addToCard(products[0], 1);
-      })
-    );
+      });
   }
 
   addToCard(article: Article, quantity: number) {
@@ -125,5 +137,57 @@ export class Tab2Page implements OnDestroy, OnInit {
     });
 
     await toast.present();
+  }
+
+  addPrice(product: Article) {
+    this.presentAlert(product);
+  }
+
+  async presentAlert(product: Article) {
+    const ok_buttons: AlertButton = {
+      text: 'OK',
+      handler: (val) => {
+        //TODO: Create input_products
+        console.log(product);
+        console.log(val);
+      },
+    };
+    const cancel_buttons: AlertButton = {
+      text: 'Cancel',
+    };
+
+    const alert = await this.alertController.create({
+      header: 'Please enter the product info',
+      buttons: [cancel_buttons, ok_buttons],
+      inputs: [
+        {
+          type: 'number',
+          label: 'Stock',
+          placeholder: 'Stock',
+          min: 1,
+          max: 1000,
+          value: Number(product.stock) || 0,
+        },
+        {
+          type: 'number',
+          label: 'Buying price',
+          placeholder: 'Buying price',
+          min: 1,
+          max: 1000,
+          value: Number(product.precio_venta) || 0,
+        },
+        {
+          type: 'number',
+          label: 'Selling price',
+          placeholder: 'Selling price',
+          min: 1,
+          max: 1000,
+
+          value: Number(product.precio_venta) || 0,
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }

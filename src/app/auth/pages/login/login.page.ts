@@ -56,7 +56,6 @@ export class LoginPage extends ComponentBase implements OnInit, OnDestroy {
       return;
     }
 
-
     if (!this.password) {
       this.hasError.password = 'Password is needed';
       return;
@@ -66,6 +65,7 @@ export class LoginPage extends ComponentBase implements OnInit, OnDestroy {
       email: this.email,
       password: this.password,
     };
+    //TODO: Get permissions
     this._authService.login(auth, this.recuerdame).subscribe(
       (res) => {
         this.hasError = {
