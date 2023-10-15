@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage extends ComponentBase implements OnInit, OnDestroy {
+  isLoading = false;
+  passwordVisible = false;
   email!: string;
   password!: string;
   public hasError: {

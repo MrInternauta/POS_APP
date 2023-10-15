@@ -76,8 +76,5 @@
     "tslib": "^2.5.0",
     "typescript": "~5.0.4"
   },
-  "description": "An Ionic project",
-  "volta": {
-    "node": "18.17.1"
-  }
+  "description": "An Ionic project"
 }
