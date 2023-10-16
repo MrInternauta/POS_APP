@@ -90,7 +90,7 @@ export class AuthService {
   logout() {
     this.storage.setLocal(ConstantsHelper.USER_DATA_KEY_STORAGE, null);
     this.store.dispatch(unUser());
-    this.router.navigate(['login']);
+    this.router.navigate(['authentication','login-1']);
   }
 
   loadStorage() {
