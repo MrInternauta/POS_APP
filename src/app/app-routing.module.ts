@@ -11,16 +11,37 @@ const routes: Routes = [
   },
   {
     canActivate: [LogoutGuard],
-    path: 'login',
-    loadChildren: () =>
-      import('./auth/pages/login/login.module').then((m) => m.LoginPageModule),
+    path: 'authentication',
+    children: [
+      { path: '', redirectTo: '/authentication/login-1', pathMatch: 'full' },
+      {
+        path: 'login-1',
+        loadChildren: () =>
+          import('./auth/pages/login/login.module').then(
+            (m) => m.LoginPageModule
+          ),
+      },
+      {
+        path: 'sign-up-1',
+        loadChildren: () =>
+          import('./auth/pages/sign-up-1/sign-up-1.module').then(
+            (m) => m.SignUpModule
+          ),
+      },
+      {
+        path: 'forget-pass',
+        loadChildren: () =>
+          import('./auth/pages/forget-pass/forget-pass.module').then(
+            (m) => m.ForgetPassPageModule
+          ),
+      },
+    ],
   },
-  { path: '**', redirectTo: '' },
 ];
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}
