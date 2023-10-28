@@ -13,6 +13,8 @@ import { LoginPageRoutingModule } from './login-routing.module';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { ComponentsModule } from '../../../core/components/components.module';
 import { LoginPage } from './login.page';
+import { CoreModule } from '../../../core/core.module';
+import { ModalInfoService } from '../../../core/services/modal.service';
 
 
 const antdModule = [
@@ -36,5 +38,7 @@ const antdModule = [
     ...antdModule
   ],
   declarations: [LoginPage],
+  providers:[    ModalInfoService
+  ]
 })
 export class LoginPageModule {}

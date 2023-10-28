@@ -1,10 +1,10 @@
 import { createAction, props } from '@ngrx/store';
 import { Id, Token } from '../../core/models';
-import { IUser } from '../model/user';
+import { UserDto } from '../model/user.dto';
 
 export const setUser = createAction(
   '[Auth] setUser',
-  props<{ user: IUser; id: Id; token: Token }>()
+  props<{ user: UserDto; id: Id; token: Token }>()
 );
 
 export const unUser = createAction('[Auth] unUser');

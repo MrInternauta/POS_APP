@@ -22,7 +22,6 @@ import { AppState } from '../state';
 import { ConstantsHelper } from '../constants/constants.helper';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
-
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   userSesion$!: Observable<IAuthState>;
@@ -32,7 +31,7 @@ export class AuthInterceptor implements HttpInterceptor {
     public http: HttpClient,
     private store: Store<AppState>,
     public router: Router,
-    private authService: AuthService
+    private authService: AuthService,
   ) {
     this.userSesion$ = this.store.select(ConstantsHelper.USER_DATA_KEY_STORAGE);
     this.userSesion$.pipe(take(1)).subscribe((sesionState: IAuthState) => {
@@ -54,7 +53,8 @@ export class AuthInterceptor implements HttpInterceptor {
     }
     return next.handle(request).pipe(
       catchError((error) => {
-        console.log(error);
+        //this.modalInfoService.error();
+        console.log(error?.error?.message);
 
         if (error instanceof HttpErrorResponse) {
           if (error.status === StatusCodes.UNAUTHORIZED) {

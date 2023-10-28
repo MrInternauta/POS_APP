@@ -1,6 +1,6 @@
-import { User } from '@gymTrack/core';
+import { UserDto } from './user.dto';
 
 export interface AuthSuccess {
   access_token: string;
-  user: User;
+  user: UserDto;
 }

@@ -8,34 +8,49 @@
     <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
       <app-avatar
         [size]="'large'"
-        [img]="(authService.user?.imagen  || '')"
+        [img]="(authService.user?.image  || '')"
       ></app-avatar>
       <h2
         *ngIf="!editMode"
         class="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white"
       >
-        {{authService.user?.nombre}}
+        {{authService.user?.name}} {{authService.user?.lastName}}
       </h2>
       <h3
         class="text-center text-xl font-normal leading-9 tracking-tight text-gray-900 dark:text-white"
       >
-        ({{authService.user?.cargo}})
+        ({{ authService.user?.role }})
       </h3>
     </div>
 
     <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-      <div class="mt-4 w-full">
-        <app-input
-          [inputValue]="authService.user?.nombre ?? ''"
+      <div class="flex mt-4 w-full">
+        <div class="w-1/2 mr-4">
+          <app-input
+            [inputValue]="authService.user?.name ?? ''"
+            [disabled]="!editMode"
+            [id]="'name'"
+            [type]="'text'"
+            [label]="'Name'"
+            [required]="true"
+            [maxLength]="100"
+          ></app-input>
+        </div>
+
+        <div class="w-1/2">
+          <app-input
+          [inputValue]="authService.user?.lastName ?? ''"
           [disabled]="!editMode"
           [id]="'name'"
           [type]="'text'"
-          [label]="'Name'"
+          [label]="'Last Name'"
           [required]="true"
           [maxLength]="100"
-          class="w-100"
-        ></app-input>
+          ></app-input>
+        </div>
       </div>
+
+
       <div class="flex mt-4 w-full">
         <div class="w-1/2 mr-4">
           <app-input
@@ -51,7 +66,7 @@
 
         <div class="w-1/2">
           <app-input
-            [inputValue]="authService.user?.telefono || ''"
+            [inputValue]="authService.user?.phone || ''"
             [disabled]="!editMode"
             [id]="'phone'"
             [type]="'text'"
@@ -62,59 +77,15 @@
         </div>
       </div>
 
-
-      <div class="flex mt-4 w-full">
-        <div class="w-full">
-          <app-input
-            [disabled]="!editMode"
-            [id]="'birthday'"
-            [type]="'text'"
-            [label]="authService.user?.tipo_documento || 'Tipo Documento'"
-            [inputValue]="authService.user?.num_documento || 'Sin Número'"
-            [required]="true"
-            [maxLength]="100"
-          ></app-input>
-        </div>
-      </div>
-
-      <div class="flex mt-4 w-full">
-        <div class="w-full">
-          <app-input
-            [disabled]="!editMode"
-            [id]="'birthday'"
-            [type]="'text'"
-            [label]="'Dirección'"
-            [inputValue]="authService.user?.direccion || 'Sin dirección'"
-            [required]="true"
-            [maxLength]="100"
-          ></app-input>
-        </div>
-      </div>
-
-      <div class="flex mt-4 w-full" *ngIf="$observable | async as permissions">
-        <div class="w-full">
-          <label
-            class="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
-            >{{ 'Permisos'}}</label
-          >
-          <div class="mt-2 max-h-40 overflow-y-auto">
-            <ion-list [inset]="true">
-              <ion-item *ngFor="let item of permissions">
-                <ion-label> {{item.nombre}}</ion-label>
-              </ion-item>
-            </ion-list>
-          </div>
-        </div>
-      </div>
-
-      <!-- <div class="mt-4 text-center text-sm text-gray-500">
+      <div class="mt-4 text-center text-sm text-gray-500">
         <app-button
           [outline]="true"
           [label]="'Reset password'"
           size="large"
           (click)="sendResetPassword()"
         ></app-button>
-      </div> -->
+      </div>
+
       <div class="mt-4 text-center text-sm text-gray-500">
         <app-button
           [outline]="false"

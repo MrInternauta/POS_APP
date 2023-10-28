@@ -13,9 +13,10 @@ import { StorageService } from '../../core/services/storage.service';
 import { UserCreatedResponse } from '@gymTrack/core';
 import { environment } from '@gymTrack/environment';
 import { API_PREFIX } from '../../core/constants/api-prefix';
-import { IUser } from '../model/user';
+import { UserDto } from '../model/user.dto';
+import { AuthSuccess } from '../model/Auth';
 
-const API_URL = `${environment.url}${API_PREFIX}usuario.php`;
+const API_URL = `${environment.url}${API_PREFIX}`;
 
 @Injectable({
   providedIn: 'root',
@@ -45,7 +46,7 @@ export class AuthService {
     return this._auth.token;
   }
 
-  login(user: Auth, recordar = false) {
+  login(user: UserDto, recordar = false) {
     if (recordar) {
       this.storage.setLocal('email', user.email);
     } else {
@@ -53,15 +54,12 @@ export class AuthService {
     }
 
     return this.http
-      .post<any>(`${API_URL}`, user, {
-        params: {
-          op: 'verificar',
-        },
-      })
+      .post<any>(`${API_URL}auth`, user)
       .pipe(
-        map((resp: IUser) => {
-          if (resp && resp.idusuario && resp.nombre) {
-            this.saveStorage(resp?.idusuario, resp?.nombre, resp);
+        map((resp: AuthSuccess) => {
+          console.log(resp.user);
+          if (resp && resp.user.id && resp.user.name) {
+            this.saveStorage(resp.user?.id.toString(), resp.access_token, resp.user);
             return true;
           }
           return false;
@@ -69,11 +67,11 @@ export class AuthService {
       );
   }
 
-  signUp(user: CreateUser) {
+  signUp(user: UserDto) {
     return this.http.post<UserCreatedResponse>(`${API_URL}users`, user);
   }
 
-  getUserbyId(user: CreateUser) {
+  getUserbyId(user: UserDto) {
     return this.http.get<UserCreatedResponse>(`${API_URL}users`);
   }
 
@@ -100,21 +98,21 @@ export class AuthService {
 
     if (localStorageAuth?.user && localStorageAuth?.token) {
       // this.token = localStorageAuth.token;
-      const user: IUser = JSON.parse(localStorageAuth.user);
+      const user: UserDto = JSON.parse(localStorageAuth.user);
       if (!user) {
         return;
       }
       this.store.dispatch(
         setUser({
           user,
-          id: user?.idusuario ?? 0,
+          id: user?.id ?? 0,
           token: localStorageAuth.token,
         })
       );
     }
   }
 
-  saveStorage(id: string, token: string, usuario: IUser) {
+  saveStorage(id: string, token: string, usuario: UserDto) {
     this.storage.setLocal(ConstantsHelper.USER_DATA_KEY_STORAGE, {
       id,
       token,

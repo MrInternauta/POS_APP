@@ -12,7 +12,7 @@ export class PermissionsEffects {
       ofType(loadPermissionsType),
       mergeMap(() =>
         this.authService
-          .getPerssions(this.authService.user?.idusuario || '')
+          .getPerssions(this.authService.user?.id?.toString() || '')
           .pipe(
             map((response) => ({
               type: loadedPermissionsType,

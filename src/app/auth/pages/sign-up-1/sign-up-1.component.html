@@ -12,8 +12,8 @@
           </div>
           <div class="py-[30px] px-[40px] content">
             <form nz-form [formGroup]="signUpForm" class="login-form" nzLayout="vertical" (ngSubmit)="submitForm()">
-              <nz-form-item class="block">
-                <nz-form-label nzFor="Name"
+              <nz-form-item  class="block">
+                <nz-form-label nzRequired nzFor="Name"
                   class="text-[14px] w-full leading-[1.4285714286] font-medium [&>label]:text-dark [&>label]:dark:text-white/[.87] mb-[8px] capitalize inline-block">
                   Name</nz-form-label>
                 <nz-form-control nzErrorTip="Please input your Name!">
@@ -22,11 +22,20 @@
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
-                <nz-form-label nzRequired nzFor="userName"
+                <nz-form-label nzRequired nzFor="lastName"
                   class=" text-[14px] leading-[1.4285714286] font-medium [&>label]:text-dark [&>label]:dark:text-white/[.87] capitalize inline-block">
-                  Username</nz-form-label>
-                <nz-form-control nzErrorTip="Please input your username!">
-                  <input type="text" nz-input formControlName="userName" placeholder="Username" id="userName"
+                  Last name</nz-form-label>
+                <nz-form-control nzErrorTip="Please input your last name!">
+                  <input type="text" nz-input formControlName="lastName" placeholder="Last Name" id="Last name"
+                    class="flex items-center shadow-none py-[10px] px-[20px] h-[48px] border-1 border-regular dark:border-white/10 rounded-4 w-full text-[14px] font-normal leading-[1.5] placeholder:text-[#A0A0A0] dark:bg-white/10 dark:text-white/60">
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label nzFor="phone"
+                  class=" text-[14px] leading-[1.4285714286] font-medium [&>label]:text-dark [&>label]:dark:text-white/[.87] capitalize inline-block">
+                  Phone</nz-form-label>
+                <nz-form-control nzErrorTip="Please input your phone!">
+                  <input type="text" nz-input formControlName="phone" placeholder="Phone" id="phone" phone
                     class="flex items-center shadow-none py-[10px] px-[20px] h-[48px] border-1 border-regular dark:border-white/10 rounded-4 w-full text-[14px] font-normal leading-[1.5] placeholder:text-[#A0A0A0] dark:bg-white/10 dark:text-white/60">
                 </nz-form-control>
               </nz-form-item>
@@ -35,7 +44,7 @@
                   class=" text-[14px] leading-[1.4285714286] font-medium [&>label]:text-dark [&>label]:dark:text-white/[.87] capitalize inline-block">
                   Email</nz-form-label>
                 <nz-form-control nzErrorTip="The input is not valid E-mail!">
-                  <input type="text" nz-input formControlName="email" placeholder="Username" id="email"
+                  <input type="text" nz-input formControlName="email" placeholder="Email" id="email"
                     class="flex items-center shadow-none py-[10px] px-[20px] h-[48px] border-1 border-regular dark:border-white/10 rounded-4 w-full text-[14px] font-normal leading-[1.5] placeholder:text-[#A0A0A0] dark:bg-white/10 dark:text-white/60">
                 </nz-form-control>
               </nz-form-item>

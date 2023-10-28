@@ -30,7 +30,7 @@ export const CartInitialState: CartState = {
 const _CartReducer = createReducer(
   CartInitialState,
   on(AddProductCart, (state, { article, quantity }) => {
-    if (!article || !article.codigo) {
+    if (!article || !article.code) {
       return {
         ...state,
       };
@@ -40,33 +40,33 @@ const _CartReducer = createReducer(
       return {
         ...state,
         Cart: {
-          [article.codigo]: { article, quantity },
+          [article.code]: { article, quantity },
         },
       };
     }
 
-    if (!state.Cart[article.codigo]) {
+    if (!state.Cart[article.code]) {
       return {
         ...state,
         Cart: {
           ...state.Cart,
-          [article.codigo]: { article, quantity },
+          [article.code]: { article, quantity },
         },
       };
     }
 
     const newQuantity =
-      Number(state.Cart[article.codigo]?.quantity) + Number(quantity || 1);
+      Number(state.Cart[article.code]?.quantity) + Number(quantity || 1);
 
     console.log('Already exists');
 
     if (newQuantity <= 0) {
       let newStateCart = {
         ...state.Cart,
-        [article.codigo]: { article, quantity: newQuantity },
+        [article.code]: { article, quantity: newQuantity },
       };
 
-      delete newStateCart[article.codigo];
+      delete newStateCart[article.code];
 
       return {
         ...state,
@@ -78,12 +78,12 @@ const _CartReducer = createReducer(
       ...state,
       Cart: {
         ...state.Cart,
-        [article.codigo]: { article, quantity: newQuantity },
+        [article.code]: { article, quantity: newQuantity },
       },
     };
   }),
   on(UpdateProductCart, (state, { article, quantity }) => {
-    if (!article || !article.codigo) {
+    if (!article || !article.code) {
       return {
         ...state,
       };
@@ -93,17 +93,17 @@ const _CartReducer = createReducer(
       return {
         ...state,
         Cart: {
-          [article.codigo]: { article, quantity },
+          [article.code]: { article, quantity },
         },
       };
     }
 
-    if (!state.Cart[article.codigo]) {
+    if (!state.Cart[article.code]) {
       return {
         ...state,
         Cart: {
           ...state.Cart,
-          [article.codigo]: { article, quantity },
+          [article.code]: { article, quantity },
         },
       };
     }
@@ -115,10 +115,10 @@ const _CartReducer = createReducer(
     if (newQuantity <= 0) {
       let newStateCart = {
         ...state.Cart,
-        [article.codigo]: { article, quantity: newQuantity },
+        [article.code]: { article, quantity: newQuantity },
       };
 
-      delete newStateCart[article.codigo];
+      delete newStateCart[article.code];
 
       return {
         ...state,
@@ -130,7 +130,7 @@ const _CartReducer = createReducer(
       ...state,
       Cart: {
         ...state.Cart,
-        [article.codigo]: { article, quantity: newQuantity },
+        [article.code]: { article, quantity: newQuantity },
       },
     };
   }),

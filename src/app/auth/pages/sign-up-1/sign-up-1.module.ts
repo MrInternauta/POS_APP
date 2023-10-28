@@ -13,6 +13,7 @@ import { SignUpRoutingModule } from './sign-up-1-routing.module';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { ComponentsModule } from '../../../core/components/components.module';
 import { SignUp1Component } from './sign-up-1.component';
+import { ModalInfoService } from '../../../core/services/modal.service';
 
 
 const antdModule = [
@@ -36,5 +37,6 @@ const antdModule = [
     ...antdModule
   ],
   declarations: [SignUp1Component],
+  providers:[    ModalInfoService ]
 })
 export class SignUpModule {}

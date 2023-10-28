@@ -4,8 +4,9 @@ import { API_PREFIX } from 'src/app/core/constants';
 import { GenericResponse, IExercise } from 'src/app/core/models';
 import { environment } from '../../../../environments/environment';
 import { ArticleResponse } from '../models';
+import { ProductsFilterDto } from '../models/productFilter.dto';
 
-const API_URL = `${environment.url}${API_PREFIX}articulo.php`;
+const API_URL = `${environment.url}${API_PREFIX}products`;
 
 @Injectable({
   providedIn: 'root',
@@ -13,14 +14,13 @@ const API_URL = `${environment.url}${API_PREFIX}articulo.php`;
 export class WorkoutService {
   constructor(public http: HttpClient) {}
 
-  getProducts() {
-    return this.http.post<ArticleResponse | null>(
+  getProducts(params?: ProductsFilterDto) {
+    return this.http.get<ArticleResponse | null>(
       API_URL,
-      {},
       {
         params: {
-          op: 'listarArticulosVenta',
-        },
+          ... params
+        }
       }
     );
   }

@@ -1,19 +1,18 @@
+import { CreateCategoryDto } from "./category.dto";
+
 export interface ArticleResponse {
-  sEcho: number;
-  iTotalRecords: number;
-  iTotalDisplayRecords: number;
-  aaData: Article[];
+  products: Article[];
 }
 
 export interface Article {
-  idarticulo: string;
-  idcategoria: string;
-  categoria: string;
-  codigo: string;
-  nombre: string;
+  id: string;
+  categoryId: string;
+  code: string;
+  name: string;
   stock: string;
   descripcion: string;
-  imagen: string;
-  condicion: string;
-  precio_venta?: string;
+  image: string;
+  price: string;
+  priceSell: string;
+  category?: CreateCategoryDto
 }

@@ -10,11 +10,13 @@ import {
 import { Store } from '@ngrx/store';
 import { AppState } from '../../core/state/app.reducer';
 import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
+import { EMPTY } from 'rxjs';
 
-import { loadExercise } from './state/workout.actions';
+import { loadExercise, loadedExercise, loadedExerciseType } from './state/workout.actions';
 import {
   Observable,
   Subscription,
+  catchError,
   filter,
   find,
   map,
@@ -24,7 +26,10 @@ import {
 } from 'rxjs';
 import { Article } from './models';
 import { AddProductCart, setTotal } from '../cart/state/cart.actions';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { WorkoutService } from './services/workout.service';
+import { ProductsFilterDto } from './models/productFilter.dto';
+import { ModalInfoService } from '../../core/services/modal.service';
 
 @Component({
   selector: 'app-tab2',
@@ -34,7 +39,8 @@ import { Router } from '@angular/router';
 export class Tab2Page implements OnDestroy, OnInit {
   $susctiption!: Subscription;
   $susctiptionSearch!: Subscription;
-
+  $susctiptionParams!: Subscription;
+  productSuscription$!: Subscription;
   public $observable!: Observable<any>;
   public tempProduc$!: Observable<any> | null;
   public searchValue!: string | null;
@@ -47,9 +53,30 @@ export class Tab2Page implements OnDestroy, OnInit {
     private store: Store<AppState>,
     private barcodeScanner: BarcodeScanner,
     public router: Router,
-    private alertController: AlertController
+    public activatedRoute: ActivatedRoute,
+    private alertController: AlertController,
+    private exercisesService: WorkoutService,
+    private modalInfoService: ModalInfoService
+
   ) {
-    this.store.dispatch(loadExercise());
+
+    this.$susctiptionParams = this.activatedRoute.queryParams.subscribe(params => {
+      const productFilter: ProductsFilterDto = {
+        limit: params?.['limit'] || 10,
+        maxPrice: params?.['maxPrice'] || 9999,
+        minPrice: params?.['minPrice'] || 1,
+        offset: params?.['offset'] || 0
+       }
+      this.productSuscription$ = this.exercisesService.getProducts(productFilter).subscribe((response) => {
+        if(response)
+          this.store.dispatch(loadedExercise({ Exercise: response }));
+      },
+      error=>{
+        this.modalInfoService.error('Something is wrong!', error)
+      }
+      )
+  });
+
     this.$observable = this.store.select('exercises');
   }
 
@@ -58,6 +85,8 @@ export class Tab2Page implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.$susctiption?.unsubscribe();
     this.$susctiptionSearch?.unsubscribe();
+    this.$susctiptionParams?.unsubscribe();
+    this.productSuscription$?.unsubscribe();
   }
 
   async scanCode() {
@@ -174,7 +203,7 @@ export class Tab2Page implements OnDestroy, OnInit {
           placeholder: 'Buying price',
           min: 1,
           max: 1000,
-          value: Number(product.precio_venta) || 0,
+          value: Number(product.priceSell) || 0,
         },
         {
           type: 'number',
@@ -183,7 +212,7 @@ export class Tab2Page implements OnDestroy, OnInit {
           min: 1,
           max: 1000,
 
-          value: Number(product.precio_venta) || 0,
+          value: Number(product.priceSell) || 0,
         },
       ],
     });

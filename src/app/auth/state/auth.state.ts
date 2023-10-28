@@ -2,10 +2,10 @@ import { Action, createReducer, on } from '@ngrx/store';
 
 import { loadedPermissions, setUser, unUser } from './auth.actions';
 import { Id, Token } from '../../core/models/index';
-import { IUser, Permissions } from '../model/user';
+import { UserDto } from '../model/user.dto';
 
 export interface IAuthState {
-  user: IUser | null;
+  user: UserDto | null;
   id: Id;
   token: Token;
   permissions: Array<any> | null;

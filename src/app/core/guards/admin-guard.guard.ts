@@ -13,7 +13,7 @@ export class AdminGuardGuard implements CanActivate {
     if (
       (await this._UsuarioService.hasSession()) &&
       this._UsuarioService.user &&
-      this._UsuarioService.user.cargo === UsuarioRoles.ADMIN
+      this._UsuarioService.user.role?.toString() === UsuarioRoles.ADMIN
     ) {
       return true;
     } else {
