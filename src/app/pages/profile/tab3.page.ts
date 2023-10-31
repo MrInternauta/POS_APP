@@ -15,18 +15,11 @@ import { Observable, Subscription, map, tap } from 'rxjs';
 export class Tab3Page implements OnDestroy {
   public editMode = false;
   $susctiption!: Subscription;
-  public $observable!: Observable<any>;
   constructor(
     private alertController: AlertController,
     public authService: AuthService,
     private store: Store<AppState>
   ) {
-    this.store.dispatch(loadPermissions());
-
-    this.$observable = this.store.select('session_data').pipe(
-      map((item) => item.permissions),
-      tap(console.log)
-    );
   }
 
   async sendResetPassword() {

@@ -10,7 +10,7 @@ export interface Article {
   code: string;
   name: string;
   stock: string;
-  descripcion: string;
+  description: string;
   image: string;
   price: string;
   priceSell: string;

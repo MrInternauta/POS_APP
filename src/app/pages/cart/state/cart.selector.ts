@@ -31,7 +31,7 @@ export const selectTotal: MemoizedSelector<
   return values.reduce((prev, current, index) => {
     return (
       Number(prev) +
-      Number(current?.quantity) * Number(current?.article?.precio_venta || 0)
+      Number(current?.quantity) * Number(current?.article?.priceSell || 0)
     );
   }, 0);
 });

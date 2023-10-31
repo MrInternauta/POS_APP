@@ -62,9 +62,9 @@ export class Tab2Page implements OnDestroy, OnInit {
 
     this.$susctiptionParams = this.activatedRoute.queryParams.subscribe(params => {
       const productFilter: ProductsFilterDto = {
-        limit: params?.['limit'] || 10,
+        limit: params?.['limit'] || 1000,
         maxPrice: params?.['maxPrice'] || 9999,
-        minPrice: params?.['minPrice'] || 1,
+        minPrice: params?.['minPrice'] || 0,
         offset: params?.['offset'] || 0
        }
       this.productSuscription$ = this.exercisesService.getProducts(productFilter).subscribe((response) => {
@@ -78,6 +78,9 @@ export class Tab2Page implements OnDestroy, OnInit {
   });
 
     this.$observable = this.store.select('exercises');
+    this.$observable.subscribe(value=>{
+      console.log(value?.Exercise)
+    })
   }
 
   ngOnInit(): void {}
@@ -110,12 +113,12 @@ export class Tab2Page implements OnDestroy, OnInit {
     }
     this.tempProduc$ = this.$observable.pipe(
       map((item_) =>
-        item_?.Exercise?.aaData.filter(
+        item_?.Exercise?.products.filter(
           (item: any) =>
-            String(item.nombre)
+            String(item.name)
               .toLocaleLowerCase()
               .includes(String(value).toLocaleLowerCase()) ||
-            String(item.descripcion)
+            String(item.description)
               .toLocaleLowerCase()
               .includes(String(value).toLocaleLowerCase())
         )
@@ -133,8 +136,8 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.$susctiptionSearch = this.$observable
       .pipe(
         map((item_) =>
-          item_?.Exercise?.aaData.filter((item: any) =>
-            String(item.codigo)
+          item_?.Exercise?.products.filter((item: any) =>
+            String(item.code)
               .toLocaleLowerCase()
               .includes(String(code).toLocaleLowerCase())
           )
@@ -203,7 +206,7 @@ export class Tab2Page implements OnDestroy, OnInit {
           placeholder: 'Buying price',
           min: 1,
           max: 1000,
-          value: Number(product.priceSell) || 0,
+          value: Number(product.price) || 0,
         },
         {
           type: 'number',

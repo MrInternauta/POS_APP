@@ -39,11 +39,11 @@
             <ion-item-sliding *ngFor="let workout of observableResult">
               <app-product-item
                 [detailed]="true"
-                [name]="workout?.nombre"
+                [name]="workout?.name"
                 [stock]="workout?.stock"
-                [category]="workout?.categoria"
-                [description]="workout?.descripcion"
-                [price]="workout?.precio_venta"
+                [category]="workout?.category"
+                [description]="workout?.code"
+                [price]="workout?.priceSell"
               >
               </app-product-item>
 
@@ -91,15 +91,15 @@
           </div>
           <ion-list *ngIf="observableResult  && observableResult.Exercise">
             <ion-item-sliding
-              *ngFor="let workout of observableResult.Exercise?.aaData"
+              *ngFor="let workout of observableResult.Exercise?.products"
             >
               <app-product-item
                 [detailed]="true"
-                [name]="workout?.nombre"
+                [name]="workout?.name"
                 [stock]="workout?.stock"
-                [category]="workout?.categoria"
-                [price]="workout?.precio_venta"
-                [description]="workout?.descripcion"
+                [category]="workout?.category"
+                [price]="workout?.priceSell"
+                [description]="workout?.code"
               >
               </app-product-item>
               <ion-item-options>
