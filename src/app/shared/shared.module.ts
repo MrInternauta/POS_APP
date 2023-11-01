@@ -12,7 +12,6 @@ import { SearchPipe } from './pipes/search.pipe';
     exports: [
         CommonModule,
         FormsModule,
-        HttpClientModule,
         HttpClientJsonpModule,
         NzIconModule,
         SearchPipe

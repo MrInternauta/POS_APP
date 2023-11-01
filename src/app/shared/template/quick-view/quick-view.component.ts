@@ -24,8 +24,8 @@ import { Subject } from 'rxjs';
 })
 export class QuickViewComponent implements OnInit {
   direction: 'ltr' | 'rtl' = 'ltr';
-  isFolded: boolean;
-  isFoldedTop: boolean;
+  isFolded!: boolean;
+  isFoldedTop!: boolean;
   isDarkMode: boolean;
   isRTL: boolean;
   isCustomClassEnabled = false;
@@ -61,7 +61,6 @@ export class QuickViewComponent implements OnInit {
 
     if (isDarkModeEnabled === 'true') {
       const body = document.querySelector('body');
-      body.classList.add('dark');
       const logoImg = document.getElementById('logo-img') as HTMLImageElement;
       const logoFoldImg = document.getElementById('logo-fold-img') as HTMLImageElement;
       logoImg.src = 'assets/images/logo/logo-white.png';
@@ -80,9 +79,12 @@ export class QuickViewComponent implements OnInit {
 
   toggleDarkMode() {
     const body = document.querySelector('body');
-    body.classList.toggle('dark');
+    if (!body) {
+      return
+    }
+    body?.classList.toggle('dark');
 
-    const isDarkModeEnabled = body.classList.contains('dark');
+    const isDarkModeEnabled = body?.classList.contains('dark');
     localStorage.setItem('darkModeEnabled', isDarkModeEnabled.toString());
 
     const logoImg = document.getElementById('logo-img') as HTMLImageElement;
@@ -102,6 +104,10 @@ export class QuickViewComponent implements OnInit {
 
   toggleListClass() {
     const list = document.querySelector('#my-list');
+    if (!list) {
+      return
+    }
+
     list.classList.toggle('custom-class');
 
     const isListClassEnabled = list.classList.contains('custom-class');
@@ -132,7 +138,12 @@ export class QuickViewComponent implements OnInit {
     const sidebar = document.querySelector('.page-container');
     const body = document.querySelector('.hexadash-top-menu');
     const button = document.querySelector('.custom-scrollbar') as HTMLElement;
-
+    if (!body) {
+      return
+    }
+    if (!sidebar) {
+      return
+    }
     if (window.innerWidth >= 991) {
       if (this.isFoldedTop) {
         body.classList.add('topMenu-active');

@@ -1,13 +1,20 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LoginGuardGuard, LogoutGuard } from '@gymTrack/core';
+import { CommonLayout_ROUTES } from './shared/routes/common-layout.routes';
+import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
 
 const routes: Routes = [
+  // {
+  //   canActivate: [LoginGuardGuard],
+  //   path: '',
+  //   loadChildren: () =>
+  //     import('./pages/tabs.module').then((m) => m.TabsPageModule),
+  // },
   {
-    canActivate: [LoginGuardGuard],
     path: '',
-    loadChildren: () =>
-      import('./pages/tabs.module').then((m) => m.TabsPageModule),
+    component: CommonLayoutComponent,
+    children: CommonLayout_ROUTES
   },
   {
     canActivate: [LogoutGuard],
@@ -37,10 +44,20 @@ const routes: Routes = [
       },
     ],
   },
+  {
+    path: '**',
+    pathMatch: 'full',
+    redirectTo: '/notfound',
+  },
 ];
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
+    RouterModule.forRoot(routes, {
+      //TODO: check what do these line
+      preloadingStrategy: PreloadAllModules,
+      anchorScrolling: 'enabled',
+      scrollPositionRestoration: 'enabled',
+    }),
   ],
   exports: [RouterModule],
 })

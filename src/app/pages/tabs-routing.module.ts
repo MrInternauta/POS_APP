@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 const routes: Routes = [
   {
@@ -38,6 +39,14 @@ const routes: Routes = [
     path: '',
     redirectTo: '/tabs/tab2',
     pathMatch: 'full',
+  },
+  {
+    path: '**',
+    redirectTo: '/notfound',
+  },
+  {
+    path: 'notfound',
+    component: ErrorPageComponent
   },
 ];
 

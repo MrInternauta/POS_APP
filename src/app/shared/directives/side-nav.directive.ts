@@ -16,7 +16,7 @@ export class SideNavDirective {
 
 }
 
-function handleMenuItemClick(event) {
+function handleMenuItemClick(this: any, event: any) {
   let parent = this.parentNode;
   if (parent.classList.contains("ant-menu-submenu-open")) {
     let dropdownMenu = parent.querySelector('.dropdown-menu');
@@ -49,7 +49,7 @@ function handleMenuItemClick(event) {
 }
 
 
-function slideUp(element, duration, callback = undefined, height = undefined) {
+function slideUp(element: any, duration: string | number | undefined, callback?: ()=>void, height?: string) {
   if (!element) return;
   if (!height) {
       height = element.offsetHeight + "px";
@@ -76,9 +76,9 @@ function slideUp(element, duration, callback = undefined, height = undefined) {
       element.style.removeProperty('transition-duration');
       element.style.removeProperty('transition-property');
       if (typeof callback === 'function') callback();
-  }, duration);
+  }, Number(duration));
 }
-function slideDown(element, duration, callback = undefined, height = undefined) {
+function slideDown(element: any, duration: any, callback?: ()=>void , height?: string) {
   if (!element) return;
   if (!height) {
       element.style.removeProperty('display');

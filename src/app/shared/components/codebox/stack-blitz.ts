@@ -80,7 +80,7 @@ import 'zone.js/dist/zone'; // Included with Angular CLI.
   const appModuleCode = `
 import { NgModule } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -106,7 +106,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
 
 @NgModule({
   imports:      [
-                  BrowserModule,FormsModule,
+                  CommonModule,FormsModule,
                   HttpClientModule,
                   HttpClientJsonpModule,
                   ReactiveFormsModule,

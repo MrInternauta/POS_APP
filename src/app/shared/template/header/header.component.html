@@ -60,7 +60,7 @@
             <svg-icon src="assets/images/svg/search.svg"></svg-icon>
           </a>
           <nz-dropdown-menu #search="nzDropdownMenu">
-            <nz-input-group class="dark:bg-[#282936] p-1.5 h-[48px] px-[20px] dark:shadow-none border-1 border-regular dark:border-white/10 rounded-6" [nzSuffix]="suffixIconSearch">
+            <nz-input-group class="dark:bg-[#282936] p-1.5 h-[48px] px-[20px] dark:shadow-none border-1 border-regular dark:border-white/10 rounded-6" nzSuffix="{{suffixIconSearch}}">
               <input class="capitalize bg-white placeholder:text-theme-light text-theme-gray dark:text-white/[.87] dark:bg-transparent text-ellipsis" type="text" nz-input placeholder="search here">
             </nz-input-group>
           </nz-dropdown-menu>
@@ -226,7 +226,7 @@
                 <li class="p-0 dark:hover:text-white hover:bg-primary/10 dark:hover:bg-white/10 rounded-4" nz-menu-item *ngFor="let authorMenu of appAuthorMenu">
                   <button
                     class="inline-flex items-center text-light dark:text-white/60 hover:text-primary hover:ps-6 w-full px-2.5 py-3 text-sm transition-all ease-in-out delay-150">
-                      <svg-icon class="h-fit me-4 [&>svg]:w-[18px] [&>svg]:h-[18px]" src="assets/images/svg/feather/{{authorMenu.icon}}.svg" alt="{{authorMenu.icon}}"></svg-icon>
+                      <svg-icon class="h-fit me-4 [&>svg]:w-[18px] [&>svg]:h-[18px]" src="assets/images/svg/feather/{{authorMenu.icon}}.svg" ></svg-icon>
                       {{authorMenu.label}}</button>
                   </li>
               </ul>

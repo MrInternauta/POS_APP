@@ -61,7 +61,7 @@ import { ROUTES } from './top-menu-routes.config';
 })
 export class MenuComponent {
   routes = ROUTES;
-  public menuItems: any[];
+  public menuItems!: any[];
 
 
   ngOnInit(): void {

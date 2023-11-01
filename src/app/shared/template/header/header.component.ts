@@ -14,8 +14,8 @@ export class HeaderComponent{
 
     searchVisible : boolean = false;
     quickViewVisible : boolean = false;
-    isFolded : boolean;
-    isExpand : boolean;
+    isFolded! : boolean;
+    isExpand! : boolean;
     appMessages = messages.appMessages;
     appNotification = notification.appNotification;
     appAuthorMenu = authorMenu.appAuthorMenu;

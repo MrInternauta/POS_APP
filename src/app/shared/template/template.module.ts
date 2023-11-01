@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { RouterModule  } from "@angular/router";
 import { SharedModule } from '../shared.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { PerfectScrollbarModule } from 'ngx-om-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-om-perfect-scrollbar';
@@ -49,7 +48,6 @@ const antdModule = [
     NzInputModule,
     NzButtonModule,
     NzToolTipModule,
-    BrowserAnimationsModule,
     AngularSvgIconModule.forRoot(),
     PerfectScrollbarModule,
     NzMenuModule,

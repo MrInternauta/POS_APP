@@ -17,7 +17,6 @@ import { AuthService } from './services';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule,
     CoreModule,
   ],
   providers: [AuthService, LoginGuardGuard, AdminGuardGuard],

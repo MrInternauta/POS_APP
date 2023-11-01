@@ -9,10 +9,10 @@ import { ThemeConstantService } from '../../services/theme-constant.service';
 
 export class SideNavComponent{
 
-    public menuItems: any[]
-    isFolded : boolean;
-    isSideNavDark : boolean;
-    isExpand : boolean;
+    public menuItems!: any[]
+    isFolded!: boolean;
+    isSideNavDark! : boolean;
+    isExpand!: boolean;
 
     constructor( private themeService: ThemeConstantService) {}
 
@@ -26,9 +26,9 @@ export class SideNavComponent{
     ngAfterViewInit(): void{
         /* Collapsed Menu dropdown */
         let submenus = document.querySelectorAll('.ant-menu li.ant-menu-submenu');
-        let direction = document.querySelector('html').getAttribute('dir');
+        let direction = document?.querySelector('html')?.getAttribute('dir');
         submenus.forEach(item => {
-            item.addEventListener('mouseover', function () {
+            item.addEventListener('mouseover', function (this: any) {
                 let menuItem = this;
                 let menuItemRect = menuItem.getBoundingClientRect();
                 let submenuWrapper = menuItem.querySelector('ul.ant-menu-sub');
