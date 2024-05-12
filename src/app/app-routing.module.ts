@@ -5,17 +5,17 @@ import { CommonLayout_ROUTES } from './shared/routes/common-layout.routes';
 import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
 
 const routes: Routes = [
-  // {
-  //   canActivate: [LoginGuardGuard],
-  //   path: '',
-  //   loadChildren: () =>
-  //     import('./pages/tabs.module').then((m) => m.TabsPageModule),
-  // },
   {
+    // canActivate: [LoginGuardGuard],  
     path: '',
-    component: CommonLayoutComponent,
-    children: CommonLayout_ROUTES
+    loadChildren: () =>
+      import('./pages/tabs.module').then((m) => m.TabsPageModule),
   },
+  // {
+  //   path: '',
+  //   component: CommonLayoutComponent,
+  //   children: CommonLayout_ROUTES
+  // },
   {
     canActivate: [LogoutGuard],
     path: 'authentication',
