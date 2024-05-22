@@ -27,7 +27,7 @@ import { RouterModule } from '@angular/router';
     IonicModule,
     CommonModule,
     FormsModule,
-    TabsPageRoutingModule,
+    //TabsPageRoutingModule,
     AngularSvgIconModule.forRoot(),
   ],
   declarations: [TabsPage, ErrorPageComponent],

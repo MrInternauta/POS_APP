@@ -80,6 +80,8 @@ export class AuthService {
       .select(ConstantsHelper.USER_DATA_KEY_STORAGE)
       .pipe(take(1))
       .toPromise();
+      console.log(session);
+
     return (
       session?.id != null && session?.token != null && session?.user != null
     );

@@ -3,24 +3,29 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LoginGuardGuard, LogoutGuard } from '@gymTrack/core';
 import { CommonLayout_ROUTES } from './shared/routes/common-layout.routes';
 import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
+import { ErrorPageComponent } from './pages/error-page/error-page.component';
 
 const routes: Routes = [
-  {
-    // canActivate: [LoginGuardGuard],  
-    path: '',
-    loadChildren: () =>
-      import('./pages/tabs.module').then((m) => m.TabsPageModule),
-  },
   // {
+  //   // canActivate: [LoginGuardGuard],
   //   path: '',
-  //   component: CommonLayoutComponent,
-  //   children: CommonLayout_ROUTES
+  //   loadChildren: () =>
+  //     import('./pages/tabs.module').then((m) => m.TabsPageModule),
   // },
+  {
+    path: '',
+    component: CommonLayoutComponent,
+    children: CommonLayout_ROUTES,
+  },
+  {
+    path: 'notfound',
+    component: ErrorPageComponent,
+  },
   {
     canActivate: [LogoutGuard],
     path: 'authentication',
     children: [
-      { path: '', redirectTo: '/authentication/login-1', pathMatch: 'full' },
+      { path: '', redirectTo: 'login-1', pathMatch: 'full' },
       {
         path: 'login-1',
         loadChildren: () =>
@@ -47,7 +52,7 @@ const routes: Routes = [
   {
     path: '**',
     pathMatch: 'full',
-    redirectTo: '/notfound',
+    redirectTo: 'notfound',
   },
 ];
 @NgModule({

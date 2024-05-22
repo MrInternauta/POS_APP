@@ -57,30 +57,33 @@ export class Tab2Page implements OnDestroy, OnInit {
     private alertController: AlertController,
     private exercisesService: WorkoutService,
     private modalInfoService: ModalInfoService
-
   ) {
-
-    this.$susctiptionParams = this.activatedRoute.queryParams.subscribe(params => {
-      const productFilter: ProductsFilterDto = {
-        limit: params?.['limit'] || 1000,
-        maxPrice: params?.['maxPrice'] || 9999,
-        minPrice: params?.['minPrice'] || 0,
-        offset: params?.['offset'] || 0
-       }
-      this.productSuscription$ = this.exercisesService.getProducts(productFilter).subscribe((response) => {
-        if(response)
-          this.store.dispatch(loadedExercise({ Exercise: response }));
-      },
-      error=>{
-        this.modalInfoService.error('Something is wrong!', error)
+    this.$susctiptionParams = this.activatedRoute.queryParams.subscribe(
+      (params) => {
+        const productFilter: ProductsFilterDto = {
+          limit: params?.['limit'] || 1000,
+          maxPrice: params?.['maxPrice'] || 9999,
+          minPrice: params?.['minPrice'] || 0,
+          offset: params?.['offset'] || 0,
+        };
+        this.productSuscription$ = this.exercisesService
+          .getProducts(productFilter)
+          .subscribe(
+            (response) => {
+              if (response)
+                this.store.dispatch(loadedExercise({ Exercise: response }));
+            },
+            (error) => {
+              this.modalInfoService.error('Something is wrong!', error);
+            }
+          );
       }
-      )
-  });
+    );
 
     this.$observable = this.store.select('exercises');
-    this.$observable.subscribe(value=>{
-      console.log(value?.Exercise)
-    })
+    this.$observable.subscribe((value) => {
+      console.log(value?.Exercise);
+    });
   }
 
   ngOnInit(): void {}
@@ -145,6 +148,7 @@ export class Tab2Page implements OnDestroy, OnInit {
       )
       .subscribe((products: Array<Article> | null) => {
         if (!products?.length || !products[0]) {
+          //TODO: If is admin option to add new product
           return;
         }
         this.addToCard(products[0], 1);
@@ -161,6 +165,7 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.searchValue = null;
     this.tempProduc$ = null;
   }
+
   async presentToast() {
     const toast = await this.toastController.create({
       message: 'Product added',

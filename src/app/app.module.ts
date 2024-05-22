@@ -28,12 +28,14 @@ import { NgChartsModule } from 'ng2-charts';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { TabsPageModule } from './pages';
 
 registerLocaleData(en);
 
 @NgModule({
   declarations: [AppComponent, CommonLayoutComponent],
   imports: [
+    TabsPageModule,
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
@@ -50,17 +52,16 @@ registerLocaleData(en);
     NgApexchartsModule,
     FullCalendarModule,
     AngularSvgIconModule.forRoot(),
-
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     BarcodeScanner,
     { provide: NZ_I18N, useValue: en_US },
-  {
+    {
       provide: LocationStrategy,
-      useClass: PathLocationStrategy
-  },
-  ThemeConstantService
+      useClass: PathLocationStrategy,
+    },
+    ThemeConstantService,
   ],
   bootstrap: [AppComponent],
 })

@@ -21,7 +21,7 @@ export class LogoutGuard implements CanActivate {
   ): Promise<boolean | UrlTree> {
     try {
       const sessionStorage = await this._UsuarioService.hasSession();
-
+      console.log(sessionStorage);
       if (!sessionStorage) {
         return true;
       }
