@@ -13,8 +13,11 @@ export interface UserDto {
 
   password: string;
 
-  role?: number;
+  role?: {
+    id: number;
+    name: 'ADMIN' | 'CASHIER' | 'CLIENT';
+    permissions?: Array<any>;
+  };
 
   image?: string;
-
 }

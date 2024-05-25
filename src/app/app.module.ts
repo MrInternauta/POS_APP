@@ -35,7 +35,6 @@ registerLocaleData(en);
 @NgModule({
   declarations: [AppComponent, CommonLayoutComponent],
   imports: [
-    TabsPageModule,
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,

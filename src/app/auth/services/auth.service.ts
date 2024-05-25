@@ -53,18 +53,20 @@ export class AuthService {
       this.storage.setLocal('email', null);
     }
 
-    return this.http
-      .post<any>(`${API_URL}auth`, user)
-      .pipe(
-        map((resp: AuthSuccess) => {
-          console.log(resp.user);
-          if (resp && resp.user.id && resp.user.name) {
-            this.saveStorage(resp.user?.id.toString(), resp.access_token, resp.user);
-            return true;
-          }
-          return false;
-        })
-      );
+    return this.http.post<any>(`${API_URL}auth`, user).pipe(
+      map((resp: AuthSuccess) => {
+        console.log(resp.user);
+        if (resp && resp.user.id && resp.user.name) {
+          this.saveStorage(
+            resp.user?.id.toString(),
+            resp.access_token,
+            resp.user
+          );
+          return true;
+        }
+        return false;
+      })
+    );
   }
 
   signUp(user: UserDto) {
@@ -80,17 +82,38 @@ export class AuthService {
       .select(ConstantsHelper.USER_DATA_KEY_STORAGE)
       .pipe(take(1))
       .toPromise();
-      console.log(session);
-
     return (
       session?.id != null && session?.token != null && session?.user != null
     );
   }
 
+  async currentUserAllowToContinue(roles: Array<'ADMIN' | 'CASHIER' | 'CLIENT'>) {
+
+    if(!roles){
+      return false;
+    }
+
+    if(roles?.length == 0){
+      return false;
+    }
+
+    let session = await this.store
+      .select(ConstantsHelper.USER_DATA_KEY_STORAGE)
+      .pipe(take(1))
+      .toPromise();
+
+    return roles.some((role: string) => {
+      return (
+        role.toLowerCase() ==
+        String(session?.user?.role?.name || '').toLowerCase()
+      );
+    });
+  }
+
   logout() {
     this.storage.setLocal(ConstantsHelper.USER_DATA_KEY_STORAGE, null);
     this.store.dispatch(unUser());
-    this.router.navigate(['authentication','login-1']);
+    this.router.navigate(['authentication', 'login-1']);
   }
 
   loadStorage() {

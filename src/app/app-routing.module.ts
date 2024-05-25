@@ -6,20 +6,11 @@ import { CommonLayoutComponent } from './layouts/common-layout/common-layout.com
 import { ErrorPageComponent } from './pages/error-page/error-page.component';
 
 const routes: Routes = [
-  // {
-  //   // canActivate: [LoginGuardGuard],
-  //   path: '',
-  //   loadChildren: () =>
-  //     import('./pages/tabs.module').then((m) => m.TabsPageModule),
-  // },
   {
+    canActivate: [LoginGuardGuard],
     path: '',
-    component: CommonLayoutComponent,
-    children: CommonLayout_ROUTES,
-  },
-  {
-    path: 'notfound',
-    component: ErrorPageComponent,
+    loadChildren: () =>
+      import('./pages/tabs.module').then((m) => m.TabsPageModule),
   },
   {
     canActivate: [LogoutGuard],
@@ -50,9 +41,13 @@ const routes: Routes = [
     ],
   },
   {
+    path: 'notfound',
+    component: ErrorPageComponent,
+  },
+  {
     path: '**',
-    pathMatch: 'full',
     redirectTo: 'notfound',
+    pathMatch: 'full',
   },
 ];
 @NgModule({
