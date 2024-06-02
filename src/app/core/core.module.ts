@@ -6,16 +6,15 @@ import { StorageService } from './services';
 import { AuthInterceptor } from './interceptors';
 import { AppStoreModule } from './state/store.module';
 import { NzModalModule } from 'ng-zorro-antd/modal';
-import { PhoneMaskDirective } from './directive/PhoneMask.directive';
 
 @NgModule({
-  declarations: [SafeHtmlPipe, PhoneMaskDirective],
+  declarations: [SafeHtmlPipe],
   imports: [CommonModule, AppStoreModule, NzModalModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     // Para la intercepción por cada consulta de http
     StorageService,
   ],
-  exports: [SafeHtmlPipe, PhoneMaskDirective],
+  exports: [SafeHtmlPipe],
 })
 export class CoreModule {}

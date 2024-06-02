@@ -1,6 +1,16 @@
 <ion-header [translucent]="false" class="ion-no-border">
   <ion-toolbar>
     <ion-title> Profile </ion-title>
+    <ion-buttons slot="end">
+      <ion-button
+      (click)="editProfile()"
+      id="open-modal"
+      color="primary">
+      <ion-icon slot="start" name="save-outline"
+      ></ion-icon>
+
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
@@ -27,24 +37,24 @@
         <div class="w-1/2 mr-4">
           <app-input
             [inputValue]="authService.user?.name ?? ''"
-            [disabled]="!editMode"
             [id]="'name'"
             [type]="'text'"
             [label]="'Name'"
             [required]="true"
             [maxLength]="100"
+            (inputValueChange)="changeName($event)"
           ></app-input>
         </div>
 
         <div class="w-1/2">
           <app-input
           [inputValue]="authService.user?.lastName ?? ''"
-          [disabled]="!editMode"
           [id]="'name'"
           [type]="'text'"
           [label]="'Last Name'"
           [required]="true"
           [maxLength]="100"
+          (inputValueChange)="changelastName($event)"
           ></app-input>
         </div>
       </div>
@@ -66,17 +76,18 @@
         <div class="w-1/2">
           <app-input
             [inputValue]="authService.user?.phone || ''"
-            [disabled]="!editMode"
             [id]="'phone'"
-            [type]="'text'"
+            [type]="'phone'"
             [label]="'Phone number'"
-            [required]="true"
             [maxLength]="100"
+            (inputValueChange)="changePhone($event)"
           ></app-input>
         </div>
       </div>
 
-      <div class="mt-4 text-center text-sm text-gray-500">
+      <div class="mt-4 text-center text-sm text-gray-500"
+      *ngIf="!editMode"
+      >
         <app-button
           [outline]="true"
           [label]="'Reset password'"
@@ -85,7 +96,9 @@
         ></app-button>
       </div>
 
-      <div class="mt-4 text-center text-sm text-gray-500">
+      <div class="mt-4 text-center text-sm text-gray-500"
+      *ngIf="!editMode"
+      >
         <app-button
           [outline]="false"
           [label]="'Logout'"

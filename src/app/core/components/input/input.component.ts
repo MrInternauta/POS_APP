@@ -1,5 +1,6 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-input',
@@ -7,7 +8,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./input.component.scss'],
 })
 export class InputComponent implements OnInit {
-  //TODO: MASK PHONE NUMBER AND WEIGHT, HEIGHT
   @Input() id!: string;
   @Input() label!: string;
   @Input() type!: string;
@@ -24,10 +24,17 @@ export class InputComponent implements OnInit {
   @Input() icon: string = '';
   @Output() inputValueChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() inputValueEnter: EventEmitter<any> = new EventEmitter<any>();
+  public userForm!: FormGroup;
 
-  constructor() {}
+  constructor(private fb: FormBuilder) {
+    this.createForm();
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.type == 'phone' && this.inputValue) {
+      this.userForm.get('phone')?.setValue(this.inputValue);
+    }
+  }
 
   handleChange(event: any) {
     this.inputValueChange.emit(event);
@@ -35,5 +42,14 @@ export class InputComponent implements OnInit {
 
   handleChangeEnter(event: any) {
     this.inputValueEnter.emit(this.inputValue);
+  }
+
+  createForm() {
+    this.userForm = this.fb.group({
+      phone: [
+        { value: this.inputValue, disabled: this.disabled },
+        [Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/), Validators.required],
+      ],
+    });
   }
 }

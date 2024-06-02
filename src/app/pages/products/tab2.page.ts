@@ -1,9 +1,10 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   AlertButton,
   AlertController,
   AlertInput,
+  IonModal,
   ModalController,
   ToastController,
 } from '@ionic/angular';
@@ -12,7 +13,11 @@ import { AppState } from '../../core/state/app.reducer';
 import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
 import { EMPTY } from 'rxjs';
 
-import { loadExercise, loadedExercise, loadedExerciseType } from './state/workout.actions';
+import {
+  loadExercise,
+  loadedExercise,
+  loadedExerciseType,
+} from './state/workout.actions';
 import {
   Observable,
   Subscription,
@@ -158,7 +163,7 @@ export class Tab2Page implements OnDestroy, OnInit {
   addToCard(article: Article, quantity: number) {
     this.store.dispatch(AddProductCart({ article, quantity }));
     this.presentToast();
-    this.router.navigate(['tabs', 'tab4'], { replaceUrl: true });
+    //this.router.navigate(['tabs', 'tab4'], { replaceUrl: true });
   }
 
   hideSearch() {

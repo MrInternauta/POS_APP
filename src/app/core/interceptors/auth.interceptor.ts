@@ -26,31 +26,32 @@ import { AuthService } from '../../auth/services/auth.service';
 export class AuthInterceptor implements HttpInterceptor {
   userSesion$!: Observable<IAuthState>;
   headers!: HttpHeaders;
-  token!: Token;
   constructor(
     public http: HttpClient,
     private store: Store<AppState>,
     public router: Router,
-    private authService: AuthService,
-  ) {
-    this.userSesion$ = this.store.select(ConstantsHelper.USER_DATA_KEY_STORAGE);
-    this.userSesion$.pipe(take(1)).subscribe((sesionState: IAuthState) => {
-      this.token = sesionState.token;
-    });
-  }
+    private authService: AuthService
+  ) {}
+
+  // getToken(){
+  //   let session = await this.store
+  //   .select(ConstantsHelper.USER_DATA_KEY_STORAGE)
+  //   .pipe(take(1))
+  //   .toPromise();
+  // return (
+  //   session?.id != null && session?.token != null && session?.user != null
+  // );
+  // }
 
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const originalUrl = request.url;
-    const isApiUrl = this.isApiUrl(originalUrl);
-    if (isApiUrl) {
-      request = request.clone({
-        url: this.rewriteUrl(originalUrl),
-      });
-      request = this.addTokenHeader(request);
-    }
+    request = request.clone({
+      url: originalUrl,
+    });
+    request = this.addTokenHeader(request);
     return next.handle(request).pipe(
       catchError((error) => {
         //this.modalInfoService.error();
@@ -71,21 +72,15 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private addTokenHeader(request: HttpRequest<any>) {
-    if (this.token) {
+    console.log(this.authService._auth.token);
+
+    if (this.authService._auth.token) {
       const setHeaders: { [name: string]: string } = {
-        Authorization: `Bearer ${this.token}`,
+        Authorization: `Bearer ${this.authService._auth.token}`,
       };
       return request.clone({ setHeaders });
     }
     return request;
-  }
-
-  protected isApiUrl(url: string) {
-    return url.indexOf(API_PREFIX) === 0;
-  }
-
-  protected rewriteUrl(url: string) {
-    return environment.url + url;
   }
 
   redirect(): void {

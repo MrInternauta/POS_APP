@@ -1,0 +1,77 @@
+<ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="cancel()">Close</ion-button>
+        </ion-buttons>
+        <ion-title>Welcome</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="confirm()" [strong]="true">Save</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+
+      <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
+          <div class="flex mt-4 w-full">
+            <div class="w-1/2 mr-4">
+              <app-input
+                [id]="'name'"
+                [type]="'text'"
+                [label]="'Name'"
+                [required]="true"
+                [maxLength]="100"
+              ></app-input>
+            </div>
+
+            <div class="w-1/2">
+              <app-input
+              [id]="'name'"
+              [type]="'text'"
+              [label]="'Last Name'"
+              [required]="true"
+              [maxLength]="100"
+              ></app-input>
+            </div>
+          </div>
+
+
+          <div class="flex mt-4 w-full">
+            <div class="w-1/2 mr-4">
+              <app-input
+                [disabled]="true"
+                [id]="'email'"
+                [type]="'email'"
+                [label]="'Email address'"
+                [required]="true"
+                [maxLength]="100"
+              ></app-input>
+            </div>
+
+            <div class="w-1/2">
+              <app-input
+                [id]="'phone'"
+                [type]="'text'"
+                [label]="'Phone number'"
+                [required]="true"
+                [maxLength]="100"
+              ></app-input>
+            </div>
+          </div>
+
+          <div class="mt-4 text-center text-sm text-gray-500">
+            <app-button
+              [outline]="false"
+              [label]="'Logout'"
+              size="large"
+            ></app-button>
+          </div>
+        </div>
+      </div>
+
+    </ion-content>
+  </ng-template>
+</ion-modal>

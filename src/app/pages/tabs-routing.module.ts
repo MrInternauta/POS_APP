@@ -14,14 +14,14 @@ const routes: Routes = [
         data: { roles: ['ADMIN'] },
         path: 'tab1',
         loadChildren: () =>
-          import('./statistics/tab1.module').then((m) => m.Tab1PageModule),
+          import('./dashboard/tab1.module').then((m) => m.Tab1PageModule),
       },
       {
         canActivate: [RoleGuardGuard],
         data: { roles: ['ADMIN', 'CASHIER', 'CLIENT'] },
         path: 'tab2',
         loadChildren: () =>
-          import('./workout/tab2.module').then((m) => m.Tab2PageModule),
+          import('./products/tab2.module').then((m) => m.Tab2PageModule),
       },
       {
         canActivate: [RoleGuardGuard],

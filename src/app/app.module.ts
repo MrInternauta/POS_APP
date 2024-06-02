@@ -15,7 +15,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PermissionsEffects } from './auth/state/permissions.effects';
 import { CartEffects } from './pages/cart/state/cart.effects';
-import { ExercisesEffects } from './pages/workout/state/workout.effects';
+import { ExercisesEffects } from './pages/products/state/workout.effects';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';

@@ -4,10 +4,11 @@ import { ButtonComponent } from './button/button.component';
 import { IonicModule } from '@ionic/angular';
 import { AvatarComponent } from './avatar/avatar.component';
 import { InputComponent } from './input/input.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AlertComponent } from './alert/alert.component';
 import { GetProfile } from '../pipes/getProfile.pipe';
 import { ProductItemComponent } from './product-item/product-item.component';
+import { PhoneMaskDirective } from '../directive/PhoneMask.directive';
 
 @NgModule({
   declarations: [
@@ -17,9 +18,17 @@ import { ProductItemComponent } from './product-item/product-item.component';
     AlertComponent,
     GetProfile,
     ProductItemComponent,
+    PhoneMaskDirective,
   ],
-  imports: [FormsModule, CommonModule, IonicModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+    IonicModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
   exports: [
+    PhoneMaskDirective,
     ButtonComponent,
     AvatarComponent,
     InputComponent,

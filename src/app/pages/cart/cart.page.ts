@@ -20,7 +20,7 @@ import {
   RemoveProductCart,
   UpdateProductCart,
 } from './state/cart.actions';
-import { Article } from '../workout/models';
+import { Article } from '../products/models';
 import { selectListCart, selectTotal } from './state/cart.selector';
 
 @Component({

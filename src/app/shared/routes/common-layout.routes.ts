@@ -81,7 +81,7 @@ export const CommonLayout_ROUTES: Routes = [
       {
         path: '',
         loadChildren: () =>
-          import('../../pages/statistics/tab1.module').then(
+          import('../../pages/dashboard/tab1.module').then(
             (m) => m.Tab1PageModule
           ),
         // loadChildren: () =>

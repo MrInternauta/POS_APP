@@ -6,6 +6,7 @@ import { Tab2Page } from './tab2.page';
 
 import { Tab2PageRoutingModule } from './tab2-routing.module';
 import { ComponentsModule } from '../../core/components/components.module';
+import { DetailComponent } from './detail/detail.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { ComponentsModule } from '../../core/components/components.module';
     Tab2PageRoutingModule,
     ComponentsModule,
   ],
-  declarations: [Tab2Page],
+  declarations: [Tab2Page, DetailComponent],
 })
 export class Tab2PageModule {}

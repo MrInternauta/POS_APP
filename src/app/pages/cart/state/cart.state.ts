@@ -9,7 +9,7 @@ import {
   setTotal,
   setTotalType,
 } from './cart.actions';
-import { Article } from '../../workout/models/index';
+import { Article } from '../../products/models/index';
 
 export interface CartInfo {
   article: Article;
@@ -45,6 +45,8 @@ const _CartReducer = createReducer(
       };
     }
 
+    console.log('Already exists', state.Cart[article.code]);
+
     if (!state.Cart[article.code]) {
       return {
         ...state,
@@ -57,8 +59,6 @@ const _CartReducer = createReducer(
 
     const newQuantity =
       Number(state.Cart[article.code]?.quantity) + Number(quantity || 1);
-
-    console.log('Already exists');
 
     if (newQuantity <= 0) {
       let newStateCart = {

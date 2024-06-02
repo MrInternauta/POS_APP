@@ -1,11 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { AuthService } from '../../auth/services/auth.service';
 import { environment } from '../../../environments/environment';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../core/state/app.reducer';
 import { loadPermissions } from '../../auth/state/auth.actions';
 import { Observable, Subscription, map, tap } from 'rxjs';
+import { UserUpdateDto } from '@gymTrack/auth/model/user.dto';
+import { ProfileService } from './services/profile.service';
 
 @Component({
   selector: 'app-tab3',
@@ -15,11 +17,14 @@ import { Observable, Subscription, map, tap } from 'rxjs';
 export class Tab3Page implements OnDestroy {
   public editMode = false;
   $susctiption!: Subscription;
+  private userToUpdate!: UserUpdateDto;
   constructor(
     private alertController: AlertController,
     public authService: AuthService,
-    private store: Store<AppState>
+    private userService: ProfileService,
+    private toastController: ToastController
   ) {
+    this.userToUpdate = {};
   }
 
   async sendResetPassword() {
@@ -44,11 +49,58 @@ export class Tab3Page implements OnDestroy {
   }
 
   async editProfile() {
-    this.editMode = !this.editMode;
-    if (!this.editMode) {
-      //TODO: Update
+    if (
+      this.userToUpdate.name ||
+      this.userToUpdate.lastName ||
+      this.userToUpdate.phone ||
+      this.userToUpdate.role
+    ) {
+      this.userToUpdate = {
+        ...this.authService._auth.user,
+        ...this.userToUpdate,
+      };
+
+      console.log(this.userToUpdate);
+
       //Detect changes
+      this.$susctiption = this.userService
+        .putUser(String(this.authService.user?.id), {
+          name: this.userToUpdate.name,
+          lastName: this.userToUpdate.lastName,
+          phone: this.userToUpdate.phone,
+          role: this.userToUpdate.role,
+        })
+        .subscribe((res) => {
+          this.presentToast(res.message);
+          this.authService.saveStorage(
+            this.authService._auth.id?.toString() || '',
+            this.authService._auth.token || '',
+            res.user
+          );
+        });
+    } else {
+      this.presentToast();
     }
+  }
+
+  changeName($event: any) {
+    this.userToUpdate['name'] = $event as string;
+  }
+  changelastName($event: any) {
+    this.userToUpdate['lastName'] = $event as string;
+  }
+  changePhone($event: any) {
+    this.userToUpdate['phone'] = $event as string;
+  }
+
+  async presentToast(text: string = '') {
+    const toast = await this.toastController.create({
+      message: text || 'No changes',
+      duration: 1500,
+      position: 'top',
+    });
+
+    await toast.present();
   }
 
   ngOnDestroy(): void {

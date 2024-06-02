@@ -21,3 +21,18 @@ export interface UserDto {
 
   image?: string;
 }
+
+
+export interface UserUpdateDto {
+  name?: string;
+
+  lastName?: string;
+
+  phone?: string;
+
+  role?: {
+    id: number;
+    name: 'ADMIN' | 'CASHIER' | 'CLIENT';
+    permissions?: Array<any>;
+  };
+}
