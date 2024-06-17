@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { API_PREFIX } from 'src/app/core/constants';
 import { GenericResponse, IExercise } from 'src/app/core/models';
 import { environment } from '../../../../environments/environment';
-import { Article, ArticleResponse } from '../models';
+import { Article, ArticleCreate, ArticleResponse } from '../models';
 import { ProductsFilterDto } from '../models/productFilter.dto';
 
 const API_URL = `${environment.url}${API_PREFIX}products`;
@@ -22,7 +22,7 @@ export class WorkoutService {
     });
   }
 
-  postProduct(product: Article) {
+  postProduct(product: ArticleCreate) {
     return this.http.post<any | null>(API_URL, product);
   }
 

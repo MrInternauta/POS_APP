@@ -16,3 +16,12 @@ export interface Article {
   priceSell: string;
   category?: CreateCategoryDto
 }
+
+export interface ArticleCreate {
+  code: string;
+  name: string;
+  stock: string;
+  description: string;
+  price: string;
+  priceSell: string;
+}

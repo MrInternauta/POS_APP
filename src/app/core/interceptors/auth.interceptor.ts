@@ -22,6 +22,7 @@ import { AppState } from '../state';
 import { ConstantsHelper } from '../constants/constants.helper';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
+import { ModalInfoService } from '../services';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   userSesion$!: Observable<IAuthState>;
@@ -30,7 +31,8 @@ export class AuthInterceptor implements HttpInterceptor {
     public http: HttpClient,
     private store: Store<AppState>,
     public router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private modalInfoService: ModalInfoService
   ) {}
 
   // getToken(){
@@ -55,6 +57,11 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((error) => {
         //this.modalInfoService.error();
+        this.modalInfoService.error(
+          error?.error?.message || 'Something is wrong',
+          ''
+        );
+
         console.log(error?.error?.message);
 
         if (error instanceof HttpErrorResponse) {

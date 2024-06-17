@@ -7,6 +7,8 @@ import { Tab2Page } from './tab2.page';
 import { Tab2PageRoutingModule } from './tab2-routing.module';
 import { ComponentsModule } from '../../core/components/components.module';
 import { DetailComponent } from './detail/detail.component';
+import { CoreModule } from '../../core/core.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [

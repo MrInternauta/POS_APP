@@ -3,75 +3,106 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button (click)="cancel()">Close</ion-button>
+          <ion-button (click)="cancel()">Cancelar</ion-button>
         </ion-buttons>
-        <ion-title>Welcome</ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="confirm()" [strong]="true">Save</ion-button>
-        </ion-buttons>
+        <ion-title>Detalle de producto</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-
       <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-
         <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
           <div class="flex mt-4 w-full">
-            <div class="w-1/2 mr-4">
+            <div class="w-full">
               <app-input
+                [inputValue]="name || ''"
+                (inputValueChange)="changeName($event)"
                 [id]="'name'"
                 [type]="'text'"
-                [label]="'Name'"
+                [label]="'Nombre del producto'"
                 [required]="true"
                 [maxLength]="100"
-              ></app-input>
-            </div>
-
-            <div class="w-1/2">
-              <app-input
-              [id]="'name'"
-              [type]="'text'"
-              [label]="'Last Name'"
-              [required]="true"
-              [maxLength]="100"
               ></app-input>
             </div>
           </div>
 
+          <div class="flex mt-4 w-full">
+            <div class="w-full">
+              <app-input
+                [id]="'code'"
+                [type]="'text'"
+                [label]="'Código de barras'"
+                [required]="true"
+                [maxLength]="100"
+                [inputValue]="code || ''"
+                (inputValueChange)="changeCode($event)"
+              ></app-input>
+            </div>
+          </div>
+
+          <div class="flex mt-4 w-full">
+            <div class="w-full">
+              <app-input
+                [id]="'stock'"
+                [type]="'number'"
+                [label]="'Número de existencias'"
+                [required]="false"
+                [maxLength]="100"
+                [inputValue]="stock || ''"
+                (inputValueChange)="changeStock($event)"
+              ></app-input>
+            </div>
+          </div>
 
           <div class="flex mt-4 w-full">
             <div class="w-1/2 mr-4">
               <app-input
-                [disabled]="true"
-                [id]="'email'"
-                [type]="'email'"
-                [label]="'Email address'"
-                [required]="true"
+                [id]="'price'"
+                [type]="'number'"
+                [label]="'Precio de Compra'"
+                [required]="false"
                 [maxLength]="100"
+                [inputValue]="price || ''"
+                (inputValueChange)="changePrice($event)"
               ></app-input>
             </div>
 
             <div class="w-1/2">
               <app-input
-                [id]="'phone'"
-                [type]="'text'"
-                [label]="'Phone number'"
+                [id]="'price_sell'"
+                [type]="'number'"
+                [label]="'Precio de venta'"
                 [required]="true"
                 [maxLength]="100"
+                [inputValue]="price_sell || ''"
+                (inputValueChange)="changePriceSell($event)"
+              ></app-input>
+            </div>
+          </div>
+
+          <div class="flex mt-4 w-full">
+            <div class="w-full">
+              <app-input
+                [id]="'description'"
+                [type]="'text'"
+                [label]="'Descripción'"
+                [required]="false"
+                [maxLength]="200"
+                [inputValue]="description || ''"
+                (inputValueChange)="changeDescription($event)"
               ></app-input>
             </div>
           </div>
 
           <div class="mt-4 text-center text-sm text-gray-500">
             <app-button
+              (click)="confirm()"
               [outline]="false"
-              [label]="'Logout'"
+              [label]="'Guardar'"
               size="large"
             ></app-button>
           </div>
         </div>
       </div>
-
     </ion-content>
   </ng-template>
 </ion-modal>
