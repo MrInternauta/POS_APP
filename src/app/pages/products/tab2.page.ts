@@ -181,7 +181,7 @@ export class Tab2Page implements OnDestroy, OnInit {
     await toast.present();
   }
 
-  addPrice(product: Article) {
+  edit(product: Article) {
     this.presentAlert(product);
   }
 

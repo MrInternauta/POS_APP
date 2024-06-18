@@ -18,7 +18,7 @@
                 (inputValueChange)="changeName($event)"
                 [id]="'name'"
                 [type]="'text'"
-                [label]="'Nombre del producto'"
+                [label]="'Nombre del producto*'"
                 [required]="true"
                 [maxLength]="100"
               ></app-input>
@@ -30,7 +30,7 @@
               <app-input
                 [id]="'code'"
                 [type]="'text'"
-                [label]="'Código de barras'"
+                [label]="'Código de barras*'"
                 [required]="true"
                 [maxLength]="100"
                 [inputValue]="code || ''"
@@ -44,7 +44,7 @@
               <app-input
                 [id]="'stock'"
                 [type]="'number'"
-                [label]="'Número de existencias'"
+                [label]="'Número de existencias*'"
                 [required]="false"
                 [maxLength]="100"
                 [inputValue]="stock || ''"
@@ -70,7 +70,7 @@
               <app-input
                 [id]="'price_sell'"
                 [type]="'number'"
-                [label]="'Precio de venta'"
+                [label]="'Precio de venta*'"
                 [required]="true"
                 [maxLength]="100"
                 [inputValue]="price_sell || ''"
@@ -98,6 +98,7 @@
               (click)="confirm()"
               [outline]="false"
               [label]="'Guardar'"
+              [disabled]="!isValidForm"
               size="large"
             ></app-button>
           </div>

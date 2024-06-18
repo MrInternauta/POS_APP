@@ -23,11 +23,33 @@ export class DetailComponent implements OnDestroy {
     private modalInfoService: ModalInfoService
   ) {}
 
+  get isValidForm() {
+    if (!this.name) {
+      return false;
+    }
+
+    if (!this.code) {
+      return false;
+    }
+
+    if (!this.stock) {
+      return false;
+    }
+
+    if (!this.price && !this.price_sell) {
+      return false;
+    }
+
+    return true;
+  }
+
   cancel() {
+    this.removeSubscription();
     this.modal.dismiss(null, 'cancel');
   }
 
   confirm() {
+    this.fillEmptyForm();
     this.subscription$ = this.productService
       .postProduct({
         name: this.name,
@@ -83,8 +105,26 @@ export class DetailComponent implements OnDestroy {
     this.description = event;
   }
 
+  fillEmptyForm() {
+    if (!this.price) {
+      if (this.price_sell) {
+        this.price = this.price_sell;
+      }
+    }
+
+    if (!this.price_sell) {
+      if (this.price) {
+        this.price_sell = this.price;
+      }
+    }
+
+    if (!this.description) {
+      this.description = '';
+    }
+  }
+
   removeSubscription() {
-    this.subscription$.unsubscribe();
+    this.subscription$?.unsubscribe();
     this.name = '';
     this.code = '';
     this.stock = '';
@@ -94,6 +134,6 @@ export class DetailComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.removeSubscription();
+    this?.removeSubscription();
   }
 }
