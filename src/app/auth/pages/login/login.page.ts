@@ -32,8 +32,8 @@ export class LoginPage extends ComponentBase implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.validateForm = this.fb.group({
-      email: ['admin', [Validators.required]],
-      password: ['admin', [Validators.required, Validators.minLength(5)]],
+      email: ['admin@admin.com', [Validators.required]],
+      password: ['1234567890', [Validators.required, Validators.minLength(5)]],
       remember: [true],
     });
     return;

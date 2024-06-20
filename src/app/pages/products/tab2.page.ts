@@ -35,6 +35,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { WorkoutService } from './services/workout.service';
 import { ProductsFilterDto } from './models/productFilter.dto';
 import { ModalInfoService } from '../../core/services/modal.service';
+import { DetailComponent } from './detail/detail.component';
 
 @Component({
   selector: 'app-tab2',
@@ -61,7 +62,8 @@ export class Tab2Page implements OnDestroy, OnInit {
     public activatedRoute: ActivatedRoute,
     private alertController: AlertController,
     private exercisesService: WorkoutService,
-    private modalInfoService: ModalInfoService
+    private modalInfoService: ModalInfoService,
+    private modalCtrl: ModalController
   ) {
     this.$susctiptionParams = this.activatedRoute.queryParams.subscribe(
       (params) => {
@@ -182,54 +184,16 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   edit(product: Article) {
-    this.presentAlert(product);
+    this.openModal(product);
   }
 
-  async presentAlert(product: Article) {
-    const ok_buttons: AlertButton = {
-      text: 'OK',
-      handler: (val) => {
-        //TODO: Create input_products
-        console.log(product);
-        console.log(val);
-      },
-    };
-    const cancel_buttons: AlertButton = {
-      text: 'Cancel',
-    };
-
-    const alert = await this.alertController.create({
-      header: 'Please enter the product info',
-      buttons: [cancel_buttons, ok_buttons],
-      inputs: [
-        {
-          type: 'number',
-          label: 'Stock',
-          placeholder: 'Stock',
-          min: 1,
-          max: 1000,
-          value: Number(product.stock) || 0,
-        },
-        {
-          type: 'number',
-          label: 'Buying price',
-          placeholder: 'Buying price',
-          min: 1,
-          max: 1000,
-          value: Number(product.price) || 0,
-        },
-        {
-          type: 'number',
-          label: 'Selling price',
-          placeholder: 'Selling price',
-          min: 1,
-          max: 1000,
-
-          value: Number(product.priceSell) || 0,
-        },
-      ],
+  async openModal(product?: Article) {
+    const modal = await this.modalCtrl.create({
+      component: DetailComponent,
+      componentProps: { product },
     });
+    modal.present();
 
-    await alert.present();
+    const { data, role } = await modal.onWillDismiss();
   }
 }

@@ -26,11 +26,11 @@ export class WorkoutService {
     return this.http.post<any | null>(API_URL, product);
   }
 
-  putProduct(productId: string, product: Article) {
-    return this.http.put<any | null>(`API_URL/${productId}`, product);
+  putProduct(productId: string, product: ArticleCreate) {
+    return this.http.put<any | null>(`${API_URL}/${productId}`, product);
   }
 
   deleteProduct(productId: string) {
-    return this.http.delete<any | null>(`API_URL/${productId}`);
+    return this.http.delete<any | null>(`${API_URL}/${productId}`);
   }
 }

@@ -19,5 +19,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ComponentsModule,
   ],
   declarations: [Tab2Page, DetailComponent],
+  exports: [Tab2Page, DetailComponent],
 })
 export class Tab2PageModule {}

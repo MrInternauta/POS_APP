@@ -3,7 +3,7 @@
     <ion-title> Product List </ion-title>
     <ion-buttons slot="end">
       <ion-button
-      id="open-modal"
+      (click)="openModal()"
       color="primary"><ion-icon slot="start" name="add-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -148,8 +148,5 @@
       </ion-fab>
     </ng-container>
   </ng-template>
-
-
-  <app-detail></app-detail>
 
 </ion-content>

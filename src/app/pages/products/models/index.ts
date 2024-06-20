@@ -18,8 +18,9 @@ export interface Article {
 }
 
 export interface ArticleCreate {
+  id?: string | number;
   code: string;
-  name: string;
+  name?: string;
   stock: string;
   description: string;
   price: string;

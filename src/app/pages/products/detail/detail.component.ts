@@ -1,16 +1,18 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { IonModal } from '@ionic/angular';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IonModal, ModalController } from '@ionic/angular';
 import { WorkoutService } from '../services/workout.service';
 import { ModalInfoService } from '../../../core/services/modal.service';
 import { Subscription } from 'rxjs';
+import { Article } from '../models';
 
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
 })
-export class DetailComponent implements OnDestroy {
-  @ViewChild(IonModal) modal!: IonModal;
+export class DetailComponent implements OnDestroy, OnInit {
+  @Input('product') product?: Article | null = null;
+
   name!: string;
   code!: string;
   stock!: string;
@@ -20,7 +22,8 @@ export class DetailComponent implements OnDestroy {
   subscription$!: Subscription;
   constructor(
     private productService: WorkoutService,
-    private modalInfoService: ModalInfoService
+    private modalInfoService: ModalInfoService,
+    private modalCtrl: ModalController
   ) {}
 
   get isValidForm() {
@@ -43,42 +46,69 @@ export class DetailComponent implements OnDestroy {
     return true;
   }
 
+  ngOnInit(): void {
+    console.log(this.product);
+    if (this.product) {
+      this.name = this.product?.name;
+      this.code = this.product?.code;
+      this.stock = this.product?.stock;
+      this.price = this.product?.price;
+      this.price_sell = this.product?.priceSell;
+      this.description = this.product?.description;
+    }
+  }
+
   cancel() {
     this.removeSubscription();
-    this.modal.dismiss(null, 'cancel');
+    return this.modalCtrl.dismiss(null, 'cancel');
   }
 
   confirm() {
     this.fillEmptyForm();
-    this.subscription$ = this.productService
-      .postProduct({
+
+    if (!this.product) {
+      const product = {
         name: this.name,
         code: this.code,
         stock: this.stock,
         price: this.price,
         priceSell: this.price_sell,
         description: this.description,
-      })
-      .subscribe(
+      };
+      this.subscription$ = this.productService.postProduct(product).subscribe(
         (res) => {
           this.removeSubscription();
           this.modalInfoService.success('Product was Created!', '');
-          this.modal.dismiss(this.name, 'confirm');
-          console.log(res);
+          return this.modalCtrl.dismiss(this.name, 'confirm');
         },
         (error) => {
           console.log(error);
         }
       );
-  }
+      return;
+    }
 
-  onWillDismiss(event: Event) {
-    const ev = event;
-    console.log(ev);
-
-    // if (ev.detail.role === 'confirm') {
-    //   this.message = `Hello, ${ev.detail.data}!`;
-    // }
+    const product = {
+      id: Number(this.product.id),
+      name: this.name,
+      code: this.code,
+      stock: this.stock,
+      price: this.price,
+      priceSell: this.price_sell,
+      description: this.description,
+    };
+    this.subscription$ = this.productService
+      .putProduct(this.product.id, product)
+      .subscribe(
+        (res) => {
+          this.removeSubscription();
+          this.modalInfoService.success('Product was Updated!', '');
+          return this.modalCtrl.dismiss(this.name, 'confirm');
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 
   changeName(event: string) {
@@ -131,6 +161,7 @@ export class DetailComponent implements OnDestroy {
     this.price = '';
     this.price_sell = '';
     this.description = '';
+    this.product = null;
   }
 
   ngOnDestroy(): void {
