@@ -1,9 +1,9 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IonModal, ModalController } from '@ionic/angular';
-import { WorkoutService } from '../services/workout.service';
 import { ModalInfoService } from '../../../core/services/modal.service';
 import { Subscription } from 'rxjs';
-import { Article } from '../models';
+import { ArticleCreate, ArticleItemResponse } from '../models';
+import { WorkoutService } from '../services/workout.service';
 
 @Component({
   selector: 'app-detail',
@@ -11,7 +11,7 @@ import { Article } from '../models';
   styleUrls: ['./detail.component.scss'],
 })
 export class DetailComponent implements OnDestroy, OnInit {
-  @Input('product') product?: Article | null = null;
+  @Input('product') product?: ArticleItemResponse | null = null;
 
   name!: string;
   code!: string;
@@ -19,6 +19,7 @@ export class DetailComponent implements OnDestroy, OnInit {
   price!: string;
   price_sell!: string;
   description!: string;
+  categoryId!: string;
   subscription$!: Subscription;
   constructor(
     private productService: WorkoutService,
@@ -55,6 +56,7 @@ export class DetailComponent implements OnDestroy, OnInit {
       this.price = this.product?.price;
       this.price_sell = this.product?.priceSell;
       this.description = this.product?.description;
+      this.categoryId = this.product?.categoryId;
     }
   }
 
@@ -66,20 +68,22 @@ export class DetailComponent implements OnDestroy, OnInit {
   confirm() {
     this.fillEmptyForm();
 
-    if (!this.product) {
-      const product = {
+    if (!this.product || (this.product?.code && !this.product?.id)) {
+      const product: ArticleCreate = {
         name: this.name,
         code: this.code,
         stock: this.stock,
         price: this.price,
         priceSell: this.price_sell,
         description: this.description,
+        categoryId: this.categoryId,
       };
+
       this.subscription$ = this.productService.postProduct(product).subscribe(
         (res) => {
           this.removeSubscription();
           this.modalInfoService.success('Product was Created!', '');
-          return this.modalCtrl.dismiss(this.name, 'confirm');
+          return this.modalCtrl.dismiss(res, 'created');
         },
         (error) => {
           console.log(error);
@@ -88,7 +92,7 @@ export class DetailComponent implements OnDestroy, OnInit {
       return;
     }
 
-    const product = {
+    const product: ArticleCreate = {
       id: Number(this.product.id),
       name: this.name,
       code: this.code,
@@ -96,6 +100,7 @@ export class DetailComponent implements OnDestroy, OnInit {
       price: this.price,
       priceSell: this.price_sell,
       description: this.description,
+      categoryId: this.categoryId,
     };
     this.subscription$ = this.productService
       .putProduct(this.product.id, product)
@@ -103,7 +108,7 @@ export class DetailComponent implements OnDestroy, OnInit {
         (res) => {
           this.removeSubscription();
           this.modalInfoService.success('Product was Updated!', '');
-          return this.modalCtrl.dismiss(this.name, 'confirm');
+          return this.modalCtrl.dismiss(res, 'updated');
         },
         (error) => {
           console.log(error);
@@ -133,6 +138,12 @@ export class DetailComponent implements OnDestroy, OnInit {
 
   changeDescription(event: string) {
     this.description = event;
+  }
+
+  changeSelect(event: string) {
+    console.log(event);
+
+    this.categoryId = event;
   }
 
   fillEmptyForm() {

@@ -9,10 +9,10 @@ import {
   setTotal,
   setTotalType,
 } from './cart.actions';
-import { Article } from '../../products/models/index';
+import { ArticleItemResponse } from '../../products/models/index';
 
 export interface CartInfo {
-  article: Article;
+  article: ArticleItemResponse;
   quantity: number;
 }
 

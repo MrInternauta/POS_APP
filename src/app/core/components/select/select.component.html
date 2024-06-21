@@ -1,0 +1,38 @@
+<div>
+  <label [for]="id" class="block text-sm font-medium leading-6">{{
+    label
+  }}</label>
+  <div
+    class="mt-2"
+    [ngClass]="{ 'mt-2': size !== 'small', '-mt-1': size === 'small' }"
+  >
+    <!-- select -->
+
+      <ion-select
+      aria-label="select"
+        [placeholder]="placeholder"
+        (ionChange)="handleChange($event)"
+        (ionCancel)="handleCancel()"
+        (ionDismiss)="handleDismiss()"
+        [id]="id"
+        [name]="id"
+        [disabled]="disabled"
+        [ngClass]="{
+          'ring-red-600 focus:ring-red-600': hasError,
+          'block rounded-md border-0 text-center': size === 'small',
+          'px-4 py-1': size !== 'small'
+        }"
+        class="block w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      >
+        <ion-select-option *ngFor="let items of dataSource"[value]="items.value">{{items.name}}</ion-select-option>
+      </ion-select>
+
+    <!-- select -->
+
+    <label
+      *ngIf="hasError"
+      class="mt-2 ml-2 block text-sm font-medium leading-6 text-red-600"
+      >{{ hasError }}</label
+    >
+  </div>
+</div>

@@ -1,15 +1,15 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title> Product List </ion-title>
+    <ion-title> Lista de productos </ion-title>
     <ion-buttons slot="end">
-      <ion-button
-      (click)="openModal()"
-      color="primary"><ion-icon slot="start" name="add-outline"></ion-icon>
+      <ion-button (click)="openModal()" color="primary"
+        ><ion-icon slot="start" name="add-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar>
     <ion-searchbar
+      #search
       (search)="searchFunction($event || '')"
       [ngModel]="searchValue"
       show-cancel-button="focus"
@@ -17,6 +17,7 @@
       cancel-button-icon="trash"
       (ionCancel)="hideSearch()"
       class="sm:mx-[25%] sm:w-auto"
+      placeholder="Buscar producto..."
     ></ion-searchbar>
   </ion-toolbar>
 </ion-header>
@@ -27,44 +28,44 @@
         <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
           <div
             *ngIf="!observableResult || !observableResult.length"
-            class="flex min-h-full flex-col justify-start"
+            class="flex min-h-full flex-col justify-start items-center"
           >
             <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-              <h2
-                class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
+              <p
+                class="text-center text-2xl font-bold leading-9 tracking-tight"
               >
-                The product list is empty
-              </h2>
+                No se encontraron productos
+              </p>
             </div>
+              <ion-icon name="sad-outline" size="large" class="text-center mt-4"></ion-icon>
           </div>
           <ion-list *ngIf="observableResult">
             <ion-item-sliding *ngFor="let workout of observableResult">
+              <ion-item-options side="start">
+                <ion-item-option
+                  (click)="addToCard(workout, 1)"
+                  color="success"
+                >
+                  <ion-icon slot="start" name="cart-outline"></ion-icon>
+                  Agregar al carrito</ion-item-option
+                >
+              </ion-item-options>
+
               <app-product-item
                 [detailed]="true"
                 [name]="workout?.name"
                 [stock]="workout?.stock"
                 [category]="workout?.category"
-                [description]="workout?.code"
+                [description]="workout?.description || workout?.code"
                 [price]="workout?.priceSell"
               >
               </app-product-item>
 
-              <ion-item-options>
-                <ion-item-option
-                  (click)="addToCard(workout, 1)"
-                  color="tertiary"
+              <ion-item-options slot="end">
+                <ion-item-option (click)="edit(workout)" color="warning">
+                  <ion-icon slot="start" name="pencil-outline"></ion-icon>
+                  Editar</ion-item-option
                 >
-                  <ion-icon slot="start" name="cart-outline"></ion-icon>
-                  Agregar al carrito</ion-item-option
-                >
-
-                <ion-item-option
-                (click)="edit(workout)"
-                color="primary"
-              >
-                <ion-icon slot="start" name="pencil-outline"></ion-icon>
-                Editar</ion-item-option
-              >
               </ion-item-options>
             </ion-item-sliding>
           </ion-list>
@@ -89,48 +90,46 @@
         <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
           <div
             *ngIf="!observableResult || !observableResult.Exercise"
-            class="flex min-h-full flex-col justify-start"
+            class="flex min-h-full flex-col justify-start items-center"
           >
             <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-              <h2
-                class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white"
+              <p
+                class="text-center text-2xl font-bold leading-9 tracking-tight "
               >
-                The product list is empty
-              </h2>
+                No se encontraron productos
+              </p>
+
             </div>
+              <ion-icon name="sad-outline" size="large" class="text-center mt-4"></ion-icon>
           </div>
           <ion-list *ngIf="observableResult  && observableResult.Exercise">
             <ion-item-sliding
               *ngFor="let workout of observableResult.Exercise?.products"
             >
+              <ion-item-options side="start">
+                <ion-item-option
+                  (click)="addToCard(workout, 1)"
+                  color="success"
+                >
+                  <ion-icon slot="start" name="cart-outline"></ion-icon>
+                  Agregar al carrito</ion-item-option
+                >
+              </ion-item-options>
+
               <app-product-item
                 [detailed]="true"
                 [name]="workout?.name"
                 [stock]="workout?.stock"
                 [category]="workout?.category"
                 [price]="workout?.priceSell"
-                [description]="workout?.code"
+                [description]="workout?.description || workout?.code"
               >
               </app-product-item>
-              <ion-item-options>
-                <ion-item-option
-                  (click)="addToCard(workout, 1)"
-                  color="tertiary"
-                  class="text-white"
-                >
-                  <ion-icon slot="start" name="cart-outline"></ion-icon>
-
-                  Agregar al carrito</ion-item-option>
-
-                  <ion-item-option
-                  (click)="edit(workout)"
-                  color="primary"
-                >
+              <ion-item-options slot="end">
+                <ion-item-option (click)="edit(workout)" color="warning">
                   <ion-icon slot="start" name="pencil-outline"></ion-icon>
                   Editar</ion-item-option
                 >
-
-
               </ion-item-options>
             </ion-item-sliding>
           </ion-list>
@@ -148,5 +147,4 @@
       </ion-fab>
     </ng-container>
   </ng-template>
-
 </ion-content>

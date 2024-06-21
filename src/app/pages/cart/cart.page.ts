@@ -20,7 +20,7 @@ import {
   RemoveProductCart,
   UpdateProductCart,
 } from './state/cart.actions';
-import { Article } from '../products/models';
+import { ArticleItemResponse } from '../products/models';
 import { selectListCart, selectTotal } from './state/cart.selector';
 
 @Component({
@@ -61,7 +61,7 @@ export class Tab2Page implements OnDestroy, OnInit {
     //this.store.dispatch(CheckOut());
   }
 
-  update(article: Article, quantity: number) {
+  update(article: ArticleItemResponse, quantity: number) {
     this.store.dispatch(UpdateProductCart({ article, quantity }));
   }
 
@@ -69,7 +69,7 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.store.dispatch(RemoveProductCart({ code }));
   }
 
-  valueChange(quantity: number, article: Article) {
+  valueChange(quantity: number, article: ArticleItemResponse) {
     if (quantity > 100 || quantity <= 0) {
       return;
     }

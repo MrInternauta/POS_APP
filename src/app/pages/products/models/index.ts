@@ -1,10 +1,10 @@
 import { CreateCategoryDto } from "./category.dto";
 
 export interface ArticleResponse {
-  products: Article[];
+  products: ArticleItemResponse[];
 }
 
-export interface Article {
+export interface ArticleItemResponse {
   id: string;
   categoryId: string;
   code: string;
@@ -14,7 +14,7 @@ export interface Article {
   image: string;
   price: string;
   priceSell: string;
-  category?: CreateCategoryDto
+  category?: CreateCategoryDto;
 }
 
 export interface ArticleCreate {
@@ -25,4 +25,5 @@ export interface ArticleCreate {
   description: string;
   price: string;
   priceSell: string;
+  categoryId?: string | number;
 }

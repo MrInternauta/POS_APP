@@ -9,6 +9,7 @@ import { AlertComponent } from './alert/alert.component';
 import { GetProfile } from '../pipes/getProfile.pipe';
 import { ProductItemComponent } from './product-item/product-item.component';
 import { PhoneMaskDirective } from '../directive/PhoneMask.directive';
+import { SelectComponent } from './select/select.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { PhoneMaskDirective } from '../directive/PhoneMask.directive';
     GetProfile,
     ProductItemComponent,
     PhoneMaskDirective,
+    SelectComponent,
   ],
   imports: [
     FormsModule,
@@ -34,6 +36,7 @@ import { PhoneMaskDirective } from '../directive/PhoneMask.directive';
     InputComponent,
     AlertComponent,
     ProductItemComponent,
+    SelectComponent,
   ],
 })
 export class ComponentsModule {}

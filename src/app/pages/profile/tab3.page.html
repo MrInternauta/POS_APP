@@ -1,6 +1,6 @@
 <ion-header [translucent]="false" class="ion-no-border">
   <ion-toolbar>
-    <ion-title> Profile </ion-title>
+    <ion-title> Perfil </ion-title>
     <ion-buttons slot="end">
       <ion-button
       (click)="editProfile()"
@@ -20,14 +20,14 @@
         [size]="'large'"
         [img]="(authService.user?.image  || '')"
       ></app-avatar>
-      <h2
+      <p
         *ngIf="!editMode"
-        class="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white"
+        class="mt-4 text-center text-2xl font-bold leading-9 tracking-tight "
       >
         {{authService.user?.name}} {{authService.user?.lastName}}
-      </h2>
+      </p>
       <h3
-        class="text-center text-xl font-normal leading-9 tracking-tight text-gray-900 dark:text-white"
+        class="text-center text-xl font-normal leading-9 tracking-tight "
       >
       </h3>
     </div>
@@ -39,7 +39,7 @@
             [inputValue]="authService.user?.name ?? ''"
             [id]="'name'"
             [type]="'text'"
-            [label]="'Name'"
+            [label]="'Nombre'"
             [required]="true"
             [maxLength]="100"
             (inputValueChange)="changeName($event)"
@@ -51,7 +51,7 @@
           [inputValue]="authService.user?.lastName ?? ''"
           [id]="'name'"
           [type]="'text'"
-          [label]="'Last Name'"
+          [label]="'Apellido'"
           [required]="true"
           [maxLength]="100"
           (inputValueChange)="changelastName($event)"
@@ -67,7 +67,7 @@
             [disabled]="true"
             [id]="'email'"
             [type]="'email'"
-            [label]="'Email address'"
+            [label]="'Correo electronico'"
             [required]="true"
             [maxLength]="100"
           ></app-input>
@@ -78,7 +78,7 @@
             [inputValue]="authService.user?.phone || ''"
             [id]="'phone'"
             [type]="'phone'"
-            [label]="'Phone number'"
+            [label]="'Numero de telefono'"
             [maxLength]="100"
             (inputValueChange)="changePhone($event)"
           ></app-input>
@@ -89,19 +89,8 @@
       *ngIf="!editMode"
       >
         <app-button
-          [outline]="true"
-          [label]="'Reset password'"
-          size="large"
-          (click)="sendResetPassword()"
-        ></app-button>
-      </div>
-
-      <div class="mt-4 text-center text-sm text-gray-500"
-      *ngIf="!editMode"
-      >
-        <app-button
           [outline]="false"
-          [label]="'Logout'"
+          [label]="'Cerrar sesión'"
           size="large"
           (click)="authService.logout()"
         ></app-button>

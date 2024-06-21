@@ -29,13 +29,13 @@ import {
   take,
   tap,
 } from 'rxjs';
-import { Article } from './models';
+import { ArticleItemResponse, ArticleCreate } from './models';
 import { AddProductCart, setTotal } from '../cart/state/cart.actions';
 import { ActivatedRoute, Router } from '@angular/router';
-import { WorkoutService } from './services/workout.service';
 import { ProductsFilterDto } from './models/productFilter.dto';
 import { ModalInfoService } from '../../core/services/modal.service';
 import { DetailComponent } from './detail/detail.component';
+import { WorkoutService } from './services/workout.service';
 
 @Component({
   selector: 'app-tab2',
@@ -43,6 +43,7 @@ import { DetailComponent } from './detail/detail.component';
   styleUrls: ['tab2.page.scss'],
 })
 export class Tab2Page implements OnDestroy, OnInit {
+  @ViewChild('search') search: any;
   $susctiption!: Subscription;
   $susctiptionSearch!: Subscription;
   $susctiptionParams!: Subscription;
@@ -65,28 +66,7 @@ export class Tab2Page implements OnDestroy, OnInit {
     private modalInfoService: ModalInfoService,
     private modalCtrl: ModalController
   ) {
-    this.$susctiptionParams = this.activatedRoute.queryParams.subscribe(
-      (params) => {
-        const productFilter: ProductsFilterDto = {
-          limit: params?.['limit'] || 1000,
-          maxPrice: params?.['maxPrice'] || 9999,
-          minPrice: params?.['minPrice'] || 0,
-          offset: params?.['offset'] || 0,
-        };
-        this.productSuscription$ = this.exercisesService
-          .getProducts(productFilter)
-          .subscribe(
-            (response) => {
-              if (response)
-                this.store.dispatch(loadedExercise({ Exercise: response }));
-            },
-            (error) => {
-              this.modalInfoService.error('Something is wrong!', error);
-            }
-          );
-      }
-    );
-
+    this.loadProducts();
     this.$observable = this.store.select('exercises');
     this.$observable.subscribe((value) => {
       console.log(value?.Exercise);
@@ -102,6 +82,31 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.productSuscription$?.unsubscribe();
   }
 
+  loadProducts() {
+    this.$susctiptionParams = this.activatedRoute.queryParams.subscribe(
+      (params) => {
+        const productFilter: ProductsFilterDto = {
+          limit: params?.['limit'] || 1000,
+          maxPrice: params?.['maxPrice'] || 9999,
+          minPrice: params?.['minPrice'] || 0,
+          offset: params?.['offset'] || 0,
+        };
+        this.productSuscription$ = this.exercisesService
+          .getProducts(productFilter)
+          .subscribe(
+            (response) => {
+              console.log(params);
+              if (response)
+                this.store.dispatch(loadedExercise({ Exercise: response }));
+            },
+            (error) => {
+              this.modalInfoService.error('Algo salio mal!', error);
+            }
+          );
+      }
+    );
+  }
+
   async scanCode() {
     try {
       const barcodeData = await this.barcodeScanner.scan();
@@ -111,6 +116,17 @@ export class Tab2Page implements OnDestroy, OnInit {
       }
       this.searchbyCode(barcodeData.text || '');
     } catch (error) {
+      if (error == 'cordova_not_available') {
+        this.modalInfoService.warning(
+          'Scanner no disponible',
+          '¿Quieres buscarlo manualmente?',
+          () => {
+            this.focusButton();
+            console.log('focus input');
+          }
+        );
+        return;
+      }
       console.log('Error', error);
     }
   }
@@ -124,11 +140,14 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.tempProduc$ = this.$observable.pipe(
       map((item_) =>
         item_?.Exercise?.products.filter(
-          (item: any) =>
+          (item: ArticleItemResponse) =>
             String(item.name)
               .toLocaleLowerCase()
               .includes(String(value).toLocaleLowerCase()) ||
             String(item.description)
+              .toLocaleLowerCase()
+              .includes(String(value).toLocaleLowerCase()) ||
+            String(item?.code)
               .toLocaleLowerCase()
               .includes(String(value).toLocaleLowerCase())
         )
@@ -145,6 +164,7 @@ export class Tab2Page implements OnDestroy, OnInit {
 
     this.$susctiptionSearch = this.$observable
       .pipe(
+        take(1),
         map((item_) =>
           item_?.Exercise?.products.filter((item: any) =>
             String(item.code)
@@ -153,18 +173,36 @@ export class Tab2Page implements OnDestroy, OnInit {
           )
         )
       )
-      .subscribe((products: Array<Article> | null) => {
+      .subscribe((products: Array<ArticleItemResponse> | null) => {
         if (!products?.length || !products[0]) {
           //TODO: If is admin option to add new product
+
+          this.modalInfoService.warning(
+            'El producto no existe',
+            '¿Quieres registrarlo?',
+            () => {
+              this.openModal({
+                id: '',
+                code: code,
+                name: '',
+                description: '',
+                price: '',
+                priceSell: '',
+                stock: '',
+              });
+            }
+          );
+          // this.s;
+
           return;
         }
         this.addToCard(products[0], 1);
       });
   }
 
-  addToCard(article: Article, quantity: number) {
+  addToCard(article: ArticleItemResponse, quantity: number) {
     this.store.dispatch(AddProductCart({ article, quantity }));
-    this.presentToast();
+    this.presentProductAddedModal(article);
     //this.router.navigate(['tabs', 'tab4'], { replaceUrl: true });
   }
 
@@ -173,21 +211,15 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.tempProduc$ = null;
   }
 
-  async presentToast() {
-    const toast = await this.toastController.create({
-      message: 'Product added',
-      duration: 1500,
-      position: 'top',
-    });
-
-    await toast.present();
+  async presentProductAddedModal(article: ArticleItemResponse) {
+    this.modalInfoService.success('Producto agregado al carrito', article.name);
   }
 
-  edit(product: Article) {
+  edit(product: ArticleCreate) {
     this.openModal(product);
   }
 
-  async openModal(product?: Article) {
+  async openModal(product?: ArticleCreate) {
     const modal = await this.modalCtrl.create({
       component: DetailComponent,
       componentProps: { product },
@@ -195,5 +227,22 @@ export class Tab2Page implements OnDestroy, OnInit {
     modal.present();
 
     const { data, role } = await modal.onWillDismiss();
+    if (role == 'created') {
+      //set data
+      console.log(data);
+      this.loadProducts();
+    }
+
+    if (role == 'updated') {
+      //update data
+      console.log(data);
+      this.loadProducts();
+    }
+  }
+
+  focusButton(): void {
+    setTimeout(() => {
+      this.search.setFocus();
+    }, 500);
   }
 }

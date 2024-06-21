@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">GymTracker</string>
-    <string name="title_activity_main">GymTracker</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">Mini POS</string>
+    <string name="title_activity_main">Mini POS</string>
+    <string name="package_name">mx.ramirex.mini-pos</string>
+    <string name="custom_url_scheme">mx.ramirex.mini-pos</string>
 </resources>

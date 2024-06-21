@@ -5,8 +5,8 @@ import { GenericResponse, IExercise, User } from 'src/app/core/models';
 import { environment } from '../../../../environments/environment';
 import { UserDto, UserUpdateDto } from '@gymTrack/auth/model/user.dto';
 import { ProductsFilterDto } from '@gymTrack/pages/products/models/productFilter.dto';
-import { ArticleResponse } from '@gymTrack/pages/products/models';
 import { UserUpdatedResponse } from '../models';
+import { ArticleItemResponse } from '../../products/models/index';
 const API_URL = `${environment.url}${API_PREFIX}users`;
 
 @Injectable({
@@ -16,7 +16,7 @@ export class ProfileService {
   constructor(public http: HttpClient) {}
 
   getUsers(params?: ProductsFilterDto) {
-    return this.http.get<ArticleResponse | null>(API_URL, {
+    return this.http.get<ArticleItemResponse | null>(API_URL, {
       params: {
         ...params,
       },

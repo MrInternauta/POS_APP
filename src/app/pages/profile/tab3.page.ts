@@ -8,6 +8,7 @@ import { loadPermissions } from '../../auth/state/auth.actions';
 import { Observable, Subscription, map, tap } from 'rxjs';
 import { UserUpdateDto } from '@gymTrack/auth/model/user.dto';
 import { ProfileService } from './services/profile.service';
+import { ModalInfoService } from '../../core/services/modal.service';
 
 @Component({
   selector: 'app-tab3',
@@ -22,7 +23,8 @@ export class Tab3Page implements OnDestroy {
     private alertController: AlertController,
     public authService: AuthService,
     private userService: ProfileService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private modalInfoService: ModalInfoService
   ) {
     this.userToUpdate = {};
   }
@@ -71,15 +73,17 @@ export class Tab3Page implements OnDestroy {
           role: this.userToUpdate.role,
         })
         .subscribe((res) => {
-          this.presentToast(res.message);
+          console.log(res.user);
+
+          this.presentModal(res.message, 'success');
           this.authService.saveStorage(
-            this.authService._auth.id?.toString() || '',
+            res?.user?.id?.toString() || '',
             this.authService._auth.token || '',
             res.user
           );
         });
     } else {
-      this.presentToast();
+      this.presentModal();
     }
   }
 
@@ -93,14 +97,15 @@ export class Tab3Page implements OnDestroy {
     this.userToUpdate['phone'] = $event as string;
   }
 
-  async presentToast(text: string = '') {
-    const toast = await this.toastController.create({
-      message: text || 'No changes',
-      duration: 1500,
-      position: 'top',
-    });
-
-    await toast.present();
+  presentModal(text: string = '', type: 'warning' | 'success' = 'warning') {
+    if (type == 'warning') {
+      this.modalInfoService.warning(
+        text || 'No hay cambios pendientes para guardar',
+        ''
+      );
+    } else {
+      this.modalInfoService.success(text || 'Guardado correctamente', '');
+    }
   }
 
   ngOnDestroy(): void {

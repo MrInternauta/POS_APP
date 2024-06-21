@@ -19,7 +19,7 @@
             [label]="'Nombre del producto*'"
             [required]="true"
             [maxLength]="100"
-            [disabled]="!!product"
+            [disabled]="!!product?.id || !!product?.name"
           ></app-input>
         </div>
       </div>
@@ -51,6 +51,20 @@
           ></app-input>
         </div>
       </div>
+
+      <div class="flex mt-4 w-full">
+        <div class="w-full">
+            <app-select
+            [dataSource]="[]"
+            [size]="'regular'"
+            [id]="'select'"
+            [label]="'Seleccionar categoria*'"
+            [placeholder]="'Seleccionar categoria'"
+            (inputValueChange)="changeSelect($event)"
+            ></app-select>
+        </div>
+      </div>
+
 
       <div class="flex mt-4 w-full">
         <div class="w-1/2 mr-4">

@@ -1,8 +1,8 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title> Cart list </ion-title>
+    <ion-title> Carrito de compras </ion-title>
     <ion-buttons slot="end">
-      <ion-button color="primary" (click)="clean()"><ion-icon slot="start" name="trash-outline"> </ion-icon></ion-button>
+      <ion-button color="primary" (click)="clean()">Vaciar<ion-icon slot="start" name="trash-outline"> </ion-icon></ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -11,18 +11,20 @@
     <ng-container *ngIf="$observable | async as observableResult">
       <div class="flex min-h-full flex-col justify-start px-4 py-4 lg:px-6">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-          <div *ngIf="!observableResult || !observableResult.length" class="flex min-h-full flex-col justify-start">
+          <div *ngIf="!observableResult || !observableResult.length" class="flex min-h-full flex-col justify-start items-center">
             <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-              <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white">
-                The product list is empty
-              </h2>
+              <p class="text-center text-2xl font-bold leading-9 tracking-tight ">
+                Carrito de compras vacio
+              </p>
             </div>
+
+            <ion-icon name="sad-outline" size="large" class="text-center mt-4"></ion-icon>
           </div>
 
           <div  *ngIf="observableResult.length">
             <ion-card *ngFor="let workout of observableResult" style="margin-bottom: 10px;">
                 <ion-item>
-                    <ion-card-subtitle>{{workout.article?.name}}</ion-card-subtitle>
+                    <p class="uppercase text-lg font-semibold">{{workout.article?.name}}</p>
                     <!-- option popover menu -->
                     <ion-buttons slot="end">
                         <ion-button (click)="removeProduct(workout.article?.code)" color="danger">
@@ -52,7 +54,7 @@
                                 [type]="'number'"
                                 [maxLength]="100"
                                 [size]="'small'"
-                                (inputValueEnter)="valueChange($event, workout?.article)"
+                                (inputValueChange)="valueChange($event, workout?.article)"
                               ></app-input>
                               </ng-container>
 
@@ -81,19 +83,19 @@
       <div class="flex justify-center text-center py-2" *ngIf="total">
           <div class="row">
               <div class="col">
-                  <h2>Total</h2>
+                  <p>Total</p>
               </div>
 
               <div class="col">
                       <div class="customTextTotales">
-                          <h2>{{total | currency:'MXN':'symbol-narrow' | lowercase}}</h2>
+                          <p class="text-2xl font-bold leading-9 tracking-tight">{{total | currency:'MXN':'symbol-narrow' | lowercase}}</p>
                       </div>
               </div>
           </div>
       </div>
 
       <div class="flex w-full items-center justify-center">
-        <app-button [disabled]="!total" class="w-3/4" [label]="'Checkout'" [size]="'large'" (click)="checkout()">
+        <app-button [disabled]="!total" class="w-3/4" [label]="'Guardar venta'" [size]="'large'" (click)="checkout()">
         </app-button>
       </div>
   </ion-toolbar>

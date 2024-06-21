@@ -3,9 +3,9 @@
     <ion-icon name="beer-outline" size="large"></ion-icon>
   </ion-avatar>
   <ion-label>
-    <h3 class="uppercase">{{name}}</h3>
+    <p class="uppercase text-lg font-semibold">{{name}}</p>
     <p class="font-semibold" *ngIf="stock">
-      Stock: <span class="font-normal">{{stock}}</span>
+      Stock: <span class="font-normal" [ngClass]="{ 'text-danger-hbr': !stock || stock <= 5, 'text-warning': (stock) <=15 && (stock) > 5  }">{{stock || '0'}}</span>
     </p>
     <p class="font-semibold" *ngIf="price">
       Price: <span class="font-normal">{{price | currency}}</span>

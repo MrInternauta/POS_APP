@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { ArticleResponse } from '../models';
+import { ArticleItemResponse, ArticleResponse } from '../models';
 
 export const loadExerciseType = '[Exercise] loadExercise Success';
 export const loadExercise = createAction(loadExerciseType);

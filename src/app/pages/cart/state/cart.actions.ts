@@ -1,17 +1,16 @@
 import { createAction, props } from '@ngrx/store';
-import { Article } from '../../products/models/index';
+import { ArticleItemResponse } from '../../products/models/index';
 
 export const AddProductCartType = '[Cart] Add product to cart';
 export const AddProductCart = createAction(
   AddProductCartType,
-  props<{ article: Article; quantity: number }>()
+  props<{ article: ArticleItemResponse; quantity: number }>()
 );
-
 
 export const UpdateProductCartType = '[Cart] Update product cart';
 export const UpdateProductCart = createAction(
   AddProductCartType,
-  props<{ article: Article; quantity: number }>()
+  props<{ article: ArticleItemResponse; quantity: number }>()
 );
 
 export const setTotalType = '[Cart] Set total to cart';
