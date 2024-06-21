@@ -9,8 +9,10 @@
     <!-- select -->
 
       <ion-select
-      aria-label="select"
-        [placeholder]="placeholder"
+        [value]="defaultValue"
+        justify="space-between"
+        aria-label="select"
+        [label]="placeholder"
         (ionChange)="handleChange($event)"
         (ionCancel)="handleCancel()"
         (ionDismiss)="handleDismiss()"

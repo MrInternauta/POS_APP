@@ -1,9 +1,10 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { IonModal, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { ModalInfoService } from '../../../core/services/modal.service';
 import { Subscription } from 'rxjs';
 import { ArticleCreate, ArticleItemResponse } from '../models';
 import { WorkoutService } from '../services/workout.service';
+import { ISelectItem } from '../../../core/models/iselect.item';
 
 @Component({
   selector: 'app-detail',
@@ -21,11 +22,15 @@ export class DetailComponent implements OnDestroy, OnInit {
   description!: string;
   categoryId!: string;
   subscription$!: Subscription;
+  subscriptionCategories$!: Subscription;
+  categories!: Array<ISelectItem>;
   constructor(
     private productService: WorkoutService,
     private modalInfoService: ModalInfoService,
     private modalCtrl: ModalController
-  ) {}
+  ) {
+    this.getCategories();
+  }
 
   get isValidForm() {
     if (!this.name) {
@@ -48,7 +53,6 @@ export class DetailComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.product);
     if (this.product) {
       this.name = this.product?.name;
       this.code = this.product?.code;
@@ -58,6 +62,23 @@ export class DetailComponent implements OnDestroy, OnInit {
       this.description = this.product?.description;
       this.categoryId = this.product?.categoryId;
     }
+  }
+
+  getCategories() {
+    this.subscriptionCategories$ = this.productService
+      .getCategories()
+      .subscribe((categoriesResponse) => {
+        this.categories =
+          categoriesResponse?.categories.map((item) => {
+            return {
+              name: item.name,
+              value: item.id.toString(),
+              selected:
+                item.id?.toString()?.toLocaleLowerCase() ===
+                this.product?.category?.id?.toString()?.toLocaleLowerCase(),
+            };
+          }) || [];
+      });
   }
 
   cancel() {
@@ -141,8 +162,6 @@ export class DetailComponent implements OnDestroy, OnInit {
   }
 
   changeSelect(event: string) {
-    console.log(event);
-
     this.categoryId = event;
   }
 
@@ -166,6 +185,7 @@ export class DetailComponent implements OnDestroy, OnInit {
 
   removeSubscription() {
     this.subscription$?.unsubscribe();
+    this.subscriptionCategories$?.unsubscribe();
     this.name = '';
     this.code = '';
     this.stock = '';

@@ -1,5 +1,3 @@
-import { CreateCategoryDto } from "./category.dto";
-
 export interface ArticleResponse {
   products: ArticleItemResponse[];
 }
@@ -14,7 +12,7 @@ export interface ArticleItemResponse {
   image: string;
   price: string;
   priceSell: string;
-  category?: CreateCategoryDto;
+  category?: CategoryItemResponse;
 }
 
 export interface ArticleCreate {
@@ -26,4 +24,14 @@ export interface ArticleCreate {
   price: string;
   priceSell: string;
   categoryId?: string | number;
+}
+
+export interface CategoryResponse {
+  categories: CategoryItemResponse[];
+}
+
+export interface CategoryItemResponse {
+  id: number;
+  name: string;
+  image: string;
 }

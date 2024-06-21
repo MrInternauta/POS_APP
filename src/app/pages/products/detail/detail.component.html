@@ -55,7 +55,8 @@
       <div class="flex mt-4 w-full">
         <div class="w-full">
             <app-select
-            [dataSource]="[]"
+            [dataSource]="this.categories"
+            [disabled]="!this.categories || !this.categories.length"
             [size]="'regular'"
             [id]="'select'"
             [label]="'Seleccionar categoria*'"

@@ -1,7 +1,6 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { select } from '@ngrx/store';
+import { ISelectItem } from '../../models/iselect.item';
 
 @Component({
   selector: 'app-select',
@@ -11,13 +10,10 @@ import { select } from '@ngrx/store';
 export class SelectComponent implements OnInit {
   @Input() id!: string;
   @Input() label!: string;
+
   @Input() required!: boolean;
   @Input() disabled!: boolean;
-  @Input() dataSource!: Array<{
-    name: string;
-    value: string;
-    selected?: boolean;
-  }>;
+  @Input() dataSource!: Array<ISelectItem>;
   @Input() placeholder: string = '';
   @Input() size: 'regular' | 'small' = 'regular';
   @Input() hasError!: string;
@@ -31,9 +27,12 @@ export class SelectComponent implements OnInit {
 
   ngOnInit() {}
 
+  get defaultValue() {
+    return this.dataSource?.find((item) => item.selected)?.value || '';
+  }
+
   handleChange(event: any) {
-    console.log('ionChange fired with value: ' + event.detail.value);
-    this.inputValueChange.emit(event);
+    this.inputValueChange.emit(event.detail.value);
   }
 
   handleCancel() {
@@ -42,5 +41,9 @@ export class SelectComponent implements OnInit {
 
   handleDismiss() {
     console.log('ionDismiss fired');
+  }
+
+  compareFn(e1: ISelectItem, e2: ISelectItem): boolean {
+    return e1 && e2 ? e1.value == e2.value : e1 == e2;
   }
 }
