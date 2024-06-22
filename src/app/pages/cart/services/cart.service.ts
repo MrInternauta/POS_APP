@@ -3,8 +3,10 @@ import { Injectable } from '@angular/core';
 import { API_PREFIX } from 'src/app/core/constants';
 import { GenericResponse, IExercise } from 'src/app/core/models';
 import { environment } from '../../../../environments/environment';
+import { CheckoutResponse } from '../models/checkout.response';
+import { ICheckoutRequest } from '../models/checkout';
 
-const API_URL = `${environment.url}${API_PREFIX}articulo.php`;
+const API_URL = `${environment.url}${API_PREFIX}orders`;
 
 @Injectable({
   providedIn: 'root',
@@ -12,15 +14,7 @@ const API_URL = `${environment.url}${API_PREFIX}articulo.php`;
 export class CartService {
   constructor(public http: HttpClient) {}
 
-  checkoutProducts(products: any) {
-    return this.http.post<any | null>(
-      API_URL,
-      { products },
-      {
-        params: {
-          op: 'listar',
-        },
-      }
-    );
+  checkoutProducts(request: ICheckoutRequest) {
+    return this.http.post<CheckoutResponse | null>(API_URL, request);
   }
 }

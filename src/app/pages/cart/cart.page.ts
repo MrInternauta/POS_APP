@@ -6,6 +6,7 @@ import { AppState, appReducers } from '../../core/state/app.reducer';
 import {
   Observable,
   Subscription,
+  catchError,
   filter,
   find,
   map,
@@ -22,6 +23,11 @@ import {
 } from './state/cart.actions';
 import { ArticleItemResponse } from '../products/models';
 import { selectListCart, selectTotal } from './state/cart.selector';
+import { AlertController } from '@ionic/angular';
+import { ICheckoutRequest, ItemRequest } from './models/checkout';
+import { CartService } from './services/cart.service';
+import { ModalInfoService } from '../../core/services/modal.service';
+import { AuthService } from '../../auth/services';
 
 @Component({
   selector: 'app-cart',
@@ -37,7 +43,13 @@ export class Tab2Page implements OnDestroy, OnInit {
     'This modal example uses the modalController to present and dismiss modals.';
   public historyWorkout!: Array<any>;
 
-  constructor(private store: Store<AppState>) {
+  constructor(
+    private store: Store<AppState>,
+    private alertController: AlertController,
+    private cartService: CartService,
+    private modalInfoService: ModalInfoService,
+    private authService: AuthService
+  ) {
     this.$observable = this.store.select('cart').pipe(
       map((item) => {
         return Object.values(item?.Cart || {});
@@ -53,12 +65,58 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   clean() {
-    this.store.dispatch(CleanCart());
+    const title = '¿Esta seguro de vaciar el carrito?';
+    this.presentAlert(
+      title,
+      () => this.store.dispatch(CleanCart()),
+      'Vaciar carrito'
+    );
   }
 
   checkout() {
-    //
-    //this.store.dispatch(CheckOut());
+    const title = '¿Esta seguro de guardar la compra?';
+    this.presentAlert(
+      title,
+      () => {
+        this.finishCheckout();
+      },
+      'Guardar'
+    ); //
+  }
+
+  finishCheckout() {
+    this.store
+      .select('cart')
+      .pipe(
+        map((item) => {
+          return Object.values(item?.Cart || {});
+        })
+      )
+      .pipe(take(1))
+      .subscribe((value) => {
+        const items = value.map((cartItem) => {
+          return {
+            productId: cartItem.article.id,
+            quantity: cartItem.quantity,
+          };
+        });
+        const dataCheckout: ICheckoutRequest = {
+          userId: this.authService._auth.id,
+          items,
+        };
+
+        this.cartService
+          .checkoutProducts(dataCheckout)
+          .pipe(take(1))
+          .subscribe((checkOutRes) => {
+            this.modalInfoService.success(
+              checkOutRes?.message || 'Orden guardada correctamnete!',
+              ''
+            );
+            this.store.dispatch(CleanCart());
+          });
+        return value;
+      });
   }
 
   update(article: ArticleItemResponse, quantity: number) {
@@ -74,5 +132,28 @@ export class Tab2Page implements OnDestroy, OnInit {
       return;
     }
     this.update(article, quantity);
+  }
+
+  async presentAlert(
+    title = '¿Desea continuar?',
+    next = () => {},
+    continueText = 'Continuar'
+  ) {
+    const alert = await this.alertController.create({
+      header: title,
+      buttons: [
+        {
+          text: 'Cancelar',
+          handler: () => {},
+        },
+
+        {
+          text: continueText,
+          handler: next,
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }

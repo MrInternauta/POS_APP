@@ -10,6 +10,8 @@ import {
   setTotalType,
 } from './cart.actions';
 import { ArticleItemResponse } from '../../products/models/index';
+import { map, catchError, EMPTY } from 'rxjs';
+import { ICheckoutRequest } from '../models/checkout';
 
 export interface CartInfo {
   article: ArticleItemResponse;
@@ -135,6 +137,10 @@ const _CartReducer = createReducer(
     };
   }),
   on(CleanCart, (state) => ({ ...state, Cart: null })),
+
+  on(CheckedOut, (state) => {
+    return { ...state, Cart: null };
+  }),
   on(RemoveProductCart, (state, { code }) => {
     if (!state?.Cart || !state?.Cart[code]) {
       {
@@ -150,9 +156,9 @@ const _CartReducer = createReducer(
       Cart: newCart,
     };
   }),
-  on(CheckedOut, (state, { response }) => {
-    return { ...state, Cart: null };
-  }),
+  // on(CheckedOut, (state, { response }) => {
+  //   return { ...state, Cart: null };
+  // }),
   on(setTotal, (state, { total }) => {
     return { ...state, total };
   })
