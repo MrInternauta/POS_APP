@@ -109,10 +109,7 @@ export class Tab2Page implements OnDestroy, OnInit {
           .checkoutProducts(dataCheckout)
           .pipe(take(1))
           .subscribe((checkOutRes) => {
-            this.modalInfoService.success(
-              checkOutRes?.message || 'Orden guardada correctamnete!',
-              ''
-            );
+            this.modalInfoService.success('Orden guardada correctamente!', '');
             this.store.dispatch(CleanCart());
           });
         return value;

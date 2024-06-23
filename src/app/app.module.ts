@@ -28,7 +28,8 @@ import { NgChartsModule } from 'ng2-charts';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { TabsPageModule } from './pages';
+import { FileTransfer } from '@awesome-cordova-plugins/file-transfer/ngx';
+import { Network } from '@awesome-cordova-plugins/network/ngx';
 
 registerLocaleData(en);
 
@@ -53,6 +54,8 @@ registerLocaleData(en);
     AngularSvgIconModule.forRoot(),
   ],
   providers: [
+    FileTransfer,
+    Network,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     BarcodeScanner,
     { provide: NZ_I18N, useValue: en_US },

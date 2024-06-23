@@ -20,23 +20,26 @@
     "@angular/platform-browser-dynamic": "^16.2.9",
     "@angular/router": "^16.2.9",
     "@awesome-cordova-plugins/barcode-scanner": "^6.4.0",
+    "@awesome-cordova-plugins/file-transfer": "^6.7.0",
+    "@awesome-cordova-plugins/network": "^6.7.0",
     "@capacitor/android": "5.0.1",
     "@capacitor/app": "5.0.1",
+    "@capacitor/camera": "^6.0.1",
     "@capacitor/core": "5.0.1",
     "@capacitor/haptics": "5.0.1",
     "@capacitor/ios": "5.0.1",
     "@capacitor/keyboard": "5.0.1",
     "@capacitor/status-bar": "5.0.1",
-    "@ionic/angular": "^7.0.5",
-    "@ngrx/effects": "^16.3.0",
-    "@ngrx/store": "^16.3.0",
-    "@ngrx/store-devtools": "^16.3.0",
     "@fullcalendar/angular": "^6.1.8",
     "@fullcalendar/core": "^6.1.8",
     "@fullcalendar/daygrid": "^6.1.8",
     "@fullcalendar/interaction": "^6.1.8",
     "@fullcalendar/list": "^6.1.8",
     "@fullcalendar/timegrid": "^6.1.8",
+    "@ionic/angular": "^7.0.5",
+    "@ngrx/effects": "^16.3.0",
+    "@ngrx/store": "^16.3.0",
+    "@ngrx/store-devtools": "^16.3.0",
     "angular-svg-icon": "^16.1.0",
     "chart.js": "^4.3.0",
     "chartjs-plugin-annotation": "^3.0.1",
@@ -87,5 +90,8 @@
     "tslib": "^2.5.0",
     "typescript": "~5.0.4"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "volta": {
+    "node": "18.20.3"
+  }
 }

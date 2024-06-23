@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { ArticleCreate, ArticleItemResponse } from '../models';
 import { WorkoutService } from '../services/workout.service';
 import { ISelectItem } from '../../../core/models/iselect.item';
+import { PictureService } from '../../../core/services/picture.service';
 
 @Component({
   selector: 'app-detail',
@@ -27,7 +28,8 @@ export class DetailComponent implements OnDestroy, OnInit {
   constructor(
     private productService: WorkoutService,
     private modalInfoService: ModalInfoService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private pictureService: PictureService
   ) {
     this.getCategories();
   }
@@ -62,6 +64,10 @@ export class DetailComponent implements OnDestroy, OnInit {
       this.description = this.product?.description;
       this.categoryId = this.product?.categoryId;
     }
+  }
+
+  getImage() {
+    this.pictureService.changePicture();
   }
 
   getCategories() {

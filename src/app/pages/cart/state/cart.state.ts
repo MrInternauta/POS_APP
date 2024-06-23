@@ -156,9 +156,7 @@ const _CartReducer = createReducer(
       Cart: newCart,
     };
   }),
-  // on(CheckedOut, (state, { response }) => {
-  //   return { ...state, Cart: null };
-  // }),
+
   on(setTotal, (state, { total }) => {
     return { ...state, total };
   })
