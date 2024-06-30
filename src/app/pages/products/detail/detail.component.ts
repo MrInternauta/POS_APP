@@ -13,8 +13,7 @@ import { PictureService } from '../../../core/services/picture.service';
   styleUrls: ['./detail.component.scss'],
 })
 export class DetailComponent implements OnDestroy, OnInit {
-  @Input('product') product?: ArticleItemResponse | null = null;
-
+  @Input() product?: ArticleItemResponse | null = null;
   name!: string;
   code!: string;
   stock!: string;
@@ -67,24 +66,21 @@ export class DetailComponent implements OnDestroy, OnInit {
   }
 
   getImage() {
-    this.pictureService.changePicture();
+    this.pictureService.changePicture(this.product?.id ?? '', 'product');
   }
 
   getCategories() {
-    this.subscriptionCategories$ = this.productService
-      .getCategories()
-      .subscribe((categoriesResponse) => {
-        this.categories =
-          categoriesResponse?.categories.map((item) => {
-            return {
-              name: item.name,
-              value: item.id.toString(),
-              selected:
-                item.id?.toString()?.toLocaleLowerCase() ===
-                this.product?.category?.id?.toString()?.toLocaleLowerCase(),
-            };
-          }) || [];
-      });
+    this.subscriptionCategories$ = this.productService.getCategories().subscribe(categoriesResponse => {
+      this.categories =
+        categoriesResponse?.categories.map(item => {
+          return {
+            name: item.name,
+            value: item.id.toString(),
+            selected:
+              item.id?.toString()?.toLocaleLowerCase() === this.product?.category?.id?.toString()?.toLocaleLowerCase(),
+          };
+        }) || [];
+    });
   }
 
   cancel() {
@@ -107,12 +103,12 @@ export class DetailComponent implements OnDestroy, OnInit {
       };
 
       this.subscription$ = this.productService.postProduct(product).subscribe(
-        (res) => {
+        res => {
           this.removeSubscription();
           this.modalInfoService.success('Product was Created!', '');
           return this.modalCtrl.dismiss(res, 'created');
         },
-        (error) => {
+        error => {
           console.log(error);
         }
       );
@@ -129,18 +125,16 @@ export class DetailComponent implements OnDestroy, OnInit {
       description: this.description,
       categoryId: this.categoryId,
     };
-    this.subscription$ = this.productService
-      .putProduct(this.product.id, product)
-      .subscribe(
-        (res) => {
-          this.removeSubscription();
-          this.modalInfoService.success('Product was Updated!', '');
-          return this.modalCtrl.dismiss(res, 'updated');
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+    this.subscription$ = this.productService.putProduct(this.product.id, product).subscribe(
+      res => {
+        this.removeSubscription();
+        this.modalInfoService.success('Product was Updated!', '');
+        return this.modalCtrl.dismiss(res, 'updated');
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 
   changeName(event: string) {

@@ -9,6 +9,7 @@ import { Observable, Subscription, map, tap } from 'rxjs';
 import { UserUpdateDto } from '@gymTrack/auth/model/user.dto';
 import { ProfileService } from './services/profile.service';
 import { ModalInfoService } from '../../core/services/modal.service';
+import { PictureService } from '../../core/services/picture.service';
 
 @Component({
   selector: 'app-tab3',
@@ -24,7 +25,8 @@ export class Tab3Page implements OnDestroy {
     public authService: AuthService,
     private userService: ProfileService,
     private toastController: ToastController,
-    private modalInfoService: ModalInfoService
+    private modalInfoService: ModalInfoService,
+    private pictureService: PictureService
   ) {
     this.userToUpdate = {};
   }
@@ -40,6 +42,10 @@ export class Tab3Page implements OnDestroy {
     await alert.present();
   }
 
+  updateUserPicture() {
+    this.pictureService.changePicture(this.authService._auth.user?.id?.toString() || '', 'user');
+  }
+
   async upgradePro() {
     const alert = await this.alertController.create({
       header: 'Upgrade to PRO',
@@ -51,12 +57,7 @@ export class Tab3Page implements OnDestroy {
   }
 
   async editProfile() {
-    if (
-      this.userToUpdate.name ||
-      this.userToUpdate.lastName ||
-      this.userToUpdate.phone ||
-      this.userToUpdate.role
-    ) {
+    if (this.userToUpdate.name || this.userToUpdate.lastName || this.userToUpdate.phone || this.userToUpdate.role) {
       this.userToUpdate = {
         ...this.authService._auth.user,
         ...this.userToUpdate,
@@ -72,15 +73,11 @@ export class Tab3Page implements OnDestroy {
           phone: this.userToUpdate.phone,
           role: this.userToUpdate.role,
         })
-        .subscribe((res) => {
+        .subscribe(res => {
           console.log(res.user);
 
           this.presentModal(res.message, 'success');
-          this.authService.saveStorage(
-            res?.user?.id?.toString() || '',
-            this.authService._auth.token || '',
-            res.user
-          );
+          this.authService.saveStorage(res?.user?.id?.toString() || '', this.authService._auth.token || '', res.user);
         });
     } else {
       this.presentModal();
@@ -97,12 +94,9 @@ export class Tab3Page implements OnDestroy {
     this.userToUpdate['phone'] = $event as string;
   }
 
-  presentModal(text: string = '', type: 'warning' | 'success' = 'warning') {
+  presentModal(text = '', type: 'warning' | 'success' = 'warning') {
     if (type == 'warning') {
-      this.modalInfoService.warning(
-        text || 'No hay cambios pendientes para guardar',
-        ''
-      );
+      this.modalInfoService.warning(text || 'No hay cambios pendientes para guardar', '');
     } else {
       this.modalInfoService.success(text || 'Guardado correctamente', '');
     }
