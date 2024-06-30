@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ModalInfoService } from '../../../core/services/modal.service';
 import { Subscription } from 'rxjs';
@@ -24,6 +24,7 @@ export class DetailComponent implements OnDestroy, OnInit {
   subscription$!: Subscription;
   subscriptionCategories$!: Subscription;
   categories!: Array<ISelectItem>;
+  didSomeChange!: boolean;
   constructor(
     private productService: WorkoutService,
     private modalInfoService: ModalInfoService,
@@ -34,6 +35,7 @@ export class DetailComponent implements OnDestroy, OnInit {
   }
 
   get isValidForm() {
+    //Required fields
     if (!this.name) {
       return false;
     }
@@ -49,6 +51,10 @@ export class DetailComponent implements OnDestroy, OnInit {
     if (!this.price && !this.price_sell) {
       return false;
     }
+    //Required fields
+    if (!this.didSomeChange) {
+      return false;
+    }
 
     return true;
   }
@@ -62,6 +68,7 @@ export class DetailComponent implements OnDestroy, OnInit {
       this.price_sell = this.product?.priceSell;
       this.description = this.product?.description;
       this.categoryId = this.product?.categoryId;
+      console.log(this.product);
     }
   }
 
@@ -139,30 +146,37 @@ export class DetailComponent implements OnDestroy, OnInit {
 
   changeName(event: string) {
     this.name = event;
+    this.didSomeChange = true;
   }
 
   changeCode(event: string) {
     this.code = event;
+    this.didSomeChange = true;
   }
 
   changeStock(event: string) {
     this.stock = event;
+    this.didSomeChange = true;
   }
 
   changePrice(event: string) {
     this.price = event;
+    this.didSomeChange = true;
   }
 
   changePriceSell(event: string) {
     this.price_sell = event;
+    this.didSomeChange = true;
   }
 
   changeDescription(event: string) {
     this.description = event;
+    this.didSomeChange = true;
   }
 
   changeSelect(event: string) {
     this.categoryId = event;
+    this.didSomeChange = true;
   }
 
   fillEmptyForm() {

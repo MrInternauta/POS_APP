@@ -7,7 +7,9 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
-  <ion-button *ngIf="!!product?.id || !!product?.name" (click)="getImage()">imagen</ion-button>
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
+    <app-avatar (click)="getImage()" [size]="'large'" [img]="product?.image || ''" [type]="'product'"></app-avatar>
+  </div>
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
       <div class="flex mt-4 w-full">
@@ -20,8 +22,7 @@
             [label]="'Nombre del producto*'"
             [required]="true"
             [maxLength]="100"
-            [disabled]="!!product?.id || !!product?.name"
-          ></app-input>
+            [disabled]="!!product?.id || !!product?.name"></app-input>
         </div>
       </div>
 
@@ -34,8 +35,7 @@
             [required]="true"
             [maxLength]="100"
             [inputValue]="code || ''"
-            (inputValueChange)="changeCode($event)"
-          ></app-input>
+            (inputValueChange)="changeCode($event)"></app-input>
         </div>
       </div>
 
@@ -48,25 +48,22 @@
             [required]="false"
             [maxLength]="100"
             [inputValue]="stock || ''"
-            (inputValueChange)="changeStock($event)"
-          ></app-input>
+            (inputValueChange)="changeStock($event)"></app-input>
         </div>
       </div>
 
       <div class="flex mt-4 w-full">
         <div class="w-full">
-            <app-select
+          <app-select
             [dataSource]="this.categories"
             [disabled]="!this.categories || !this.categories.length"
             [size]="'regular'"
             [id]="'select'"
             [label]="'Seleccionar categoria*'"
             [placeholder]="'Seleccionar categoria'"
-            (inputValueChange)="changeSelect($event)"
-            ></app-select>
+            (inputValueChange)="changeSelect($event)"></app-select>
         </div>
       </div>
-
 
       <div class="flex mt-4 w-full">
         <div class="w-1/2 mr-4">
@@ -77,8 +74,7 @@
             [required]="false"
             [maxLength]="100"
             [inputValue]="price || ''"
-            (inputValueChange)="changePrice($event)"
-          ></app-input>
+            (inputValueChange)="changePrice($event)"></app-input>
         </div>
 
         <div class="w-1/2">
@@ -89,8 +85,7 @@
             [required]="true"
             [maxLength]="100"
             [inputValue]="price_sell || ''"
-            (inputValueChange)="changePriceSell($event)"
-          ></app-input>
+            (inputValueChange)="changePriceSell($event)"></app-input>
         </div>
       </div>
 
@@ -103,8 +98,7 @@
             [required]="false"
             [maxLength]="200"
             [inputValue]="description || ''"
-            (inputValueChange)="changeDescription($event)"
-          ></app-input>
+            (inputValueChange)="changeDescription($event)"></app-input>
         </div>
       </div>
 
@@ -114,8 +108,7 @@
           [outline]="false"
           [label]="'Guardar'"
           [disabled]="!isValidForm"
-          size="large"
-        ></app-button>
+          size="large"></app-button>
       </div>
     </div>
   </div>

@@ -1,32 +1,38 @@
-<ion-item [detail]="detailed" class="w-full" [ngClass]="{'cursor-pointer': detailed}">
+<ion-item [detail]="detailed" class="w-full" [ngClass]="{ 'cursor-pointer': detailed }">
   <ion-avatar slot="start">
-    <ion-icon name="beer-outline" size="large"></ion-icon>
+    <app-avatar [size]="'small'" [img]="image || ''" [type]="'product'"></app-avatar>
+
+    <!-- <ion-icon name="beer-outline" size="large"></ion-icon> -->
   </ion-avatar>
   <ion-label>
-    <p class="uppercase text-lg font-semibold">{{name}}</p>
+    <p class="uppercase text-lg font-semibold">{{ name }}</p>
     <p class="font-semibold" *ngIf="stock">
-      Stock: <span class="font-normal" [ngClass]="{ 'text-danger-hbr': !stock || stock <= 5, 'text-warning': (stock) <=15 && (stock) > 5  }">{{stock || '0'}}</span>
+      Stock:
+      <span
+        class="font-normal"
+        [ngClass]="{ 'text-danger-hbr': !stock || stock <= 5, 'text-warning': stock <= 15 && stock > 5 }"
+        >{{ stock || "0" }}</span
+      >
     </p>
     <p class="font-semibold" *ngIf="price">
-      Price: <span class="font-normal">{{price | currency}}</span>
+      Price: <span class="font-normal">{{ price | currency }}</span>
     </p>
     <p class="font-semibold" *ngIf="category">
       Category:
-      <span class="font-normal">{{category}}</span>
+      <span class="font-normal">{{ category }}</span>
     </p>
     <p *ngIf="description" class="font-semibold">
       Description:
-      <span class="font-normal">{{description}}</span>
+      <span class="font-normal">{{ description }}</span>
     </p>
     <p *ngIf="quantity" class="font-semibold">
       Quantity:
-      <span class="font-normal">{{quantity}}</span>
+      <span class="font-normal">{{ quantity }}</span>
     </p>
 
     <p *ngIf="quantity && price" class="font-semibold">
       Subtotal:
-      <span class="font-normal">{{subtotal | currency }}</span>
+      <span class="font-normal">{{ subtotal | currency }}</span>
     </p>
   </ion-label>
-
 </ion-item>

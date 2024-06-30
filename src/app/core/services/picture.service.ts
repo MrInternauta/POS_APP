@@ -42,7 +42,6 @@ export class PictureService {
         },
         err => {
           console.log(err);
-          this.modalInfoService.error('Error al seleccionar la imagen/Abrir la Galeria', '');
         }
       );
     });

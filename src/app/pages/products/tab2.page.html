@@ -17,8 +17,7 @@
       cancel-button-icon="trash"
       (ionCancel)="hideSearch()"
       class="sm:mx-[25%] sm:w-auto"
-      placeholder="Buscar producto..."
-    ></ion-searchbar>
+      placeholder="Buscar producto..."></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
@@ -28,24 +27,16 @@
         <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
           <div
             *ngIf="!observableResult || !observableResult.length"
-            class="flex min-h-full flex-col justify-start items-center"
-          >
+            class="flex min-h-full flex-col justify-start items-center">
             <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-              <p
-                class="text-center text-2xl font-bold leading-9 tracking-tight"
-              >
-                No se encontraron productos
-              </p>
+              <p class="text-center text-2xl font-bold leading-9 tracking-tight">No se encontraron productos</p>
             </div>
-              <ion-icon name="sad-outline" size="large" class="text-center mt-4"></ion-icon>
+            <ion-icon name="sad-outline" size="large" class="text-center mt-4"></ion-icon>
           </div>
           <ion-list *ngIf="observableResult">
             <ion-item-sliding *ngFor="let workout of observableResult">
               <ion-item-options side="start">
-                <ion-item-option
-                  (click)="addToCard(workout, 1)"
-                  color="success"
-                >
+                <ion-item-option (click)="addToCard(workout, 1)" color="success">
                   <ion-icon slot="start" name="cart-outline"></ion-icon>
                   Agregar al carrito</ion-item-option
                 >
@@ -53,12 +44,12 @@
 
               <app-product-item
                 [detailed]="true"
+                [image]="workout?.image"
                 [name]="workout?.name"
                 [stock]="workout?.stock"
-                [category]="workout?.category"
-                [description]="workout?.description || workout?.code"
+                [category]="workout?.category?.name"
                 [price]="workout?.priceSell"
-              >
+                [description]="workout?.description || workout?.code">
               </app-product-item>
 
               <ion-item-options slot="end">
@@ -71,12 +62,7 @@
           </ion-list>
         </div>
       </div>
-      <ion-fab
-        *ngIf="observableResult.length"
-        slot="fixed"
-        vertical="bottom"
-        horizontal="end"
-      >
+      <ion-fab *ngIf="observableResult.length" slot="fixed" vertical="bottom" horizontal="end">
         <ion-fab-button (click)="scanCode()">
           <ion-icon name="barcode-outline"></ion-icon>
         </ion-fab-button>
@@ -90,27 +76,16 @@
         <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
           <div
             *ngIf="!observableResult || !observableResult.Exercise"
-            class="flex min-h-full flex-col justify-start items-center"
-          >
+            class="flex min-h-full flex-col justify-start items-center">
             <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-              <p
-                class="text-center text-2xl font-bold leading-9 tracking-tight "
-              >
-                No se encontraron productos
-              </p>
-
+              <p class="text-center text-2xl font-bold leading-9 tracking-tight">No se encontraron productos</p>
             </div>
-              <ion-icon name="sad-outline" size="large" class="text-center mt-4"></ion-icon>
+            <ion-icon name="sad-outline" size="large" class="text-center mt-4"></ion-icon>
           </div>
           <ion-list *ngIf="observableResult  && observableResult.Exercise">
-            <ion-item-sliding
-              *ngFor="let workout of observableResult.Exercise?.products"
-            >
+            <ion-item-sliding *ngFor="let workout of observableResult.Exercise?.products">
               <ion-item-options side="start">
-                <ion-item-option
-                  (click)="addToCard(workout, 1)"
-                  color="success"
-                >
+                <ion-item-option (click)="addToCard(workout, 1)" color="success">
                   <ion-icon slot="start" name="cart-outline"></ion-icon>
                   Agregar al carrito</ion-item-option
                 >
@@ -118,12 +93,12 @@
 
               <app-product-item
                 [detailed]="true"
+                [image]="workout?.image"
                 [name]="workout?.name"
                 [stock]="workout?.stock"
-                [category]="workout?.category"
+                [category]="workout?.category?.name"
                 [price]="workout?.priceSell"
-                [description]="workout?.description || workout?.code"
-              >
+                [description]="workout?.description || workout?.code">
               </app-product-item>
               <ion-item-options slot="end">
                 <ion-item-option (click)="edit(workout)" color="warning">
@@ -135,12 +110,7 @@
           </ion-list>
         </div>
       </div>
-      <ion-fab
-        *ngIf="observableResult.Exercise"
-        slot="fixed"
-        vertical="bottom"
-        horizontal="end"
-      >
+      <ion-fab *ngIf="observableResult.Exercise" slot="fixed" vertical="bottom" horizontal="end">
         <ion-fab-button (click)="scanCode()">
           <ion-icon name="barcode-outline"></ion-icon>
         </ion-fab-button>

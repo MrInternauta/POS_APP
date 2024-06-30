@@ -9,15 +9,20 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 })
 export class ProductItemComponent implements OnInit {
   @Input() name!: string;
-  @Input() stock: number = 0;
+  @Input() stock = 0;
   @Input() category!: string;
+  @Input() image!: string;
   @Input() description!: string;
   @Input() quantity!: string;
   @Input() price!: string;
-  @Input() detailed: boolean = true;
-  constructor() {}
+  @Input() detailed = true;
+  constructor() {
+    //nothing
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+    //nothing
+  }
 
   get subtotal() {
     if (this.price && this.quantity) {

@@ -10,6 +10,7 @@ import { GetProfile } from '../pipes/getProfile.pipe';
 import { ProductItemComponent } from './product-item/product-item.component';
 import { PhoneMaskDirective } from '../directive/PhoneMask.directive';
 import { SelectComponent } from './select/select.component';
+import { ImagesPipe } from '../pipes/Image.pipe';
 
 @NgModule({
   declarations: [
@@ -18,17 +19,12 @@ import { SelectComponent } from './select/select.component';
     InputComponent,
     AlertComponent,
     GetProfile,
+    ImagesPipe,
     ProductItemComponent,
     PhoneMaskDirective,
     SelectComponent,
   ],
-  imports: [
-    FormsModule,
-    CommonModule,
-    IonicModule,
-    FormsModule,
-    ReactiveFormsModule,
-  ],
+  imports: [FormsModule, CommonModule, IonicModule, FormsModule, ReactiveFormsModule],
   exports: [
     PhoneMaskDirective,
     ButtonComponent,
