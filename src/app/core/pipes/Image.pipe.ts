@@ -41,8 +41,9 @@ export class ImagesPipe implements PipeTransform {
       }
       // La peticion regresa una img y se pasa a una url temporal para poder ser usada
       this.GetImagen(img, type).subscribe(
-        () => {
+        value => {
           const reader = new FileReader();
+          reader.readAsDataURL(value);
           reader.onloadend = () => {
             const imagenTemp = reader.result;
             resolve(imagenTemp);
