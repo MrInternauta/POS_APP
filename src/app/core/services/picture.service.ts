@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Camera, CameraOptions, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
+import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
+import { Platform } from '@ionic/angular';
+
+import { dataURLtoFile } from '../util/helpers';
 import { ToolsService } from './api.service';
 import { SubirarhivoService } from './file.service';
-import { Platform } from '@ionic/angular';
 import { ModalInfoService } from './modal.service';
-import { dataURLtoFile } from '../util/helpers';
 
 @Injectable({
   providedIn: 'root',
@@ -37,20 +38,11 @@ export class PictureService {
         async (imageData: Photo) => {
           if (!imageData?.dataUrl) return;
           const data = dataURLtoFile(imageData?.dataUrl, 'file.png');
-          // let blob = await fetch(imageData?.webPath).then(r => r.blob());
-          console.log(data);
-          // const imgFile = dataURLtoFile(base64 encoded, "image.{ext}")
-          // const dataTransfer = new DataTransfer();
-          // dataTransfer.items.add(imgFile);
-          // console.log(imageData);
-
           this.subirArchivo.uploadImage(data, id, type);
         },
         err => {
           console.log(err);
-          this.modalInfoService.success('Error al seleccionar la imagen/Abrir la Galeria', '');
-
-          //this.api.presentToast('Error al abrir la camara');
+          this.modalInfoService.error('Error al seleccionar la imagen/Abrir la Galeria', '');
         }
       );
     });
