@@ -1,20 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { UserCreatedResponse } from '@gymTrack/core';
+import { environment } from '@gymTrack/environment';
 import { Store } from '@ngrx/store';
 import { map, take } from 'rxjs/operators';
 
-import { Auth, CreateUser } from '../../core/models/usuario.model';
-import { IAuthState, setUser, unUser } from '../state';
-import { ConstantsHelper } from '../../core/constants/constants.helper';
-import { AppState } from '../../core/state/app.reducer';
-import { StorageService } from '../../core/services/storage.service';
-import { UserCreatedResponse } from '@gymTrack/core';
-import { environment } from '@gymTrack/environment';
 import { API_PREFIX } from '../../core/constants/api-prefix';
-import { UserDto } from '../model/user.dto';
+import { ConstantsHelper } from '../../core/constants/constants.helper';
+import { StorageService } from '../../core/services/storage.service';
+import { AppState } from '../../core/state/app.reducer';
 import { AuthSuccess } from '../model/Auth';
+import { UserDto } from '../model/user.dto';
+import { IAuthState, setUser, unUser } from '../state';
 
 const API_URL = `${environment.url}${API_PREFIX}`;
 
@@ -31,11 +29,9 @@ export class AuthService {
     private storage: StorageService
   ) {
     this.loadStorage();
-    this.store
-      .select(ConstantsHelper.USER_DATA_KEY_STORAGE)
-      .subscribe((auth) => {
-        this._auth = auth;
-      });
+    this.store.select(ConstantsHelper.USER_DATA_KEY_STORAGE).subscribe(auth => {
+      this._auth = auth;
+    });
   }
 
   get user() {
@@ -57,11 +53,7 @@ export class AuthService {
       map((resp: AuthSuccess) => {
         console.log(resp.user);
         if (resp && resp.user.id && resp.user.name) {
-          this.saveStorage(
-            resp.user?.id.toString(),
-            resp.access_token,
-            resp.user
-          );
+          this.saveStorage(resp.user?.id.toString(), resp.access_token, resp.user);
           return true;
         }
         return false;
@@ -78,35 +70,23 @@ export class AuthService {
   }
 
   async hasSession() {
-    let session = await this.store
-      .select(ConstantsHelper.USER_DATA_KEY_STORAGE)
-      .pipe(take(1))
-      .toPromise();
-    return (
-      session?.id != null && session?.token != null && session?.user != null
-    );
+    const session = await this.store.select(ConstantsHelper.USER_DATA_KEY_STORAGE).pipe(take(1)).toPromise();
+    return session?.id != null && session?.token != null && session?.user != null;
   }
 
   async currentUserAllowToContinue(roles: Array<'ADMIN' | 'CASHIER' | 'CLIENT'>) {
-
-    if(!roles){
+    if (!roles) {
       return false;
     }
 
-    if(roles?.length == 0){
+    if (roles?.length == 0) {
       return false;
     }
 
-    let session = await this.store
-      .select(ConstantsHelper.USER_DATA_KEY_STORAGE)
-      .pipe(take(1))
-      .toPromise();
+    const session = await this.store.select(ConstantsHelper.USER_DATA_KEY_STORAGE).pipe(take(1)).toPromise();
 
     return roles.some((role: string) => {
-      return (
-        role.toLowerCase() ==
-        String(session?.user?.role?.name || '').toLowerCase()
-      );
+      return role.toLowerCase() == String(session?.user?.role?.name || '').toLowerCase();
     });
   }
 
@@ -117,9 +97,7 @@ export class AuthService {
   }
 
   loadStorage() {
-    let localStorageAuth = this.storage.getLocal(
-      ConstantsHelper.USER_DATA_KEY_STORAGE
-    );
+    const localStorageAuth = this.storage.getLocal(ConstantsHelper.USER_DATA_KEY_STORAGE);
 
     if (localStorageAuth?.user && localStorageAuth?.token) {
       // this.token = localStorageAuth.token;

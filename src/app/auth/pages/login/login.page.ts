@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, UntypedFormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
-import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, UntypedFormGroup, Validators } from '@angular/forms';
 // import  socialIcons  from './../../../../assets/data/pages/social-items.json';
 import { ComponentBase } from '../../../core/base/component.base';
-import { AuthService } from '../../services';
-import { AppState } from '../../../core/state/app.reducer';
 import { ModalInfoService } from '../../../core/services/modal.service';
+import { AppState } from '../../../core/state/app.reducer';
+import { AuthService } from '../../services';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +24,8 @@ export class LoginPage extends ComponentBase implements OnInit, OnDestroy {
   constructor(
     private _authService: AuthService,
     private _store: Store<AppState>,
-    private fb: FormBuilder, private router: Router,
+    private fb: FormBuilder,
+    private router: Router,
     private modalInfoService: ModalInfoService
   ) {
     super();
@@ -39,13 +40,10 @@ export class LoginPage extends ComponentBase implements OnInit, OnDestroy {
     return;
   }
 
-
   submitForm(): void {
     if (this.validateForm.valid) {
-      this._authService.login(
-        this.validateForm.value
-        , this.validateForm.value.remember).subscribe(
-        (res) => {
+      this._authService.login(this.validateForm.value, this.validateForm.value.remember).subscribe(
+        res => {
           if (!res) {
             this.modalInfoService.error('Something is wrong', '');
             this.validateForm.hasError('Something is wrong');
@@ -53,13 +51,13 @@ export class LoginPage extends ComponentBase implements OnInit, OnDestroy {
           }
           this.router.navigate(['tabs'], { replaceUrl: true });
         },
-        (login) => {
-          this.modalInfoService.error('Something is wrong',login || '');
+        login => {
+          this.modalInfoService.error('Something is wrong', login || '');
           this.validateForm.hasError('Something is wrong');
         }
       );
     } else {
-      Object.values(this.validateForm.controls).forEach((control) => {
+      Object.values(this.validateForm.controls).forEach(control => {
         if (control.invalid) {
           control.markAsDirty();
           control.updateValueAndValidity({ onlySelf: true });
