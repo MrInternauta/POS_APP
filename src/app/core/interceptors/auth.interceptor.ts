@@ -8,21 +8,17 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
-import { Observable, throwError } from 'rxjs';
-import { catchError, take } from 'rxjs/operators';
-
-import { API_PREFIX, IGNORE_ERROR } from '../constants';
-import { Token } from '../models';
-import { StatusCodes } from '../util';
-import { environment } from '../../../environments/environment';
-import { IAuthState } from '../../auth/state/auth.state';
-import { Store } from '@ngrx/store';
-import { AppState } from '../state';
-import { ConstantsHelper } from '../constants/constants.helper';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
 import { AuthService } from '../../auth/services/auth.service';
+import { IAuthState } from '../../auth/state/auth.state';
 import { ModalInfoService } from '../services';
+import { AppState } from '../state';
+import { StatusCodes } from '../util';
+
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   userSesion$!: Observable<IAuthState>;
@@ -45,22 +41,16 @@ export class AuthInterceptor implements HttpInterceptor {
   // );
   // }
 
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const originalUrl = request.url;
     request = request.clone({
       url: originalUrl,
     });
     request = this.addTokenHeader(request);
     return next.handle(request).pipe(
-      catchError((error) => {
+      catchError(error => {
         //this.modalInfoService.error();
-        this.modalInfoService.error(
-          error?.error?.message || 'Something is wrong',
-          ''
-        );
+        this.modalInfoService.error(error?.error?.message || 'Something is wrong', '');
 
         console.log(error?.error?.message);
 

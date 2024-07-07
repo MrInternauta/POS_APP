@@ -14,6 +14,7 @@ import { appReducers } from './app.reducer';
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: true,
+      connectInZone: true,
     }),
   ],
 })

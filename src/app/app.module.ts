@@ -10,7 +10,7 @@ import { CoreModule } from '@gymTrack/core';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { EffectsModule } from '@ngrx/effects';
 
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
 import { FileTransfer } from '@awesome-cordova-plugins/file-transfer/ngx';
@@ -35,6 +35,7 @@ registerLocaleData(en);
 
 @NgModule({
   declarations: [AppComponent, CommonLayoutComponent],
+  bootstrap: [AppComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -43,7 +44,6 @@ registerLocaleData(en);
     AuthModule,
     EffectsModule.forRoot([ExercisesEffects, CartEffects, PermissionsEffects]),
     FormsModule,
-    HttpClientModule,
     TemplateModule,
     SharedModule,
     NzBreadCrumbModule,
@@ -64,7 +64,7 @@ registerLocaleData(en);
       useClass: PathLocationStrategy,
     },
     ThemeConstantService,
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  bootstrap: [AppComponent],
 })
 export class AppModule {}
