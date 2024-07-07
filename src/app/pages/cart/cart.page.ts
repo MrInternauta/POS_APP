@@ -1,33 +1,17 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store, select } from '@ngrx/store';
-import { AppState, appReducers } from '../../core/state/app.reducer';
-
-import {
-  Observable,
-  Subscription,
-  catchError,
-  filter,
-  find,
-  map,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs';
-import {
-  AddProductCart,
-  CheckOut,
-  CleanCart,
-  RemoveProductCart,
-  UpdateProductCart,
-} from './state/cart.actions';
-import { ArticleItemResponse } from '../products/models';
-import { selectListCart, selectTotal } from './state/cart.selector';
 import { AlertController } from '@ionic/angular';
-import { ICheckoutRequest, ItemRequest } from './models/checkout';
-import { CartService } from './services/cart.service';
-import { ModalInfoService } from '../../core/services/modal.service';
+import { select, Store } from '@ngrx/store';
+import { map, Observable, Subscription, take, tap } from 'rxjs';
+
 import { AuthService } from '../../auth/services';
+import { ModalInfoService } from '../../core/services/modal.service';
+import { AppState } from '../../core/state/app.reducer';
+import { ArticleItemResponse } from '../products/models';
+import { ICheckoutRequest } from './models/checkout';
+import { CartService } from './services/cart.service';
+import { CleanCart, RemoveProductCart, UpdateProductCart } from './state/cart.actions';
+import { selectTotal } from './state/cart.selector';
 
 @Component({
   selector: 'app-cart',
@@ -39,8 +23,7 @@ export class Tab2Page implements OnDestroy, OnInit {
   public $observable!: Observable<any>;
   public $total!: Observable<number>;
 
-  message =
-    'This modal example uses the modalController to present and dismiss modals.';
+  message = 'This modal example uses the modalController to present and dismiss modals.';
   public historyWorkout!: Array<any>;
 
   constructor(
@@ -51,13 +34,14 @@ export class Tab2Page implements OnDestroy, OnInit {
     private authService: AuthService
   ) {
     this.$observable = this.store.select('cart').pipe(
-      map((item) => {
+      map(item => {
         return Object.values(item?.Cart || {});
       })
     );
     this.$total = this.store.select(selectTotal).pipe(tap(console.log));
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   ngOnInit(): void {}
 
   ngOnDestroy(): void {
@@ -66,11 +50,7 @@ export class Tab2Page implements OnDestroy, OnInit {
 
   clean() {
     const title = '¿Esta seguro de vaciar el carrito?';
-    this.presentAlert(
-      title,
-      () => this.store.dispatch(CleanCart()),
-      'Vaciar carrito'
-    );
+    this.presentAlert(title, () => this.store.dispatch(CleanCart()), 'Vaciar carrito');
   }
 
   checkout() {
@@ -88,13 +68,13 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.store
       .select('cart')
       .pipe(
-        map((item) => {
+        map(item => {
           return Object.values(item?.Cart || {});
         })
       )
       .pipe(take(1))
-      .subscribe((value) => {
-        const items = value.map((cartItem) => {
+      .subscribe(value => {
+        const items = value.map(cartItem => {
           return {
             productId: cartItem.article.id,
             quantity: cartItem.quantity,
@@ -108,7 +88,7 @@ export class Tab2Page implements OnDestroy, OnInit {
         this.cartService
           .checkoutProducts(dataCheckout)
           .pipe(take(1))
-          .subscribe((checkOutRes) => {
+          .subscribe(checkOutRes => {
             this.modalInfoService.success('Orden guardada correctamente!', '');
             this.store.dispatch(CleanCart());
           });
@@ -126,21 +106,26 @@ export class Tab2Page implements OnDestroy, OnInit {
 
   valueChange(quantity: number, article: ArticleItemResponse) {
     if (quantity > 100 || quantity <= 0) {
+      this.modalInfoService.warning('El producto no cuenta con suficientes existencias', article.name);
       return;
     }
+
+    if (!article?.stock || parseInt(article?.stock || '0') < quantity) {
+      this.modalInfoService.warning('El producto no cuenta con suficientes existencias', article.name);
+      return;
+    }
+
     this.update(article, quantity);
   }
 
-  async presentAlert(
-    title = '¿Desea continuar?',
-    next = () => {},
-    continueText = 'Continuar'
-  ) {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  async presentAlert(title = '¿Desea continuar?', next = () => {}, continueText = 'Continuar') {
     const alert = await this.alertController.create({
       header: title,
       buttons: [
         {
           text: 'Cancelar',
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           handler: () => {},
         },
 

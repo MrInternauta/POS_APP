@@ -1,11 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { ModalInfoService } from '../../../core/services/modal.service';
 import { Subscription } from 'rxjs';
+
+import { ISelectItem } from '../../../core/models/iselect.item';
+import { ModalInfoService } from '../../../core/services/modal.service';
+import { PictureService } from '../../../core/services/picture.service';
 import { ArticleCreate, ArticleItemResponse } from '../models';
 import { WorkoutService } from '../services/workout.service';
-import { ISelectItem } from '../../../core/models/iselect.item';
-import { PictureService } from '../../../core/services/picture.service';
 
 @Component({
   selector: 'app-detail',
@@ -73,6 +74,10 @@ export class DetailComponent implements OnDestroy, OnInit {
   }
 
   getImage() {
+    if (!this.product?.id) {
+      return;
+    }
+
     this.pictureService.changePicture(this.product?.id ?? '', 'product');
   }
 

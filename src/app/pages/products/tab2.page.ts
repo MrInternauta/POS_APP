@@ -1,41 +1,19 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {
-  AlertButton,
-  AlertController,
-  AlertInput,
-  IonModal,
-  ModalController,
-  ToastController,
-} from '@ionic/angular';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../core/state/app.reducer';
-import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
-import { EMPTY } from 'rxjs';
-
-import {
-  loadExercise,
-  loadedExercise,
-  loadedExerciseType,
-} from './state/workout.actions';
-import {
-  Observable,
-  Subscription,
-  catchError,
-  filter,
-  find,
-  map,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs';
-import { ArticleItemResponse, ArticleCreate } from './models';
-import { AddProductCart, setTotal } from '../cart/state/cart.actions';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductsFilterDto } from './models/productFilter.dto';
+import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
+import { Store } from '@ngrx/store';
+import { filter, map, Observable, Subscription, take } from 'rxjs';
+
 import { ModalInfoService } from '../../core/services/modal.service';
+import { AppState } from '../../core/state/app.reducer';
+import { AddProductCart } from '../cart/state/cart.actions';
 import { DetailComponent } from './detail/detail.component';
+import { ArticleCreate, ArticleItemResponse } from './models';
+import { ProductsFilterDto } from './models/productFilter.dto';
 import { WorkoutService } from './services/workout.service';
+import { loadedExercise } from './state/workout.actions';
 
 @Component({
   selector: 'app-tab2',
@@ -51,8 +29,7 @@ export class Tab2Page implements OnDestroy, OnInit {
   public $observable!: Observable<any>;
   public tempProduc$!: Observable<any> | null;
   public searchValue!: string | null;
-  message =
-    'This modal example uses the modalController to present and dismiss modals.';
+  message = 'This modal example uses the modalController to present and dismiss modals.';
 
   public historyWorkout!: Array<any>;
   constructor(
@@ -68,11 +45,12 @@ export class Tab2Page implements OnDestroy, OnInit {
   ) {
     this.loadProducts();
     this.$observable = this.store.select('exercises');
-    this.$observable.subscribe((value) => {
+    this.$observable.subscribe(value => {
       console.log(value?.Exercise);
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   ngOnInit(): void {}
 
   ngOnDestroy(): void {
@@ -83,28 +61,23 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   loadProducts() {
-    this.$susctiptionParams = this.activatedRoute.queryParams.subscribe(
-      (params) => {
-        const productFilter: ProductsFilterDto = {
-          limit: params?.['limit'] || 1000,
-          maxPrice: params?.['maxPrice'] || 9999,
-          minPrice: params?.['minPrice'] || 0,
-          offset: params?.['offset'] || 0,
-        };
-        this.productSuscription$ = this.exercisesService
-          .getProducts(productFilter)
-          .subscribe(
-            (response) => {
-              console.log(params);
-              if (response)
-                this.store.dispatch(loadedExercise({ Exercise: response }));
-            },
-            (error) => {
-              this.modalInfoService.error('Algo salio mal!', error);
-            }
-          );
-      }
-    );
+    this.$susctiptionParams = this.activatedRoute.queryParams.subscribe(params => {
+      const productFilter: ProductsFilterDto = {
+        limit: params?.['limit'] || 1000,
+        maxPrice: params?.['maxPrice'] || 9999,
+        minPrice: params?.['minPrice'] || 0,
+        offset: params?.['offset'] || 0,
+      };
+      this.productSuscription$ = this.exercisesService.getProducts(productFilter).subscribe(
+        response => {
+          console.log(params);
+          if (response) this.store.dispatch(loadedExercise({ Exercise: response }));
+        },
+        error => {
+          this.modalInfoService.error('Algo salio mal!', error);
+        }
+      );
+    });
   }
 
   async scanCode() {
@@ -117,14 +90,10 @@ export class Tab2Page implements OnDestroy, OnInit {
       this.searchbyCode(barcodeData.text || '');
     } catch (error) {
       if (error == 'cordova_not_available') {
-        this.modalInfoService.warning(
-          'Scanner no disponible',
-          '¿Quieres buscarlo manualmente?',
-          () => {
-            this.focusButton();
-            console.log('focus input');
-          }
-        );
+        this.modalInfoService.warning('Scanner no disponible', '¿Quieres buscarlo manualmente?', () => {
+          this.focusButton();
+          console.log('focus input');
+        });
         return;
       }
       console.log('Error', error);
@@ -138,18 +107,12 @@ export class Tab2Page implements OnDestroy, OnInit {
       return;
     }
     this.tempProduc$ = this.$observable.pipe(
-      map((item_) =>
+      map(item_ =>
         item_?.Exercise?.products.filter(
           (item: ArticleItemResponse) =>
-            String(item.name)
-              .toLocaleLowerCase()
-              .includes(String(value).toLocaleLowerCase()) ||
-            String(item.description)
-              .toLocaleLowerCase()
-              .includes(String(value).toLocaleLowerCase()) ||
-            String(item?.code)
-              .toLocaleLowerCase()
-              .includes(String(value).toLocaleLowerCase())
+            String(item.name).toLocaleLowerCase().includes(String(value).toLocaleLowerCase()) ||
+            String(item.description).toLocaleLowerCase().includes(String(value).toLocaleLowerCase()) ||
+            String(item?.code).toLocaleLowerCase().includes(String(value).toLocaleLowerCase())
         )
       )
     );
@@ -165,11 +128,9 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.$susctiptionSearch = this.$observable
       .pipe(
         take(1),
-        map((item_) =>
+        map(item_ =>
           item_?.Exercise?.products.filter((item: any) =>
-            String(item.code)
-              .toLocaleLowerCase()
-              .includes(String(code).toLocaleLowerCase())
+            String(item.code).toLocaleLowerCase().includes(String(code).toLocaleLowerCase())
           )
         )
       )
@@ -177,21 +138,17 @@ export class Tab2Page implements OnDestroy, OnInit {
         if (!products?.length || !products[0]) {
           //TODO: If is admin option to add new product
 
-          this.modalInfoService.warning(
-            'El producto no existe',
-            '¿Quieres registrarlo?',
-            () => {
-              this.openModal({
-                id: '',
-                code: code,
-                name: '',
-                description: '',
-                price: '',
-                priceSell: '',
-                stock: '',
-              });
-            }
-          );
+          this.modalInfoService.warning('El producto no existe', '¿Quieres registrarlo?', () => {
+            this.openModal({
+              id: '',
+              code: code,
+              name: '',
+              description: '',
+              price: '',
+              priceSell: '',
+              stock: '',
+            });
+          });
           // this.s;
 
           return;
@@ -201,6 +158,10 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   addToCard(article: ArticleItemResponse, quantity: number) {
+    if (!article?.stock || parseInt(article?.stock || '0') < quantity) {
+      this.modalInfoService.warning('El producto no cuenta con suficientes existencias', article.name);
+      return;
+    }
     this.store.dispatch(AddProductCart({ article, quantity }));
     this.presentProductAddedModal(article);
     //this.router.navigate(['tabs', 'tab4'], { replaceUrl: true });
