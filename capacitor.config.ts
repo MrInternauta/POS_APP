@@ -4,12 +4,14 @@ const config: CapacitorConfig = {
   appId: 'mx.ramirex.mini-pos',
   appName: 'Mini POS',
   webDir: 'www',
+  loggingBehavior: 'debug',
   server: {
     androidScheme: 'http',
     cleartext: true,
   },
+  backgroundColor: '#ffffff',
   android: {
-    allowMixedContent: true,
+    allowMixedContent: false,
   },
 };
 
