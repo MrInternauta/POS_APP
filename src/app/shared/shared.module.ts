@@ -7,6 +7,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 import { SearchPipe } from './pipes/search.pipe';
 import { ThemeConstantService } from './services/theme-constant.service';
+import { HttpClientJsonpModule } from '@angular/common/http';
 
 @NgModule({
   exports: [CommonModule, FormsModule, HttpClientJsonpModule, NzIconModule, SearchPipe],

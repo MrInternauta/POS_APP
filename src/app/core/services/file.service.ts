@@ -1,9 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { FileTransfer } from '@awesome-cordova-plugins/file-transfer/ngx';
-// import { FileTransfer } from '@awesome-cordova-plugins/file-transfer/ngx';
 import { environment } from '@gymTrack/environment';
-import { Platform } from '@ionic/angular';
 import { take } from 'rxjs';
 
 import { API_PREFIX } from '../constants';
@@ -17,8 +14,6 @@ export class SubirarhivoService {
   linkPicture = '';
   // tslint:disable-next-line: deprecation
   constructor(
-    private transfer: FileTransfer,
-    private platform: Platform,
     private modalInfoService: ModalInfoService,
     private http: HttpClient
   ) {}
@@ -33,27 +28,14 @@ export class SubirarhivoService {
   public async uploadImage(archivo: any, id: string, type: 'user' | 'product' = 'user') {
     try {
       const fd = new FormData();
-
       fd.append('file', archivo);
       const API_URL = `${environment.url}${API_PREFIX}image/${type}/${id}`;
       const res = await this.http.post(API_URL, fd).pipe(take(1)).toPromise();
       console.log(res);
       this.modalInfoService.success('Image was uploaded!', '');
-
-      // await this.platform.ready();
-      //
-      //
-      // const options: FileUploadOptions = {
-      //   fileKey: 'file',
-      // };
-      // const fileTrasfer: FileTransferObject = this.transfer.create();
-      // console.log('ready', fileTrasfer);
-
-      // const res = await fileTrasfer.upload(archivo, API_URL, options);
-      // return res;
+      return res;
     } catch (error) {
       console.log(error);
-      //this.modalInfoService.error('Error al actualizar la imagen!');
       return error;
     }
   }

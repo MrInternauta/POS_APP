@@ -2,15 +2,16 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 import { ErrorPageComponent } from './pages/error-page/error-page.component';
+import { LoginGuardGuard, LogoutGuard } from './core';
 
 const routes: Routes = [
   {
-    // canActivate: [LoginGuardGuard],
+    canActivate: [LoginGuardGuard],
     path: '',
     loadChildren: () => import('./pages/tabs.module').then(m => m.TabsPageModule),
   },
   {
-    // canActivate: [LogoutGuard],
+    canActivate: [LogoutGuard],
     path: 'authentication',
     children: [
       { path: '', redirectTo: 'login-1', pathMatch: 'full' },

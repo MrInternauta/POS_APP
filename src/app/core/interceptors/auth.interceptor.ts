@@ -11,7 +11,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, timeout } from 'rxjs/operators';
 
 import { AuthService } from '../../auth/services/auth.service';
 import { IAuthState } from '../../auth/state/auth.state';
@@ -31,16 +31,6 @@ export class AuthInterceptor implements HttpInterceptor {
     private modalInfoService: ModalInfoService
   ) {}
 
-  // getToken(){
-  //   let session = await this.store
-  //   .select(ConstantsHelper.USER_DATA_KEY_STORAGE)
-  //   .pipe(take(1))
-  //   .toPromise();
-  // return (
-  //   session?.id != null && session?.token != null && session?.user != null
-  // );
-  // }
-
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const originalUrl = request.url;
     request = request.clone({
@@ -48,6 +38,10 @@ export class AuthInterceptor implements HttpInterceptor {
     });
     request = this.addTokenHeader(request);
     return next.handle(request).pipe(
+      timeout({
+        first: 30_000,
+        with: () => throwError(() => throwError('Error: Timeout - Sin respuesta del servidor')),
+      }),
       catchError(error => {
         //this.modalInfoService.error();
         this.modalInfoService.error(error?.error?.message || 'Something is wrong', '');
@@ -71,7 +65,7 @@ export class AuthInterceptor implements HttpInterceptor {
   private addTokenHeader(request: HttpRequest<any>) {
     console.log(this.authService._auth.token);
 
-    if (this.authService._auth.token) {
+    if (this.authService?._auth?.token) {
       const setHeaders: { [name: string]: string } = {
         Authorization: `Bearer ${this.authService._auth.token}`,
       };

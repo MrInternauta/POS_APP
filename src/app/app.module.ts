@@ -13,7 +13,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
-import { FileTransfer } from '@awesome-cordova-plugins/file-transfer/ngx';
 import { Network } from '@awesome-cordova-plugins/network/ngx';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -54,7 +53,6 @@ registerLocaleData(en);
     AngularSvgIconModule.forRoot(),
   ],
   providers: [
-    FileTransfer,
     Network,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     BarcodeScanner,
