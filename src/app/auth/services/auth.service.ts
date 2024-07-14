@@ -1,18 +1,17 @@
+import { map } from 'rxjs/operators';
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserCreatedResponse } from '@gymTrack/core';
 import { environment } from '@gymTrack/environment';
-import { Store } from '@ngrx/store';
-import { map, take } from 'rxjs/operators';
 
 import { API_PREFIX } from '../../core/constants/api-prefix';
 import { ConstantsHelper } from '../../core/constants/constants.helper';
 import { StorageService } from '../../core/services/storage.service';
-import { AppState } from '../../core/state/app.reducer';
 import { AuthSuccess } from '../model/Auth';
 import { UserDto } from '../model/user.dto';
-import { IAuthState, setUser, unUser } from '../state';
+import { IAuthState } from '../state';
 
 const API_URL = `${environment.url}${API_PREFIX}`;
 
@@ -20,26 +19,23 @@ const API_URL = `${environment.url}${API_PREFIX}`;
   providedIn: 'root',
 })
 export class AuthService {
-  _auth!: IAuthState;
+  _auth!: IAuthState | null;
 
   constructor(
     public http: HttpClient,
     public router: Router,
-    private store: Store<AppState>,
     private storage: StorageService
+    // private store: Store<AppState>
   ) {
     this.loadStorage();
-    this.store.select(ConstantsHelper.USER_DATA_KEY_STORAGE).subscribe(auth => {
-      this._auth = auth;
-    });
   }
 
   get user() {
-    return this._auth.user;
+    return this._auth?.user;
   }
 
   get token() {
-    return this._auth.token;
+    return this._auth?.token;
   }
 
   login(user: UserDto, recordar = false) {
@@ -51,8 +47,14 @@ export class AuthService {
 
     return this.http.post<any>(`${API_URL}auth`, user).pipe(
       map((resp: AuthSuccess) => {
-        console.log(resp.user);
+        console.log(resp);
         if (resp && resp.user.id && resp.user.name) {
+          this._auth = {
+            user: resp.user,
+            id: resp.user.id,
+            token: resp.access_token,
+            permissions: [],
+          };
           this.saveStorage(resp.user?.id.toString(), resp.access_token, resp.user);
           return true;
         }
@@ -65,13 +67,12 @@ export class AuthService {
     return this.http.post<UserCreatedResponse>(`${API_URL}users`, user);
   }
 
-  getUserbyId(user: UserDto) {
+  getUserbyId() {
     return this.http.get<UserCreatedResponse>(`${API_URL}users`);
   }
 
   async hasSession() {
-    const session = await this.store.select(ConstantsHelper.USER_DATA_KEY_STORAGE).pipe(take(1)).toPromise();
-    return session?.id != null && session?.token != null && session?.user != null;
+    return this._auth?.id != null && this._auth?.token != null && this._auth?.user != null;
   }
 
   async currentUserAllowToContinue(roles: Array<'ADMIN' | 'CASHIER' | 'CLIENT'>) {
@@ -79,39 +80,40 @@ export class AuthService {
       return false;
     }
 
-    if (roles?.length == 0) {
+    if (!roles?.length) {
       return false;
     }
-
-    const session = await this.store.select(ConstantsHelper.USER_DATA_KEY_STORAGE).pipe(take(1)).toPromise();
+    console.log(roles, this._auth?.user);
 
     return roles.some((role: string) => {
-      return role.toLowerCase() == String(session?.user?.role?.name || '').toLowerCase();
+      return role.toLowerCase() == String(this._auth?.user?.role?.name || '').toLowerCase();
     });
   }
 
   logout() {
+    this._auth = null;
     this.storage.setLocal(ConstantsHelper.USER_DATA_KEY_STORAGE, null);
-    this.store.dispatch(unUser());
     this.router.navigate(['authentication', 'login-1']);
   }
 
   loadStorage() {
     const localStorageAuth = this.storage.getLocal(ConstantsHelper.USER_DATA_KEY_STORAGE);
 
-    if (localStorageAuth?.user && localStorageAuth?.token) {
-      // this.token = localStorageAuth.token;
-      const user: UserDto = JSON.parse(localStorageAuth.user);
-      if (!user) {
-        return;
+    if (!localStorageAuth) {
+      return;
+    }
+
+    try {
+      const localStorageSession = JSON.parse(localStorageAuth);
+
+      if (localStorageSession?.id && localStorageSession?.token && localStorageSession?.user) {
+        const user: UserDto = JSON.parse(localStorageAuth?.user);
+        const AuthObjectSession: IAuthState = { ...localStorageSession, user };
+        this._auth = AuthObjectSession;
+        console.log(this._auth);
       }
-      this.store.dispatch(
-        setUser({
-          user,
-          id: user?.id ?? 0,
-          token: localStorageAuth.token,
-        })
-      );
+    } catch (error) {
+      console.log('error', error);
     }
   }
 
@@ -121,7 +123,7 @@ export class AuthService {
       token,
       user: JSON.stringify(usuario),
     });
-    this.store.dispatch(setUser({ user: usuario, id, token }));
+    //this.store.dispatch(setUser({ user: usuario, id, token }));
   }
 
   getPerssions(userId: string) {

@@ -1,15 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AlertController, ToastController } from '@ionic/angular';
-import { AuthService } from '../../auth/services/auth.service';
-import { environment } from '../../../environments/environment';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../core/state/app.reducer';
-import { loadPermissions } from '../../auth/state/auth.actions';
-import { Observable, Subscription, map, tap } from 'rxjs';
+import { Component, OnDestroy } from '@angular/core';
 import { UserUpdateDto } from '@gymTrack/auth/model/user.dto';
-import { ProfileService } from './services/profile.service';
+import { AlertController, ToastController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../auth/services/auth.service';
 import { ModalInfoService } from '../../core/services/modal.service';
 import { PictureService } from '../../core/services/picture.service';
+import { ProfileService } from './services/profile.service';
 
 @Component({
   selector: 'app-tab3',
@@ -43,7 +39,7 @@ export class Tab3Page implements OnDestroy {
   }
 
   updateUserPicture() {
-    this.pictureService.changePicture(this.authService._auth.user?.id?.toString() || '', 'user');
+    this.pictureService.changePicture(this.authService._auth?.user?.id?.toString() || '', 'user');
   }
 
   async upgradePro() {
@@ -59,7 +55,7 @@ export class Tab3Page implements OnDestroy {
   async editProfile() {
     if (this.userToUpdate.name || this.userToUpdate.lastName || this.userToUpdate.phone || this.userToUpdate.role) {
       this.userToUpdate = {
-        ...this.authService._auth.user,
+        ...this.authService._auth?.user,
         ...this.userToUpdate,
       };
 
@@ -77,7 +73,7 @@ export class Tab3Page implements OnDestroy {
           console.log(res.user);
 
           this.presentModal(res.message, 'success');
-          this.authService.saveStorage(res?.user?.id?.toString() || '', this.authService._auth.token || '', res.user);
+          this.authService.saveStorage(res?.user?.id?.toString() || '', this.authService._auth?.token || '', res.user);
         });
     } else {
       this.presentModal();

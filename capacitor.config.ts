@@ -3,7 +3,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'mx.ramirex.mini-pos',
   appName: 'Mini POS',
-  webDir: 'www',
+  webDir: 'www/browser',
   loggingBehavior: 'debug',
   server: {
     androidScheme: 'http',

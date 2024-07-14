@@ -49,7 +49,7 @@ export class LoginPage extends ComponentBase implements OnInit, OnDestroy {
             this.validateForm.hasError('Something is wrong');
             return;
           }
-          this.router.navigate(['tabs'], { replaceUrl: true });
+          this.router.navigate(['tabs', 'tab2'], { replaceUrl: true });
         },
         login => {
           this.modalInfoService.error('Something is wrong', login || '');

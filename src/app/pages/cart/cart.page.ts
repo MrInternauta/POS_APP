@@ -1,8 +1,8 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { select, Store } from '@ngrx/store';
-import { map, Observable, Subscription, take, tap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Observable, Subscription, map, take, tap } from 'rxjs';
 
 import { AuthService } from '../../auth/services';
 import { ModalInfoService } from '../../core/services/modal.service';
@@ -81,14 +81,14 @@ export class Tab2Page implements OnDestroy, OnInit {
           };
         });
         const dataCheckout: ICheckoutRequest = {
-          userId: this.authService._auth.id,
+          userId: this.authService?._auth?.id || '',
           items,
         };
 
         this.cartService
           .checkoutProducts(dataCheckout)
           .pipe(take(1))
-          .subscribe(checkOutRes => {
+          .subscribe(() => {
             this.modalInfoService.success('Orden guardada correctamente!', '');
             this.store.dispatch(CleanCart());
           });

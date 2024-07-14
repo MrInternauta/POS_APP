@@ -1,31 +1,23 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  Router,
-  RouterStateSnapshot,
-  UrlTree,
-} from '@angular/router';
-import { ConstantsHelper } from '../constants/constants.helper';
-import { StorageService } from '../services';
+import { CanActivate, Router, UrlTree } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LogoutGuard implements CanActivate {
-  constructor(public _UsuarioService: AuthService, public router: Router) {}
-  async canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Promise<boolean | UrlTree> {
+  constructor(
+    public _UsuarioService: AuthService,
+    public router: Router
+  ) {}
+  async canActivate(): Promise<boolean | UrlTree> {
     try {
       const sessionStorage = await this._UsuarioService.hasSession();
-      console.log(sessionStorage);
+      console.log('logout session', sessionStorage);
       if (!sessionStorage) {
         return true;
       }
-      this.router.navigate([''], { replaceUrl: true });
+      this.router.navigate(['tabs', 'tab2'], { replaceUrl: true });
       return false;
     } catch (error) {
       return false;

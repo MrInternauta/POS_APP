@@ -6,12 +6,17 @@ import { AuthService } from '../../auth/services/auth.service';
   providedIn: 'root',
 })
 export class LoginGuardGuard implements CanActivate {
-  constructor(public _UsuarioService: AuthService, public router: Router) {}
+  constructor(
+    public _UsuarioService: AuthService,
+    public router: Router
+  ) {}
   async canActivate() {
-    if (await this._UsuarioService.hasSession()) {
+    const session = await this._UsuarioService.hasSession();
+    console.log('login session', session);
+    if (session) {
       return true;
     } else {
-      this.router.navigate(['/authentication/login-1']);
+      this.router.navigate(['authentication', 'login-1']);
       return false;
     }
   }
