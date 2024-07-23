@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package mx.ramirex.minipos;
 
 import com.getcapacitor.BridgeActivity;
 

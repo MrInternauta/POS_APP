@@ -1,5 +1,12 @@
+android.enableJetifier=true
+
 cd android &&
 ./gradlew assembleRelease &&
-cd app/build/outputs/apk/release &&
-jarsigner -keystore YOUR_KEYSTORE_PATH -storepass YOUR_KEYSTORE_PASS app-release-unsigned.apk YOUR_KEYSTORE_ALIAS &&
-zipalign 4 app-release-unsigned.apk app-release.apk
+
+---
+
+jarsigner -keystore /Users/feliperamirez/upload.jks -storepass password /Users/feliperamirez/Projects/POS_APP/android/app/build/outputs/apk/release/app-release-unsigned.apk upload
+
+&&
+
+/Users/feliperamirez/Library/Android/sdk/build-tools/34.0.0/zipalign 4 /Users/feliperamirez/Projects/POS_APP/android/app/build/outputs/apk/release/app-release-unsigned.apk /Users/feliperamirez/Projects/POS_APP/android/app/build/outputs/apk/release/app-release-signed.apk
