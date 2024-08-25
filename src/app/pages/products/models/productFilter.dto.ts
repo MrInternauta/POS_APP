@@ -1,4 +1,4 @@
-export interface ProductsFilterDto  {
+export interface ProductsFilterDto {
   minPrice: number;
 
   maxPrice: number;
@@ -6,5 +6,4 @@ export interface ProductsFilterDto  {
   limit: number;
 
   offset: number;
-
 }

@@ -1,22 +1,39 @@
-import { Component, ViewChild, computed, effect, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Chart, ChartConfiguration, ChartEvent, ChartType } from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts';
-
 import { default as Annotation } from 'chartjs-plugin-annotation';
+import { BaseChartDirective } from 'ng2-charts';
+import { Subscription } from 'rxjs';
+
+import { OrderResponse } from './models/order.model';
+import { OrderService } from './services/order.service';
+
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
 })
-export class Tab1Page {
+export class Tab1Page implements OnInit, OnDestroy {
   private newLabel? = 'New label';
-  public historyWorkout!: Array<any>;
-
-  constructor() {
+  public historyWorkout: OrderResponse[] = [];
+  private subscription$!: Subscription;
+  constructor(
+    private orderService: OrderService,
+    public router: Router,
+    public activatedRoute: ActivatedRoute
+  ) {
     Chart.register(Annotation);
-    this.historyWorkout = [
-      1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4,
-    ];
+  }
+
+  ngOnInit(): void {
+    this.subscription$ = this.orderService.getOrders().subscribe(response => {
+      this.historyWorkout = response?.orders || [];
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription$?.unsubscribe();
+    this.historyWorkout = [];
   }
 
   public lineChartData: ChartConfiguration['data'] = {
@@ -124,23 +141,11 @@ export class Tab1Page {
   }
 
   // events
-  public chartClicked({
-    event,
-    active,
-  }: {
-    event?: ChartEvent;
-    active?: {}[];
-  }): void {
+  public chartClicked({ event, active }: { event?: ChartEvent; active?: object[] }): void {
     console.log(event, active);
   }
 
-  public chartHovered({
-    event,
-    active,
-  }: {
-    event?: ChartEvent;
-    active?: {}[];
-  }): void {
+  public chartHovered({ event, active }: { event?: ChartEvent; active?: object[] }): void {
     console.log(event, active);
   }
 
@@ -154,9 +159,7 @@ export class Tab1Page {
       const num = Tab1Page.generateNumber(i);
       x.data.push(num);
     });
-    this.lineChartData?.labels?.push(
-      `Label ${this.lineChartData.labels.length}`
-    );
+    this.lineChartData?.labels?.push(`Label ${this.lineChartData.labels.length}`);
 
     this.chart?.update();
   }
@@ -174,5 +177,9 @@ export class Tab1Page {
     this.lineChartData.datasets[2].label = tmp;
 
     this.chart?.update();
+  }
+  public onItemClicked(item: OrderResponse): void {
+    this.orderService.itemSelected = item;
+    this.router.navigate(['tabs', 'tab1', 'order']);
   }
 }

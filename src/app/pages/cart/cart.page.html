@@ -1,11 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-title> Carrito de compras </ion-title>
-    <ion-buttons slot="end">
-      <ion-button color="primary" (click)="clean()"
-        >Vaciar<ion-icon slot="start" name="trash-outline"> </ion-icon
-      ></ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
@@ -73,6 +68,14 @@
       </div>
     </ng-container>
   </ng-container>
+
+  <ion-fab  slot="fixed" vertical="bottom" horizontal="end" *ngIf="$total | async as total">  
+    <ion-fab-button (click)="clean()">
+      <ion-icon name="trash-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+
 </ion-content>
 
 <!-- Footer without a border -->

@@ -1,0 +1,71 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title> Orden # {{orderService?.itemSelected?.id}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ng-container *ngIf="orderService?.itemSelected">
+    <ng-container>
+      <div class="flex min-h-full flex-col justify-start px-4 py-4 lg:px-6">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
+          <div *ngIf="orderService?.itemSelected?.items?.length">
+            <ion-card *ngFor="let item of orderService?.itemSelected?.items" style="margin-bottom: 10px">
+              <ion-item>
+                <p class="uppercase text-lg font-semibold">{{item?.product?.name}}</p>
+              </ion-item>
+
+              <ion-card-content>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      <app-avatar [size]="'small'" [img]="item?.product?.image || ''" [type]="'product'"></app-avatar>
+                    </ion-col>
+
+                    <ion-col size="5">
+                      <ion-card-subtitle><strong>Quantity:</strong></ion-card-subtitle>
+                      <ion-card-subtitle><strong>Price:</strong></ion-card-subtitle>
+                      <ion-card-subtitle><strong>Subtotal:</strong></ion-card-subtitle>
+                    </ion-col>
+                    <ion-col class="customCol">
+                      <p>{{item?.quantity }}</p>
+                      <p>{{item?.product?.priceSell | currency }}</p>
+                      <p>{{ getTotal(item?.product?.priceSell, item?.quantity) | currency }}</p>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-content>
+            </ion-card>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</ion-content>
+
+<!-- Footer without a border -->
+<ion-footer class="animated fadeIn" mode="md">
+  <ion-toolbar *ngIf="orderService?.itemSelected?.total">
+    <div class="flex justify-center text-center py-2">
+      <div class="row">
+        <div class="col">
+          <p class="mb-0">Total</p>
+        </div>
+
+        <div class="col">
+          <div class="customTextTotales">
+            <p class="text-2xl font-bold leading-9 tracking-tight mb-0">
+              {{ orderService?.itemSelected?.total | currency:'MXN':'symbol-narrow' | lowercase}}
+            </p>
+          </div>
+        </div>
+
+        <ion-label> Fecha de creación: {{orderService?.itemSelected?.createAt | date}} </ion-label>
+        <br />
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-footer>

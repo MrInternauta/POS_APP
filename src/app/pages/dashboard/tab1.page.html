@@ -1,18 +1,19 @@
 <ion-header [translucent]="false" class="ion-no-border">
   <ion-toolbar>
-    <ion-title> Workout Statistics </ion-title>
-    <ion-buttons slot="end">
+    <ion-title> Historial de compras</ion-title>
+    <!-- <ion-buttons slot="end">
       <ion-button class="pr-4" color="primary">Filter</ion-button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-toolbar>
   <ion-toolbar>
     <ion-searchbar class="sm:mx-[25%] sm:w-auto"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  <div class="flex min-h-full flex-col justify-start px-4 py-4 lg:px-6">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
       <canvas
+      *ngIf="false" 
         baseChart
         class="chart"
         [data]="lineChartData"
@@ -23,7 +24,7 @@
       ></canvas>
       <div
         *ngIf="!historyWorkout?.length"
-        class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8"
+        class="flex min-h-full flex-col justify-center"
       >
         <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
           <h2
@@ -34,34 +35,16 @@
         </div>
       </div>
       <ion-list *ngIf="historyWorkout?.length" class="mt-6">
-        <ion-item *ngFor="let workout of historyWorkout" detail="true" class="w-full">
-          <ion-avatar slot="start">
-            <img
-              alt="Silhouette of a person's head"
-              src="https://ionicframework.com/docs/img/demos/avatar.svg"
-            />
-          </ion-avatar>
+        <ion-item *ngFor="let workout of historyWorkout" detail="true" class="w-full"
+          (click)="onItemClicked(workout)"
+        >
           <ion-label>
-            <h3>Text Item</h3>
-            <p>Detail set to true - detail arrow displays on both modes</p>
+            <h3>Order #{{workout?.id}}</h3>
+            <p>Total: ${{workout?.total}}</p>
+            <p>Fecha de creación: {{workout?.createAt | date}}</p>
           </ion-label>
         </ion-item>
       </ion-list>
     </div>
   </div>
-  <!-- <table>
-  <tr>
-    <th *ngFor="let label of lineChartData.labels">{{label}}</th>
-  </tr>
-  <tr *ngFor="let d of lineChartData.datasets; let i=index" [class]="'line-'+i">
-    <td *ngFor="let label of lineChartData.labels; let j=index">{{d && d.data[j]}}</td>
-  </tr>
-</table>
-<div class="button-row">
-  <button mat-button mat-raised-button color="primary" (click)="randomize()">Randomize</button>
-  <button mat-button mat-raised-button color="primary" (click)="pushOne()">Push</button>
-  <button mat-button mat-raised-button color="primary" (click)="changeColor()">Recolor</button>
-  <button mat-button mat-raised-button color="primary" (click)="hideOne()">Toggle Series B</button>
-  <button mat-button mat-raised-button color="primary" (click)="changeLabel()">Change Label</button>
-</div> -->
 </ion-content>

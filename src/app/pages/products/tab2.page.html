@@ -1,11 +1,11 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-title> Lista de productos </ion-title>
-    <ion-buttons slot="end">
+    <!-- <ion-buttons slot="end">
       <ion-button (click)="openModal()" color="primary"
         ><ion-icon slot="start" name="add-outline"></ion-icon>
       </ion-button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-toolbar>
   <ion-toolbar>
     <ion-searchbar
@@ -111,6 +111,16 @@
         </div>
       </div>
       <ion-fab *ngIf="observableResult.Exercise" slot="fixed" vertical="bottom" horizontal="end">
+
+        <ion-fab-button  color="tertiary" class="mb-4">
+          <ion-icon name="filter-outline"></ion-icon>
+        </ion-fab-button>
+
+
+        <ion-fab-button (click)="openModal()" color="success" class="mb-4">
+          <ion-icon name="add-outline"></ion-icon>
+        </ion-fab-button>
+
         <ion-fab-button (click)="scanCode()">
           <ion-icon name="barcode-outline"></ion-icon>
         </ion-fab-button>
