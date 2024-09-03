@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { OrderService } from '../order.service';
+import { OrderService } from '../../services/order.service';
 
 @Component({
   selector: 'app-order',

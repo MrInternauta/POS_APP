@@ -4,13 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
-import { filter, map, Observable, Subscription, take } from 'rxjs';
+// eslint-disable-next-line
+import { map, Observable, Subscription, take } from 'rxjs';
 
 import { ModalInfoService } from '../../core/services/modal.service';
 import { AppState } from '../../core/state/app.reducer';
 import { AddProductCart } from '../cart/state/cart.actions';
 import { DetailComponent } from './detail/detail.component';
-import { ArticleCreate, ArticleItemResponse } from './models';
+import { ArticleCreate, ArticleItemResponse, CategoryItemResponse } from './models';
 import { ProductsFilterDto } from './models/productFilter.dto';
 import { WorkoutService } from './services/workout.service';
 import { loadedExercise } from './state/workout.actions';
@@ -30,8 +31,11 @@ export class Tab2Page implements OnDestroy, OnInit {
   public tempProduc$!: Observable<any> | null;
   public searchValue!: string | null;
   message = 'This modal example uses the modalController to present and dismiss modals.';
-
+  public selectedFilteritem!: string;
   public historyWorkout!: Array<any>;
+  public filter!: ProductsFilterDto;
+  subscriptionCategories$!: Subscription;
+  public categories!: Array<CategoryItemResponse>;
   constructor(
     private toastController: ToastController,
     private store: Store<AppState>,
@@ -41,7 +45,8 @@ export class Tab2Page implements OnDestroy, OnInit {
     private alertController: AlertController,
     private exercisesService: WorkoutService,
     private modalInfoService: ModalInfoService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private productService: WorkoutService
   ) {
     this.loadProducts();
     this.$observable = this.store.select('exercises');
@@ -51,7 +56,10 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.setDefaultFilter();
+    this.getCategories();
+  }
 
   ngOnDestroy(): void {
     this.$susctiption?.unsubscribe();
@@ -60,24 +68,26 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.productSuscription$?.unsubscribe();
   }
 
+  setDefaultFilter() {
+    this.selectedFilteritem = '';
+    this.filter = {
+      limit: 1000,
+      maxPrice: 9999,
+      minPrice: 0,
+      offset: 0,
+      categoryId: '',
+    };
+  }
+
   loadProducts() {
-    this.$susctiptionParams = this.activatedRoute.queryParams.subscribe(params => {
-      const productFilter: ProductsFilterDto = {
-        limit: params?.['limit'] || 1000,
-        maxPrice: params?.['maxPrice'] || 9999,
-        minPrice: params?.['minPrice'] || 0,
-        offset: params?.['offset'] || 0,
-      };
-      this.productSuscription$ = this.exercisesService.getProducts(productFilter).subscribe(
-        response => {
-          console.log(params);
-          if (response) this.store.dispatch(loadedExercise({ Exercise: response }));
-        },
-        error => {
-          this.modalInfoService.error('Algo salio mal!', error);
-        }
-      );
-    });
+    this.productSuscription$ = this.exercisesService.getProducts(this.filter).subscribe(
+      response => {
+        if (response) this.store.dispatch(loadedExercise({ Exercise: response }));
+      },
+      error => {
+        this.modalInfoService.error('Algo salio mal!', error);
+      }
+    );
   }
 
   async scanCode() {
@@ -205,5 +215,37 @@ export class Tab2Page implements OnDestroy, OnInit {
     setTimeout(() => {
       this.search.setFocus();
     }, 500);
+  }
+
+  clickedItem(value: string) {
+    console.log('clickedItem');
+    this.selectedFilteritem = value;
+    switch (value) {
+      case 'more':
+        //this.showClearButton = true;
+        break;
+      case 'less':
+        //this.showClearButton = true;
+        break;
+      default:
+        this.setDefaultFilter();
+        this.loadProducts();
+        break;
+    }
+  }
+
+  clickedCategory(value: string) {
+    console.log('clickedCategory');
+    this.setDefaultFilter();
+    this.filter.categoryId = value;
+    this.loadProducts();
+    //this.showClearButton = true;
+  }
+
+  getCategories() {
+    this.subscriptionCategories$ = this.productService.getCategories().subscribe(categoriesResponse => {
+      this.categories = categoriesResponse?.categories || [];
+      console.log(this.categories);
+    });
   }
 }

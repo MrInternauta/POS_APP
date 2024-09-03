@@ -1,23 +1,15 @@
-import { IonicModule } from '@ionic/angular';
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Tab2Page } from './tab2.page';
+import { IonicModule } from '@ionic/angular';
 
-import { Tab2PageRoutingModule } from './tab2-routing.module';
 import { ComponentsModule } from '../../core/components/components.module';
 import { DetailComponent } from './detail/detail.component';
-import { CoreModule } from '../../core/core.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Tab2PageRoutingModule } from './tab2-routing.module';
+import { Tab2Page } from './tab2.page';
 
 @NgModule({
-  imports: [
-    IonicModule,
-    CommonModule,
-    FormsModule,
-    Tab2PageRoutingModule,
-    ComponentsModule,
-  ],
+  imports: [IonicModule, CommonModule, FormsModule, Tab2PageRoutingModule, ComponentsModule],
   declarations: [Tab2Page, DetailComponent],
   exports: [Tab2Page, DetailComponent],
 })

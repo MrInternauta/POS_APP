@@ -6,4 +6,8 @@ export interface ProductsFilterDto {
   limit: number;
 
   offset: number;
+
+  categoryId?: string;
+
+  orderBy?: string;
 }

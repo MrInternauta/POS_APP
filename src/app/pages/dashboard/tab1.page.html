@@ -2,13 +2,21 @@
   <ion-toolbar>
     <ion-title> Historial de compras</ion-title>
     <!-- <ion-buttons slot="end">
-      <ion-button class="pr-4" color="primary">Filter</ion-button>
+      <app-filter-popover></app-filter-popover>
     </ion-buttons> -->
   </ion-toolbar>
+  
   <ion-toolbar>
-    <ion-searchbar class="sm:mx-[25%] sm:w-auto"></ion-searchbar>
+    <ion-searchbar class="sm:mx-[25%] sm:w-auto"
+    show-cancel-button="focus"
+    show-clear-button="never"
+    cancel-button-icon="trash"
+    placeholder="Buscar..."
+    ></ion-searchbar>
   </ion-toolbar>
 </ion-header>
+
+
 <ion-content [fullscreen]="true">
   <div class="flex min-h-full flex-col justify-start px-4 py-4 lg:px-6">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
