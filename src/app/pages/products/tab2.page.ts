@@ -84,8 +84,25 @@ export class Tab2Page implements OnDestroy, OnInit {
       response => {
         if (response) this.store.dispatch(loadedExercise({ Exercise: response }));
       },
-      error => {
-        this.modalInfoService.error('Algo salio mal!', error);
+      async error => {
+        const toast = await this.toastController.create({
+          cssClass: 'my-custom-toast',
+          header: 'Algo salio mal: ',
+          message: error,
+          duration: 3000,
+          position: 'top',
+          icon: 'checkmark-circle-outline',
+          color: 'primary',
+          buttons: [
+            {
+              icon: 'close',
+              htmlAttributes: {
+                'aria-label': 'close',
+              },
+            },
+          ],
+        });
+        toast.present();
       }
     );
   }
@@ -100,10 +117,26 @@ export class Tab2Page implements OnDestroy, OnInit {
       this.searchbyCode(barcodeData.text || '');
     } catch (error) {
       if (error == 'cordova_not_available') {
-        this.modalInfoService.warning('Scanner no disponible', '¿Quieres buscarlo manualmente?', () => {
-          this.focusButton();
-          console.log('focus input');
+        const alert = await this.alertController.create({
+          header: 'Scanner no disponible',
+          message: '¿Quieres buscarlo manualmente?',
+          buttons: [
+            {
+              text: 'Buscar',
+              role: 'cancel',
+              cssClass: 'secondary',
+              handler: () => {
+                this.focusButton();
+              },
+            },
+            {
+              text: 'Cancelar',
+              handler: () => {},
+            },
+          ],
         });
+        alert.present();
+
         return;
       }
       console.log('Error', error);
@@ -144,32 +177,89 @@ export class Tab2Page implements OnDestroy, OnInit {
           )
         )
       )
-      .subscribe((products: Array<ArticleItemResponse> | null) => {
+      .subscribe(async (products: Array<ArticleItemResponse> | null) => {
         if (!products?.length || !products[0]) {
-          //TODO: If is admin option to add new product
-
-          this.modalInfoService.warning('El producto no existe', '¿Quieres registrarlo?', () => {
-            this.openModal({
-              id: '',
-              code: code,
-              name: '',
-              description: '',
-              price: '',
-              priceSell: '',
-              stock: '',
-            });
+          const alert = await this.alertController.create({
+            header: 'Producto no encontrado',
+            message: '¿Quieres registrarlo?',
+            buttons: [
+              {
+                text: 'Cancelar',
+                role: 'cancel',
+                cssClass: 'secondary',
+              },
+              {
+                text: 'Aceptar',
+                handler: () => {
+                  this.openModal({
+                    id: '',
+                    code: code,
+                    name: '',
+                    description: '',
+                    price: '',
+                    priceSell: '',
+                    stock: '',
+                  });
+                },
+              },
+            ],
           });
-          // this.s;
-
+          alert.present();
           return;
         }
-        this.addToCard(products[0], 1);
+        const alert = await this.alertController.create({
+          header: 'Producto encontrado',
+          message: '¿Quieres registrarlo al carrito?',
+          buttons: [
+            {
+              text: 'Registrar',
+              role: 'cancel',
+              cssClass: 'secondary',
+              handler: () => {
+                this.openModal({
+                  id: '',
+                  code: code,
+                  name: '',
+                  description: '',
+                  price: '',
+                  priceSell: '',
+                  stock: '',
+                });
+              },
+            },
+            {
+              text: 'Agregar al Carrito',
+              handler: () => {
+                this.addToCard(products[0], 1);
+              },
+            },
+          ],
+        });
+        alert.present();
       });
   }
 
-  addToCard(article: ArticleItemResponse, quantity: number) {
+  async addToCard(article: ArticleItemResponse, quantity: number) {
     if (!article?.stock || parseInt(article?.stock || '0') < quantity) {
-      this.modalInfoService.warning('El producto no cuenta con suficientes existencias', article.name);
+      const toast = await this.toastController.create({
+        cssClass: 'my-custom-toast',
+        header: 'Producto no cuenta con suficientes existencias: ',
+        message: article.name,
+        duration: 3000,
+        position: 'top',
+        icon: 'checkmark-circle-outline',
+        color: 'warning',
+        buttons: [
+          {
+            icon: 'close',
+            htmlAttributes: {
+              'aria-label': 'close',
+            },
+          },
+        ],
+      });
+      toast.present();
+
       return;
     }
     this.store.dispatch(AddProductCart({ article, quantity }));
@@ -183,7 +273,24 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   async presentProductAddedModal(article: ArticleItemResponse) {
-    this.modalInfoService.success('Producto agregado al carrito', article.name);
+    const toast = await this.toastController.create({
+      cssClass: 'my-custom-toast',
+      header: 'Producto agregado al carrito: ',
+      message: article.name,
+      duration: 3000,
+      position: 'top',
+      icon: 'checkmark-circle-outline',
+      color: 'success',
+      buttons: [
+        {
+          icon: 'close',
+          htmlAttributes: {
+            'aria-label': 'close',
+          },
+        },
+      ],
+    });
+    toast.present();
   }
 
   edit(product: ArticleCreate) {
@@ -218,7 +325,6 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   clickedItem(value: string) {
-    console.log('clickedItem');
     this.selectedFilteritem = value;
     switch (value) {
       case 'more':
@@ -235,7 +341,6 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   clickedCategory(value: string) {
-    console.log('clickedCategory');
     this.setDefaultFilter();
     this.filter.categoryId = value;
     this.loadProducts();
