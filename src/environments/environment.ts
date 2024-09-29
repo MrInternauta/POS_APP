@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  url: 'http://localhost:3000/',
+  url: 'http://nestpos.eba-i2uaxmst.us-east-1.elasticbeanstalk.com/',
   production: false,
 };
 

@@ -189,7 +189,7 @@ export class Tab2Page implements OnDestroy, OnInit {
                 cssClass: 'secondary',
               },
               {
-                text: 'Aceptar',
+                text: 'Registrar',
                 handler: () => {
                   this.openModal({
                     id: '',
@@ -209,22 +209,14 @@ export class Tab2Page implements OnDestroy, OnInit {
         }
         const alert = await this.alertController.create({
           header: 'Producto encontrado',
-          message: '¿Quieres registrarlo al carrito?',
+          message: '¿Quieres agregar al carrito?',
           buttons: [
             {
-              text: 'Registrar',
+              text: 'Editar',
               role: 'cancel',
               cssClass: 'secondary',
               handler: () => {
-                this.openModal({
-                  id: '',
-                  code: code,
-                  name: '',
-                  description: '',
-                  price: '',
-                  priceSell: '',
-                  stock: '',
-                });
+                this.edit(products[0]);
               },
             },
             {

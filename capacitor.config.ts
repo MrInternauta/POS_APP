@@ -13,6 +13,9 @@ const config: CapacitorConfig = {
   android: {
     allowMixedContent: false,
   },
+  ios: {
+    loggingBehavior: 'debug',
+  },
 };
 
 export default config;
