@@ -26,19 +26,28 @@ export class PictureService {
   private takePicture = async (
     sourceType: CameraSource = CameraSource.Camera,
     id: string,
-    type: 'user' | 'product' = 'user'
+    type: 'user' | 'product' = 'user',
+    callback?: () => void
   ) => {
     this.platform.ready().then(() => {
       Camera.getPhoto({
-        quality: 90,
+        quality: 60,
         allowEditing: false,
         resultType: CameraResultType.DataUrl,
         source: sourceType,
+        height: 500,
+        width: 500,
       }).then(
         async (imageData: Photo) => {
           if (!imageData?.dataUrl) return;
+          //restrict by size 2MB
+          if (imageData?.dataUrl.length > 2097152) {
+            this.modalInfoService.error('Error', 'La imagen es muy pesada, intenta con otra.');
+            return;
+          }
           const data = dataURLtoFile(imageData?.dataUrl, 'file.png');
-          this.subirArchivo.uploadImage(data, id, type);
+          await this.subirArchivo.uploadImage(data, id, type);
+          callback && callback();
         },
         err => {
           console.log(err);
@@ -57,15 +66,15 @@ export class PictureService {
    * @function changePic
    * @description Abre modal de opciones (Para actualizar la imagen)
    */
-  changePicture(id: string, type: 'user' | 'product' = 'user') {
+  changePicture(id: string, type: 'user' | 'product' = 'user', callback?: () => void) {
     this.api.MostrarAlert(
       'Actualizar Fotografía',
       '¿Desde donde deseas seleccionar?',
       () => {
-        this.takePicture(CameraSource.Photos, id, type);
+        this.takePicture(CameraSource.Photos, id, type, callback);
       },
       () => {
-        this.takePicture(CameraSource.Camera, id, type);
+        this.takePicture(CameraSource.Camera, id, type, callback);
       },
       'Galeria',
       'Camara'

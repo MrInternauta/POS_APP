@@ -9,13 +9,13 @@
   <ion-toolbar>
     <ion-searchbar
       #search
-      (search)="searchFunction($event || '')"
       [ngModel]="searchValue"
       show-cancel-button="focus"
       show-clear-button="never"
       cancel-button-icon="trash"
       (ionCancel)="hideSearch()"
       class="sm:mx-[25%] sm:w-auto"
+      (ngModelChange)="searchFunction($event || '')"
       placeholder="Buscar producto..."></ion-searchbar>
   </ion-toolbar>
 </ion-header>

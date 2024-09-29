@@ -144,7 +144,7 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   searchFunction($termSearch: any) {
-    const value = $termSearch?.target?.value;
+    const value = $termSearch;
     if (!value || value?.length < 3) {
       this.tempProduc$ = null;
       return;

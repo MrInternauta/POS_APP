@@ -3,12 +3,10 @@
     <ion-title> Perfil </ion-title>
     <ion-buttons slot="end">
       <ion-button
-      (click)="editProfile()"
+      (click)="authService.logout()"
       id="open-modal"
       color="primary">
-      <ion-icon slot="start" name="save-outline"
-      ></ion-icon>
-
+      <ion-icon slot="start" name="log-out-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -90,10 +88,11 @@
       *ngIf="!editMode"
       >
         <app-button
+          [disabled]="!areChangesAvalible"
           [outline]="false"
-          [label]="'Cerrar sesión'"
+          [label]="'Guardar cambios'"
           size="large"
-          (click)="authService.logout()"
+          (click)="editProfile()"
         ></app-button>
       </div>
     </div>
