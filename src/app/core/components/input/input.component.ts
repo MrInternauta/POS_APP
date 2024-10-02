@@ -1,6 +1,6 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-input',
@@ -40,7 +40,7 @@ export class InputComponent implements OnInit {
     this.inputValueChange.emit(event);
   }
 
-  handleChangeEnter(event: any) {
+  handleChangeEnter() {
     this.inputValueEnter.emit(this.inputValue);
   }
 
@@ -48,7 +48,7 @@ export class InputComponent implements OnInit {
     this.userForm = this.fb.group({
       phone: [
         { value: this.inputValue, disabled: this.disabled },
-        [Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/), Validators.required],
+        // [Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/), Validators.required],
       ],
     });
   }

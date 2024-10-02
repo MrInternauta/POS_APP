@@ -1,55 +1,47 @@
 <div>
-  <label [for]="id" class="block text-sm font-medium leading-6 ">{{
-    label
-  }}</label>
-  <div class="mt-2"  [ngClass]="{'mt-2': size !== 'small', '-mt-1': size === 'small'}">
-<ng-container
-[formGroup]="userForm" novalidate
-*ngIf="type === 'phone'"
->
-<input
-id="tel"
-phoneMask
-[preValue]="inputValue"
-[phoneControl]="userForm.controls['phone']"
-formControlName="phone"
-maxlength="14"
-[placeholder]="placeholder"
-(ngModelChange)="handleChange($event)"
-(keyup.enter)="handleChangeEnter($event)"
-[name]="id"
-[type]="type"
-[autocomplete]="type"
-[ngClass]="{ 'ring-red-600 focus:ring-red-600': hasError,
-'block rounded-md border-0 text-center': size === 'small', 'px-4 py-3.5':  size !== 'small'}"
-class="block w-full rounded-md border-0
-shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
-/>
-</ng-container>
-
+  <label [for]="id" class="block text-sm font-medium leading-6">{{ label }}</label>
+  <div class="mt-2" [ngClass]="{ 'mt-2': size !== 'small', '-mt-1': size === 'small' }">
+    <ng-container [formGroup]="userForm" novalidate *ngIf="type === 'phone'">
+      <input
+        id="tel"
+        phoneMask
+        [preValue]="inputValue"
+        [phoneControl]="userForm.controls['phone']"
+        formControlName="phone"
+        maxlength="14"
+        [placeholder]="placeholder"
+        (ngModelChange)="handleChange($event)"
+        (keyup.enter)="handleChangeEnter($event)"
+        [name]="id"
+        [type]="type"
+        [autocomplete]="type"
+        [ngClass]="{
+          'ring-red-600 focus:ring-red-600': hasError,
+          'block rounded-md border-0 text-center': size === 'small',
+          'px-4 py-3.5': size !== 'small',
+        }"
+        class="block w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6" />
+    </ng-container>
 
     <input
-    *ngIf="type !== 'phone'"
-    [placeholder]="placeholder"
-    [(ngModel)]="inputValue"
-    (ngModelChange)="handleChange($event)"
-    (keyup.enter)="handleChangeEnter($event)"
-    [id]="id"
-    [name]="id"
-    [type]="type"
-    [autocomplete]="type"
-    [required]="required"
-    [disabled]="disabled"
-    [max]="maxLength"
-    [ngClass]="{ 'ring-red-600 focus:ring-red-600': hasError,
-    'block rounded-md border-0 text-center': size === 'small', 'px-4 py-3.5':  size !== 'small'}"
-    class="block w-full rounded-md border-0
-    shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
-  />
-    <label
-      *ngIf="hasError"
-      class="mt-2 ml-2 block text-sm font-medium leading-6 text-red-600"
-      >{{ hasError }}</label
-    >
+      *ngIf="type !== 'phone'"
+      [placeholder]="placeholder"
+      [(ngModel)]="inputValue"
+      (ngModelChange)="handleChange($event)"
+      (keyup.enter)="handleChangeEnter()"
+      [id]="id"
+      [name]="id"
+      [type]="type"
+      [autocomplete]="type"
+      [required]="required"
+      [disabled]="disabled"
+      [max]="maxLength"
+      [ngClass]="{
+        'ring-red-600 focus:ring-red-600': hasError,
+        'block rounded-md border-0 text-center': size === 'small',
+        'px-4 py-3.5': size !== 'small',
+      }"
+      class="block w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6" />
+    <label *ngIf="hasError" class="mt-2 ml-2 block text-sm font-medium leading-6 text-red-600">{{ hasError }}</label>
   </div>
 </div>

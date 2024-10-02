@@ -42,12 +42,12 @@
           </h2>
         </div>
       </div>
-      <ion-list *ngIf="historyWorkout?.length" class="mt-6">
+      <ion-list *ngIf="historyWorkout?.length">
         <ion-item *ngFor="let workout of historyWorkout" detail="true" class="w-full"
           (click)="onItemClicked(workout)"
         >
           <ion-label>
-            <h3>Order #{{workout?.id}}</h3>
+            <h3 class="font-bold leading-9 tracking-tight mb-1 uppercase">Orden #{{workout?.id}}</h3>
             <p>Total: ${{workout?.total}}</p>
             <p>Fecha de creación: {{workout?.createAt | date}}</p>
           </ion-label>

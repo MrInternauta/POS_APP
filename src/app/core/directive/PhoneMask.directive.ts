@@ -36,15 +36,15 @@ export class PhoneMaskDirective implements OnInit, OnDestroy {
 
   phoneValidate() {
     this.sub = this._phoneControl.valueChanges.subscribe(data => {
-      //directive to format phone number
+      //directive to format phone number with area code and country code +52
       let value = data;
       value = value.replace(/\D/g, '');
       if (value.length === 0) {
         this._phoneControl.setValue('');
         return;
       }
-      if (value.length > 10) {
-        value = value.slice(0, 10);
+      if (value.length > 13) {
+        value = value.slice(0, 13);
       }
       if (value.length > 6) {
         value = value.replace(/^(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
@@ -55,6 +55,7 @@ export class PhoneMaskDirective implements OnInit, OnDestroy {
       }
       this.renderer.setProperty(this.el.nativeElement, 'value', value);
       this._phoneControl.setValue(value);
+      //directive to format phone number with area code and country code +52
     });
   }
 }

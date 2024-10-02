@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title> Lista de productos </ion-title>
     <ion-buttons slot="end">
-      <app-filter-popover [categories]="categories" (clickedItem)="clickedItem($event)" (clickedCategory)="clickedCategory($event)" [selectedFilteritem]="selectedFilteritem || filter?.categoryId || ''"></app-filter-popover>
+      <app-filter-popover [categories]="categories" (clickedItem)="clickedItem($event)" (clickedCategory)="clickedCategory($event)" [selectedFilteritem]="selectedFilteritem || filter.categoryId || ''"></app-filter-popover>
       
     </ion-buttons>
   </ion-toolbar>

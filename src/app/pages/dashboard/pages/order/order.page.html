@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title> Orden # {{orderService?.itemSelected?.id}}</ion-title>
+    <ion-title> Orden # {{orderService.itemSelected?.id}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -58,12 +58,12 @@
         <div class="col">
           <div class="customTextTotales">
             <p class="text-2xl font-bold leading-9 tracking-tight mb-0">
-              {{ orderService?.itemSelected?.total | currency:'MXN':'symbol-narrow' | lowercase}}
+              {{ orderService.itemSelected?.total | currency:'MXN':'symbol-narrow' | lowercase}}
             </p>
           </div>
         </div>
 
-        <ion-label> Fecha de creación: {{orderService?.itemSelected?.createAt | date}} </ion-label>
+        <ion-label> Fecha de creación: {{orderService.itemSelected?.createAt | date}} </ion-label>
         <br />
       </div>
     </div>
