@@ -32,7 +32,7 @@ export class SubirarhivoService {
       const API_URL = `${environment.url}${API_PREFIX}image/${type}/${id}`;
       const res = await this.http.post(API_URL, fd).pipe(take(1)).toPromise();
       console.log(res);
-      this.modalInfoService.success('Image was uploaded!', '');
+      this.modalInfoService.success('Imagen actualizada!', '');
       return res;
     } catch (error) {
       console.log(error);

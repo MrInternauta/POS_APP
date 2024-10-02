@@ -117,7 +117,7 @@ export class DetailComponent implements OnDestroy, OnInit {
       this.subscription$ = this.productService.postProduct(product).subscribe(
         res => {
           this.removeSubscription();
-          this.modalInfoService.success('Product was Created!', '');
+          this.modalInfoService.success('El producto fue creado!', '');
           return this.modalCtrl.dismiss(res, 'created');
         },
         error => {
@@ -140,7 +140,7 @@ export class DetailComponent implements OnDestroy, OnInit {
     this.subscription$ = this.productService.putProduct(this.product.id, product).subscribe(
       res => {
         this.removeSubscription();
-        this.modalInfoService.success('Product was Updated!', '');
+        this.modalInfoService.success('El producto fue actualizado!', '');
         return this.modalCtrl.dismiss(res, 'updated');
       },
       error => {

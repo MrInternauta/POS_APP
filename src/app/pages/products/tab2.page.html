@@ -74,7 +74,7 @@
       <div class="flex min-h-full flex-col justify-start px-4 py-4 lg:px-6">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
           <div
-            *ngIf="!observableResult || !observableResult.Exercise"
+            *ngIf="!observableResult || !observableResult.Exercise?.products?.length"
             class="flex min-h-full flex-col justify-start items-center">
             <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
               <p class="text-center text-2xl font-bold leading-9 tracking-tight">No se encontraron productos</p>
