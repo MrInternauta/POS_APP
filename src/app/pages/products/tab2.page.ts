@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 // eslint-disable-next-line
 import { debounceTime, distinctUntilChanged, map, Observable, Subject, Subscription, take } from 'rxjs';
 
-import { AuthService } from '../../auth/services/auth.service';
+import { selectUser } from '../../auth/state/auth.state';
 import { ModalInfoService } from '../../core/services/modal.service';
 import { AppState } from '../../core/state/app.reducer';
 import { AddProductCart } from '../cart/state/cart.actions';
@@ -46,6 +46,8 @@ export class Tab2Page implements OnDestroy, OnInit {
   /** False once every product matching the current filter is already loaded */
   public hasMoreProducts = true;
   public loading = false;
+  /** Importing rewrites the catalogue, which only an admin is allowed to do */
+  public canImport$!: Observable<boolean>;
   private searchTerm$ = new Subject<string>();
   constructor(
     private toastController: ToastController,
@@ -58,10 +60,12 @@ export class Tab2Page implements OnDestroy, OnInit {
     private modalInfoService: ModalInfoService,
     private modalCtrl: ModalController,
     private productService: WorkoutService,
-    private transloco: TranslocoService,
-    private authService: AuthService
+    private transloco: TranslocoService
   ) {
     this.$observable = this.store.select('exercises');
+    this.canImport$ = this.store
+      .select(selectUser)
+      .pipe(map(user => String(user?.role?.name || '').toLowerCase() === 'admin'));
   }
 
   ngOnInit(): void {
@@ -78,11 +82,6 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.productSuscription$?.unsubscribe();
     this.subscriptionCategories$?.unsubscribe();
     this.importSubscription$?.unsubscribe();
-  }
-
-  /** Importing rewrites the catalogue, which only an admin is allowed to do */
-  get canImport(): boolean {
-    return String(this.authService.user?.role?.name || '').toLowerCase() === 'admin';
   }
 
   /** Hands the chosen file to the API and says what it did with it */

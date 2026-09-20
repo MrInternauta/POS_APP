@@ -3,10 +3,10 @@ import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserCreatedResponse } from '@gymTrack/core';
 import { environment } from '@gymTrack/environment';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { UserCreatedResponse } from '../../core/models';
 
 import { API_PREFIX } from '../../core/constants/api-prefix';
 import { ConstantsHelper } from '../../core/constants/constants.helper';
