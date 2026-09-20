@@ -53,7 +53,7 @@
           <p class="font-bold leading-9 tracking-tight mb-1 uppercase">Orden #{{workout?.id}}</p>
           <ion-label>
             <p>Total: ${{workout?.total}}</p>
-            <p>Fecha de creación: {{workout?.createAt | date}}</p>
+            <p>Fecha de creación: {{workout?.createAt | date: 'dd/MM/yyyy HH:mm'}}</p>
           </ion-label>
         </div>
         </ion-item>
