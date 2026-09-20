@@ -76,6 +76,16 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.loadProducts();
   }
 
+  /**
+   * Ionic keeps the page alive between visits, so ngOnInit does not run again. A sale made in the
+   * cart takes the units it sold out of the stock, and reading the list again on every entry is
+   * what shows that. ngOnInit keeps its own load because entering the page straight from its url
+   * does not run this one.
+   */
+  ionViewWillEnter(): void {
+    this.reloadFirstPage();
+  }
+
   ngOnDestroy(): void {
     this.$susctiption?.unsubscribe();
     this.$susctiptionSearch?.unsubscribe();
