@@ -31,10 +31,10 @@
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
-                <nz-form-label nzFor="phone"
+                <nz-form-label nzRequired nzFor="phone"
                   class=" text-[14px] leading-[1.4285714286] font-medium [&>label]:text-dark [&>label]:dark:text-white/[.87] capitalize inline-block">
                   Phone</nz-form-label>
-                <nz-form-control nzErrorTip="Please input your phone!">
+                <nz-form-control nzErrorTip="Please input a valid mexican phone, 10 digits!">
                   <input type="text" nz-input formControlName="phone" placeholder="Phone" id="phone" phone
                     class="flex items-center shadow-none py-[10px] px-[20px] h-[48px] border-1 border-regular dark:border-white/10 rounded-4 w-full text-[14px] font-normal leading-[1.5] placeholder:text-[#A0A0A0] dark:bg-white/10 dark:text-white/60">
                 </nz-form-control>
@@ -52,9 +52,23 @@
                 <nz-form-label nzRequired nzFor="password"
                   class=" text-[14px] leading-[1.4285714286] font-medium [&>label]:text-dark [&>label]:dark:text-white/[.87] capitalize inline-block">
                   Password</nz-form-label>
-                <nz-form-control nzErrorTip="Please input your Password!">
+                <nz-form-control nzErrorTip="Please input a password of at least 5 characters!">
                   <input type="password" nz-input formControlName="password" placeholder="Password" id="password"
                     class="flex items-center shadow-none py-[10px] px-[20px] h-[48px] border-1 border-regular dark:border-white/10 rounded-4 w-full text-[14px] font-normal leading-[1.5] placeholder:text-[#A0A0A0] dark:bg-white/10 dark:text-white/60">
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label nzRequired nzFor="checkPassword"
+                  class=" text-[14px] leading-[1.4285714286] font-medium [&>label]:text-dark [&>label]:dark:text-white/[.87] capitalize inline-block">
+                  Confirm password</nz-form-label>
+                <nz-form-control [nzErrorTip]="checkPasswordErrorTpl">
+                  <input type="password" nz-input formControlName="checkPassword" placeholder="Confirm password"
+                    id="checkPassword"
+                    class="flex items-center shadow-none py-[10px] px-[20px] h-[48px] border-1 border-regular dark:border-white/10 rounded-4 w-full text-[14px] font-normal leading-[1.5] placeholder:text-[#A0A0A0] dark:bg-white/10 dark:text-white/60">
+                  <ng-template #checkPasswordErrorTpl let-control>
+                    <ng-container *ngIf="control.hasError('required')">Please confirm your password!</ng-container>
+                    <ng-container *ngIf="control.hasError('confirm')">The two passwords are not the same!</ng-container>
+                  </ng-template>
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
@@ -68,7 +82,7 @@
               <nz-form-item>
                 <nz-form-control>
                   <div>
-                    <button nz-button class="login-form-button login-form-margin inline-flex items-center justify-center w-full h-[48px] text-14 rounded-6 font-medium bg-primary text-white cursor-pointer hover:bg-primary-hbr transition duration-300" [nzType]="'primary'">Sign Up</button>
+                    <button type="submit" nz-button [nzLoading]="isLoading" [disabled]="isLoading" class="login-form-button login-form-margin inline-flex items-center justify-center w-full h-[48px] text-14 rounded-6 font-medium bg-primary text-white cursor-pointer hover:bg-primary-hbr transition duration-300" [nzType]="'primary'">Sign Up</button>
                   </div>
                 </nz-form-control>
               </nz-form-item>
@@ -86,7 +100,7 @@
           <div class="text-center p-[25px] rounded-b-6 bg-deepBG dark:bg-[#282a37]">
             <p
               class="text-[14px] font-medium text-theme-gray dark:text-white/60 inline-flex items-center gap-[6px] mb-0">
-              Don`t have an account?<a
+              Already have an account?<a
                 class="transition duration-300 text-primary hover:text-dark dark:hover:text-white/[.87]"
                 routerLink="/authentication/login-1">Sign In</a>
             </p>
