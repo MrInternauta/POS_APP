@@ -1,8 +1,9 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-product-item',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './product-item.component.html',
   styleUrls: ['./product-item.component.scss'],
   encapsulation: ViewEncapsulation.None,

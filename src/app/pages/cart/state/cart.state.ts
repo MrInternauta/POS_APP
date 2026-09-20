@@ -44,8 +44,6 @@ const _CartReducer = createReducer(
       };
     }
 
-    console.log('Already exists', state.Cart[article.code]);
-
     if (!state.Cart[article.code]) {
       return {
         ...state,
@@ -108,8 +106,6 @@ const _CartReducer = createReducer(
 
     const newQuantity = Number(quantity || 1);
 
-    console.log('Already exists');
-
     if (newQuantity <= 0) {
       const newStateCart = {
         ...state.Cart,
@@ -144,8 +140,6 @@ const _CartReducer = createReducer(
       }
     }
     const newCart = { ...state.Cart };
-    console.log(newCart);
-
     delete newCart[code];
     return {
       ...state,
