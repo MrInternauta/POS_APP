@@ -1,0 +1,7 @@
+Código;Nombre;Cantidad;Costo;Precio de venta;Descripción;
+7790000000101;"Galletas surtidas, paquete 500g";1.500;$12,50;$1.234,50;"Con coma, y ""comillas"" dentro";
+'7790000000102';'Refresco lata 355ml';24;10;18;;
+;Producto sin codigo;5;10;20;;
+7790000000104;;5;10;20;;
+
+7501062702657;Chiles rellenos la morena 380g;36;;;;
