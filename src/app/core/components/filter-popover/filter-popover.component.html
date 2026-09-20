@@ -1,6 +1,11 @@
 <ng-container>
-  <ion-button color="primary" (click)="presentPopover($event)" [fill]="selectedFilteritem !== '' ? 'solid' : ''">
-    {{ 'filters.filter' | transloco }}
+  <ion-button
+    color="primary"
+    [title]="'filters.filter' | transloco"
+    [fill]="selectedFilteritem !== '' ? 'solid' : ''"
+    (click)="presentPopover($event)">
+    <!-- On a phone the toolbar only has room for the icon -->
+    <span class="hidden sm:inline">{{ 'filters.filter' | transloco }}</span>
     <ion-icon slot="end" name="filter-outline"></ion-icon>
   </ion-button>
   <ion-popover #popover [isOpen]="isOpen" (didDismiss)="isOpen = false">

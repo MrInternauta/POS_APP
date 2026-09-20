@@ -2,18 +2,16 @@
   <ion-toolbar>
     <ion-title>{{ 'products.title' | transloco }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button *ngIf="canImport$ | async" color="primary" (click)="csvInput.click()">
-        {{ 'products.import' | transloco }}
+      <ion-button
+        *ngIf="canImport$ | async"
+        color="primary"
+        [title]="'products.import' | transloco"
+        (click)="csvInput.click()">
+        <!-- The label only fits next to the title and the filter on a wide screen -->
+        <span class="hidden sm:inline">{{ 'products.import' | transloco }}</span>
         <ion-icon slot="end" name="cloud-upload-outline"></ion-icon>
       </ion-button>
-      <input
-        #csvInput
-        type="file"
-        accept=".csv,text/csv,text/plain"
-        hidden
-        (change)="importCsv($event)" />
       <app-filter-popover [categories]="categories" (clickedItem)="clickedItem($event)" (clickedCategory)="clickedCategory($event)" [selectedFilteritem]="selectedFilteritem || filter.categoryId || ''"></app-filter-popover>
-      
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar>
@@ -30,6 +28,15 @@
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
+  <!-- Outside ion-buttons on purpose: it is a scoped ionic component and its slot relocation drops
+       the hidden attribute of what angular renders into it, which left the file picker sitting on
+       top of the title. A class survives that. -->
+  <input
+    #csvInput
+    type="file"
+    accept=".csv,text/csv,text/plain"
+    class="hidden"
+    (change)="importCsv($event)" />
   <ng-container *ngIf="$observable | async as observableResult">
     <div class="flex min-h-full flex-col justify-start px-4 py-4 lg:px-6">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
