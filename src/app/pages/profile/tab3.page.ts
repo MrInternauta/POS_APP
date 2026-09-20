@@ -6,6 +6,7 @@ import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 import { ModalInfoService } from '../../core/services/modal.service';
 import { PictureService } from '../../core/services/picture.service';
+import { ThemeMode, ThemeService } from '../../core/services/theme.service';
 import { ProfileService } from './services/profile.service';
 
 @Component({
@@ -18,6 +19,7 @@ export class Tab3Page implements OnDestroy {
   $susctiption!: Subscription;
   /** Followed by the view, so a saved change or a new picture shows up straight away */
   public user$: Observable<UserDto | null> = this.authService.user$;
+  public themeMode$: Observable<ThemeMode> = this.themeService.mode$;
   private userToUpdate!: UserUpdateDto;
   constructor(
     private alertController: AlertController,
@@ -25,9 +27,14 @@ export class Tab3Page implements OnDestroy {
     private userService: ProfileService,
     private toastController: ToastController,
     private modalInfoService: ModalInfoService,
-    private pictureService: PictureService
+    private pictureService: PictureService,
+    private themeService: ThemeService
   ) {
     this.userToUpdate = {};
+  }
+
+  changeTheme(event: any): void {
+    this.themeService.setMode(event?.detail?.value as ThemeMode);
   }
 
   async sendResetPassword() {

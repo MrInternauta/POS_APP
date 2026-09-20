@@ -95,6 +95,21 @@
           (click)="editProfile()"
         ></app-button>
       </div>
+
+      <div class="mt-8">
+        <p class="mb-2 font-semibold">Apariencia</p>
+        <ion-segment [value]="themeMode$ | async" (ionChange)="changeTheme($event)">
+          <ion-segment-button value="system">
+            <ion-label>Sistema</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="light">
+            <ion-label>Claro</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="dark">
+            <ion-label>Oscuro</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </div>
     </div>
   </div>
 </ion-content>

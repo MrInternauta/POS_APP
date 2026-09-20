@@ -68,7 +68,8 @@
 
 }
 
-@media (prefers-color-scheme: dark) {
+//The class is put on the document by the ThemeService, which decides what 'system' means
+html.dark {
 //   /*
 //    * Dark Colors
 //    * -------------------------------------------
