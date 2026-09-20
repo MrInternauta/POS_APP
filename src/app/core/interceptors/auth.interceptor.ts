@@ -63,8 +63,6 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private addTokenHeader(request: HttpRequest<any>) {
-    console.log(this.authService._auth?.token);
-
     if (this.authService?._auth?.token) {
       const setHeaders: { [name: string]: string } = {
         Authorization: `Bearer ${this.authService._auth?.token}`,
