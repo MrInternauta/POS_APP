@@ -15,6 +15,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "^18.2.14",
     "@angular/common": "^18.0.6",
     "@angular/core": "^18.0.6",
     "@angular/forms": "^18.0.6",
@@ -22,6 +23,7 @@
     "@angular/platform-browser-dynamic": "^18.0.6",
     "@angular/router": "^18.0.6",
     "@awesome-cordova-plugins/barcode-scanner": "^6.4.0",
+    "@awesome-cordova-plugins/core": "^6.16.0",
     "@awesome-cordova-plugins/network": "^6.7.0",
     "@capacitor/android": "6.1.1",
     "@capacitor/app": "^6.0.0",
@@ -45,6 +47,7 @@
     "@ngrx/store": "^18.0.1",
     "@ngrx/store-devtools": "^18.0.1",
     "angular-svg-icon": "^16.1.0",
+    "apexcharts": "^3.54.1",
     "chart.js": "^4.3.0",
     "chartjs-plugin-annotation": "^3.0.1",
     "file-saver": "^2.0.5",
