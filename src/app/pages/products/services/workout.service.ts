@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { API_PREFIX } from 'src/app/core/constants';
 
@@ -17,17 +17,13 @@ export class WorkoutService {
 
   getCategories(params?: ProductsFilterDto) {
     return this.http.get<CategoryResponse | null>(API_URL_CATEGORY, {
-      params: {
-        ...params,
-      },
+      params: toHttpParams(params),
     });
   }
 
   getProducts(params?: ProductsFilterDto) {
     return this.http.get<ArticleResponse | null>(API_URL, {
-      params: {
-        ...params,
-      },
+      params: toHttpParams(params),
     });
   }
 
@@ -42,4 +38,17 @@ export class WorkoutService {
   deleteProduct(productId: string) {
     return this.http.delete<any | null>(`${API_URL}/${productId}`);
   }
+}
+
+/**
+ * The API rejects unknown and empty query params, so only the ones with a real
+ * value are sent.
+ */
+function toHttpParams(params?: ProductsFilterDto): HttpParams {
+  let httpParams = new HttpParams();
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value === null || value === undefined || value === '') return;
+    httpParams = httpParams.set(key, String(value));
+  });
+  return httpParams;
 }

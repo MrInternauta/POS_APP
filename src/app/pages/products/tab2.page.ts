@@ -2,10 +2,10 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
-import { AlertController, ModalController, ToastController } from '@ionic/angular';
+import { AlertController, InfiniteScrollCustomEvent, ModalController, ToastController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 // eslint-disable-next-line
-import { map, Observable, Subscription, take } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, Observable, Subject, Subscription, take } from 'rxjs';
 
 import { ModalInfoService } from '../../core/services/modal.service';
 import { AppState } from '../../core/state/app.reducer';
@@ -14,7 +14,12 @@ import { DetailComponent } from './detail/detail.component';
 import { ArticleCreate, ArticleItemResponse, CategoryItemResponse } from './models';
 import { ProductsFilterDto } from './models/productFilter.dto';
 import { WorkoutService } from './services/workout.service';
-import { loadedExercise } from './state/workout.actions';
+import { loadedExercise, loadedMoreExercise } from './state/workout.actions';
+
+/** Products requested on every page, the API caps the limit at 50 */
+export const PAGE_SIZE = 20;
+/** Shorter terms keep showing the whole list instead of searching */
+export const MIN_SEARCH_LENGTH = 3;
 
 @Component({
   selector: 'app-tab2',
@@ -28,7 +33,6 @@ export class Tab2Page implements OnDestroy, OnInit {
   $susctiptionParams!: Subscription;
   productSuscription$!: Subscription;
   public $observable!: Observable<any>;
-  public tempProduc$!: Observable<any> | null;
   public searchValue!: string | null;
   message = 'This modal example uses the modalController to present and dismiss modals.';
   public selectedFilteritem!: string;
@@ -36,6 +40,10 @@ export class Tab2Page implements OnDestroy, OnInit {
   public filter!: ProductsFilterDto;
   subscriptionCategories$!: Subscription;
   public categories!: Array<CategoryItemResponse>;
+  /** False once every product matching the current filter is already loaded */
+  public hasMoreProducts = true;
+  public loading = false;
+  private searchTerm$ = new Subject<string>();
   constructor(
     private toastController: ToastController,
     private store: Store<AppState>,
@@ -48,17 +56,14 @@ export class Tab2Page implements OnDestroy, OnInit {
     private modalCtrl: ModalController,
     private productService: WorkoutService
   ) {
-    this.loadProducts();
     this.$observable = this.store.select('exercises');
-    this.$observable.subscribe(value => {
-      console.log(value?.Exercise);
-    });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   ngOnInit(): void {
     this.setDefaultFilter();
+    this.listenSearch();
     this.getCategories();
+    this.loadProducts();
   }
 
   ngOnDestroy(): void {
@@ -66,25 +71,58 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.$susctiptionSearch?.unsubscribe();
     this.$susctiptionParams?.unsubscribe();
     this.productSuscription$?.unsubscribe();
+    this.subscriptionCategories$?.unsubscribe();
+  }
+
+  /** Keeps the list from being re-rendered when only its order or its page changed */
+  trackByProduct(_index: number, product: ArticleItemResponse) {
+    return product?.id ?? product?.code;
   }
 
   setDefaultFilter() {
     this.selectedFilteritem = '';
     this.filter = {
-      limit: 1000,
-      maxPrice: 9999,
-      minPrice: 0,
+      limit: PAGE_SIZE,
       offset: 0,
       categoryId: '',
+      orderBy: 'name',
+      order: 'ASC',
+      //The text typed in the searchbar survives a filter change
+      search: this.filter?.search,
     };
   }
 
-  loadProducts() {
+  listenSearch() {
+    this.$susctiptionSearch = this.searchTerm$
+      .pipe(
+        debounceTime(350),
+        map(term => (term.length >= MIN_SEARCH_LENGTH ? term : '')),
+        distinctUntilChanged()
+      )
+      .subscribe(term => {
+        this.filter = { ...this.filter, search: term || undefined, offset: 0 };
+        this.loadProducts();
+      });
+  }
+
+  loadProducts(append = false, onDone?: (loaded: boolean) => void) {
+    this.loading = true;
+    this.productSuscription$?.unsubscribe();
     this.productSuscription$ = this.exercisesService.getProducts(this.filter).subscribe(
       response => {
-        if (response) this.store.dispatch(loadedExercise({ Exercise: response }));
+        this.loading = false;
+        onDone?.(!!response);
+        if (!response) return;
+        const received = response.products?.length || 0;
+        const loaded = (append ? this.filter.offset : 0) + received;
+        this.hasMoreProducts = response.total != null ? loaded < response.total : received >= this.filter.limit;
+        this.store.dispatch(
+          append ? loadedMoreExercise({ Exercise: response }) : loadedExercise({ Exercise: response })
+        );
       },
       async error => {
+        this.loading = false;
+        onDone?.(false);
         const toast = await this.toastController.create({
           cssClass: 'my-custom-toast',
           header: 'Algo salio mal: ',
@@ -105,6 +143,21 @@ export class Tab2Page implements OnDestroy, OnInit {
         toast.present();
       }
     );
+  }
+
+  /** Asks for the next page when the list is scrolled to the bottom */
+  loadNextPage(event: InfiniteScrollCustomEvent) {
+    if (!this.hasMoreProducts || this.loading) {
+      event.target.complete();
+      return;
+    }
+    const previousOffset = this.filter.offset;
+    this.filter = { ...this.filter, offset: previousOffset + this.filter.limit };
+    this.loadProducts(true, loaded => {
+      //A page that failed is asked again on the next scroll instead of being skipped
+      if (!loaded) this.filter = { ...this.filter, offset: previousOffset };
+      event.target.complete();
+    });
   }
 
   async scanCode() {
@@ -144,36 +197,25 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   searchFunction($termSearch: any) {
-    const value = $termSearch;
-    if (!value || value?.length < 3) {
-      this.tempProduc$ = null;
-      return;
-    }
-    this.tempProduc$ = this.$observable.pipe(
-      map(item_ =>
-        item_?.Exercise?.products.filter(
-          (item: ArticleItemResponse) =>
-            String(item.name).toLocaleLowerCase().includes(String(value).toLocaleLowerCase()) ||
-            String(item.description).toLocaleLowerCase().includes(String(value).toLocaleLowerCase()) ||
-            String(item?.code).toLocaleLowerCase().includes(String(value).toLocaleLowerCase())
-        )
-      )
-    );
+    this.searchValue = $termSearch || null;
+    this.searchTerm$.next(String($termSearch || '').trim());
   }
 
   searchbyCode(code: string) {
-    if (!code || code?.length < 3) {
+    if (!code || code?.length < MIN_SEARCH_LENGTH) {
       this.searchValue = null;
-      this.tempProduc$ = null;
       return;
     }
 
-    this.$susctiptionSearch = this.$observable
+    //The code is looked up on the API, the scanned product may not be on the loaded pages
+    this.$susctiption?.unsubscribe();
+    this.$susctiption = this.exercisesService
+      .getProducts({ limit: PAGE_SIZE, offset: 0, search: code })
       .pipe(
         take(1),
-        map(item_ =>
-          item_?.Exercise?.products.filter((item: any) =>
-            String(item.code).toLocaleLowerCase().includes(String(code).toLocaleLowerCase())
+        map(response =>
+          (response?.products || []).filter(
+            (item: ArticleItemResponse) => String(item.code).toLocaleLowerCase() === String(code).toLocaleLowerCase()
           )
         )
       )
@@ -261,7 +303,7 @@ export class Tab2Page implements OnDestroy, OnInit {
 
   hideSearch() {
     this.searchValue = null;
-    this.tempProduc$ = null;
+    this.searchTerm$.next('');
   }
 
   async presentProductAddedModal(article: ArticleItemResponse) {
@@ -300,13 +342,13 @@ export class Tab2Page implements OnDestroy, OnInit {
     if (role == 'created') {
       //set data
       console.log(data);
-      this.loadProducts();
+      this.reloadFirstPage();
     }
 
     if (role == 'updated') {
       //update data
       console.log(data);
-      this.loadProducts();
+      this.reloadFirstPage();
     }
   }
 
@@ -320,10 +362,16 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.selectedFilteritem = value;
     switch (value) {
       case 'more':
-        //this.showClearButton = true;
+        this.applyOrder('stock', 'DESC');
         break;
       case 'less':
-        //this.showClearButton = true;
+        this.applyOrder('stock', 'ASC');
+        break;
+      case 'az':
+        this.applyOrder('name', 'ASC');
+        break;
+      case 'za':
+        this.applyOrder('name', 'DESC');
         break;
       default:
         this.setDefaultFilter();
@@ -333,16 +381,24 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   clickedCategory(value: string) {
-    this.setDefaultFilter();
-    this.filter.categoryId = value;
-    this.loadProducts();
-    //this.showClearButton = true;
+    this.filter = { ...this.filter, categoryId: value, offset: 0 };
+    this.reloadFirstPage();
   }
 
   getCategories() {
     this.subscriptionCategories$ = this.productService.getCategories().subscribe(categoriesResponse => {
       this.categories = categoriesResponse?.categories || [];
-      console.log(this.categories);
     });
+  }
+
+  private applyOrder(orderBy: ProductsFilterDto['orderBy'], order: ProductsFilterDto['order']) {
+    this.filter = { ...this.filter, orderBy, order, offset: 0 };
+    this.reloadFirstPage();
+  }
+
+  private reloadFirstPage() {
+    this.filter = { ...this.filter, offset: 0 };
+    this.hasMoreProducts = true;
+    this.loadProducts();
   }
 }

@@ -1,7 +1,11 @@
-export interface ProductsFilterDto {
-  minPrice: number;
+export type ProductOrderBy = 'name' | 'code' | 'price' | 'priceSell' | 'stock';
 
-  maxPrice: number;
+export type OrderDirection = 'ASC' | 'DESC';
+
+export interface ProductsFilterDto {
+  minPrice?: number;
+
+  maxPrice?: number;
 
   limit: number;
 
@@ -9,5 +13,10 @@ export interface ProductsFilterDto {
 
   categoryId?: string;
 
-  orderBy?: string;
+  /** Free text matched against name, description and code */
+  search?: string;
+
+  orderBy?: ProductOrderBy;
+
+  order?: OrderDirection;
 }

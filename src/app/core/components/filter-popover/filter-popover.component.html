@@ -11,6 +11,8 @@
             <ion-item-divider>
               <ion-label> Ordenar por</ion-label>
             </ion-item-divider>
+            <ion-item [button]="true" [detail]="false" (click)="onItemClicked('az')" [ngClass]="{'active': selectedFilteritem === 'az'}">Alfabéticamente (A-Z)</ion-item>
+            <ion-item [button]="true" [detail]="false" (click)="onItemClicked('za')" [ngClass]="{'active': selectedFilteritem === 'za'}">Alfabéticamente (Z-A)</ion-item>
             <ion-item [button]="true" [detail]="false" (click)="onItemClicked('more')" [ngClass]="{'active': selectedFilteritem === 'more'}" >Más existencias</ion-item>
             <ion-item [button]="true" [detail]="false" (click)="onItemClicked('less')" [ngClass]="{'active': selectedFilteritem === 'less'}">Menos existencias</ion-item>
           </ion-item-group>
@@ -20,7 +22,7 @@
               <ion-label> Filtrar por</ion-label>
             </ion-item-divider>
 
-            <ion-item [button]="true" id="nested-trigger" [ngClass]="{'active': selectedFilteritem !== '' && selectedFilteritem !== 'less' && selectedFilteritem !== 'more'}">Categorias</ion-item>
+            <ion-item [button]="true" id="nested-trigger" [ngClass]="{'active': selectedFilteritem !== '' && selectedFilteritem !== 'less' && selectedFilteritem !== 'more' && selectedFilteritem !== 'az' && selectedFilteritem !== 'za'}">Categorias</ion-item>
             <ion-popover trigger="nested-trigger" [dismissOnSelect]="true" side="end">
               <ng-template>
                 <ion-content>
@@ -29,7 +31,7 @@
                       [ngClass]="{'active': selectedFilteritem === item?.id + '' }"
                       [button]="true"
                       [detail]="false"
-                      *ngFor="let item of categories"
+                      *ngFor="let item of categories; trackBy: trackByCategory"
                       (click)="onCategoryClicked(item?.id)"
                       >{{ item.name }}</ion-item
                     >

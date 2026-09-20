@@ -1,5 +1,9 @@
 export interface ArticleResponse {
   products: ArticleItemResponse[];
+  /** Amount of products matching the filter, ignoring limit/offset */
+  total?: number;
+  limit?: number;
+  offset?: number;
 }
 
 export interface ArticleItemResponse {
