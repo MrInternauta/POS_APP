@@ -35,7 +35,10 @@
           <ion-item-sliding
             *ngFor="let workout of observableResult.Exercise?.products; trackBy: trackByProduct">
             <ion-item-options side="start">
-              <ion-item-option (click)="addToCard(workout, 1)" color="success">
+              <ion-item-option
+                (click)="addToCard(workout, 1)"
+                color="success"
+                [disabled]="!workout?.stock || workout?.stock <= 0">
                 <ion-icon slot="start" name="cart-outline"></ion-icon>
                 Agregar al carrito</ion-item-option
               >
