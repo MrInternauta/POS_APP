@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { API_PREFIX } from 'src/app/core/constants';
 
 import { environment } from '../../../../environments/environment';
-import { ArticleCreate, ArticleResponse, CategoryResponse } from '../models';
+import { ArticleCreate, ArticleResponse, CategoryResponse, ProductImportSummary } from '../models';
 import { ProductsFilterDto } from '../models/productFilter.dto';
 
 const API_URL = `${environment.url}${API_PREFIX}products`;
@@ -37,6 +37,14 @@ export class WorkoutService {
       offset: 0,
       codes: codes.slice(0, MAX_CODES),
     });
+  }
+
+  /** Sends a product list, the API creates what is missing and updates what is already there */
+  importProducts(file: File) {
+    const body = new FormData();
+    body.append('file', file);
+
+    return this.http.post<ProductImportSummary>(`${API_URL}/import`, body);
   }
 
   postProduct(product: ArticleCreate) {

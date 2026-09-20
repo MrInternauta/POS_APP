@@ -52,7 +52,11 @@
     "sellPriceLabel": "Selling price*",
     "descriptionLabel": "Description",
     "created": "The product was created",
-    "updated": "The product was updated"
+    "updated": "The product was updated",
+    "import": "Import CSV",
+    "importDone": "Import finished",
+    "importSummary": "{{created}} created, {{updated}} updated, {{failed}} failed",
+    "importEmpty": "The file has no rows to import"
   },
   "filters": {
     "filter": "Filter",

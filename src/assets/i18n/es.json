@@ -52,7 +52,11 @@
     "sellPriceLabel": "Precio de venta*",
     "descriptionLabel": "Descripción",
     "created": "El producto fue creado",
-    "updated": "El producto fue actualizado"
+    "updated": "El producto fue actualizado",
+    "import": "Importar CSV",
+    "importDone": "Importación terminada",
+    "importSummary": "{{created}} creados, {{updated}} actualizados, {{failed}} con error",
+    "importEmpty": "El archivo no tiene filas para importar"
   },
   "filters": {
     "filter": "Filtrar",

@@ -39,3 +39,17 @@ export interface CategoryItemResponse {
   name: string;
   image: string;
 }
+
+export interface ProductImportError {
+  row: number;
+  code?: string;
+  message: string;
+}
+
+export interface ProductImportSummary {
+  total: number;
+  created: number;
+  updated: number;
+  failed: number;
+  errors: ProductImportError[];
+}

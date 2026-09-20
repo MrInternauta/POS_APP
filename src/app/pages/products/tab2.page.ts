@@ -8,11 +8,12 @@ import { Store } from '@ngrx/store';
 // eslint-disable-next-line
 import { debounceTime, distinctUntilChanged, map, Observable, Subject, Subscription, take } from 'rxjs';
 
+import { AuthService } from '../../auth/services/auth.service';
 import { ModalInfoService } from '../../core/services/modal.service';
 import { AppState } from '../../core/state/app.reducer';
 import { AddProductCart } from '../cart/state/cart.actions';
 import { DetailComponent } from './detail/detail.component';
-import { ArticleCreate, ArticleItemResponse, CategoryItemResponse } from './models';
+import { ArticleCreate, ArticleItemResponse, CategoryItemResponse, ProductImportSummary } from './models';
 import { ProductsFilterDto } from './models/productFilter.dto';
 import { WorkoutService } from './services/workout.service';
 import { loadedExercise, loadedMoreExercise } from './state/workout.actions';
@@ -40,6 +41,7 @@ export class Tab2Page implements OnDestroy, OnInit {
   public historyWorkout!: Array<any>;
   public filter!: ProductsFilterDto;
   subscriptionCategories$!: Subscription;
+  importSubscription$!: Subscription;
   public categories!: Array<CategoryItemResponse>;
   /** False once every product matching the current filter is already loaded */
   public hasMoreProducts = true;
@@ -56,7 +58,8 @@ export class Tab2Page implements OnDestroy, OnInit {
     private modalInfoService: ModalInfoService,
     private modalCtrl: ModalController,
     private productService: WorkoutService,
-    private transloco: TranslocoService
+    private transloco: TranslocoService,
+    private authService: AuthService
   ) {
     this.$observable = this.store.select('exercises');
   }
@@ -74,6 +77,52 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.$susctiptionParams?.unsubscribe();
     this.productSuscription$?.unsubscribe();
     this.subscriptionCategories$?.unsubscribe();
+    this.importSubscription$?.unsubscribe();
+  }
+
+  /** Importing rewrites the catalogue, which only an admin is allowed to do */
+  get canImport(): boolean {
+    return String(this.authService.user?.role?.name || '').toLowerCase() === 'admin';
+  }
+
+  /** Hands the chosen file to the API and says what it did with it */
+  importCsv(event: any): void {
+    const input = event?.target as HTMLInputElement;
+    const file = input?.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    this.loading = true;
+    this.importSubscription$?.unsubscribe();
+    this.importSubscription$ = this.productService.importProducts(file).subscribe(
+      (summary: ProductImportSummary | null) => {
+        this.loading = false;
+        //The same file can be picked again right after
+        input.value = '';
+
+        if (!summary?.total) {
+          this.modalInfoService.warning(this.transloco.translate('products.importEmpty'), '');
+          return;
+        }
+
+        this.modalInfoService.success(
+          this.transloco.translate('products.importDone'),
+          this.transloco.translate('products.importSummary', {
+            created: summary.created,
+            updated: summary.updated,
+            failed: summary.failed,
+          })
+        );
+        this.reloadFirstPage();
+      },
+      () => {
+        //The interceptor already shows what the API answered
+        this.loading = false;
+        input.value = '';
+      }
+    );
   }
 
   /** Keeps the list from being re-rendered when only its order or its page changed */

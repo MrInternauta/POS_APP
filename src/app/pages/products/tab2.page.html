@@ -2,6 +2,16 @@
   <ion-toolbar>
     <ion-title>{{ 'products.title' | transloco }}</ion-title>
     <ion-buttons slot="end">
+      <ion-button *ngIf="canImport" color="primary" (click)="csvInput.click()">
+        {{ 'products.import' | transloco }}
+        <ion-icon slot="end" name="cloud-upload-outline"></ion-icon>
+      </ion-button>
+      <input
+        #csvInput
+        type="file"
+        accept=".csv,text/csv,text/plain"
+        hidden
+        (change)="importCsv($event)" />
       <app-filter-popover [categories]="categories" (clickedItem)="clickedItem($event)" (clickedCategory)="clickedCategory($event)" [selectedFilteritem]="selectedFilteritem || filter.categoryId || ''"></app-filter-popover>
       
     </ion-buttons>
