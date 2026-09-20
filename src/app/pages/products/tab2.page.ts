@@ -12,6 +12,7 @@ import { selectUser } from '../../auth/state/auth.state';
 import { ModalInfoService } from '../../core/services/modal.service';
 import { AppState } from '../../core/state/app.reducer';
 import { AddProductCart } from '../cart/state/cart.actions';
+import { selectListCart } from '../cart/state/cart.selector';
 import { DetailComponent } from './detail/detail.component';
 import { ArticleCreate, ArticleItemResponse, CategoryItemResponse, ProductImportSummary } from './models';
 import { ProductsFilterDto } from './models/productFilter.dto';
@@ -323,8 +324,24 @@ export class Tab2Page implements OnDestroy, OnInit {
       });
   }
 
+  /** What the cart already holds of this product, the stock left has to account for it */
+  private quantityInCart(article: ArticleItemResponse): number {
+    let inCart = 0;
+    this.store
+      .select(selectListCart)
+      .pipe(take(1))
+      .subscribe(cart => {
+        inCart = Number(cart?.[article?.code as string]?.quantity || 0);
+      });
+
+    return inCart;
+  }
+
   async addToCard(article: ArticleItemResponse, quantity: number) {
-    if (!article?.stock || parseInt(article?.stock || '0') < quantity) {
+    //Adding one at a time must not walk past the stock, so what is already in the cart counts too
+    const wanted = this.quantityInCart(article) + Number(quantity || 0);
+
+    if (!article?.stock || parseInt(article?.stock || '0') < wanted) {
       const toast = await this.toastController.create({
         cssClass: 'my-custom-toast',
         header: this.transloco.translate('products.notEnough'),
