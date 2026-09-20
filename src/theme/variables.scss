@@ -3,6 +3,10 @@
 
 /** Ionic CSS Variables **/
 :root {
+	//Native controls (the inputs of the profile above all) follow this and nothing else, so it has
+	//to say what the app decided rather than let them read the host setting on their own
+	color-scheme: light;
+
 	--ion-color-primary: #dc2626;
 	--ion-color-primary-rgb: 220,38,38;
 	--ion-color-primary-contrast: #ffffff;
@@ -70,6 +74,8 @@
 
 //The class is put on the document by the ThemeService, which decides what 'system' means
 html.dark {
+  color-scheme: dark;
+
 //   /*
 //    * Dark Colors
 //    * -------------------------------------------
