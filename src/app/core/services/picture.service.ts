@@ -27,7 +27,7 @@ export class PictureService {
     sourceType: CameraSource = CameraSource.Camera,
     id: string,
     type: 'user' | 'product' = 'user',
-    callback?: () => void
+    callback?: (uploaded?: any) => void
   ) => {
     this.platform.ready().then(() => {
       Camera.getPhoto({
@@ -46,8 +46,9 @@ export class PictureService {
             return;
           }
           const data = dataURLtoFile(imageData?.dataUrl, 'file.png');
-          await this.subirArchivo.uploadImage(data, id, type);
-          callback && callback();
+          //The API answers with the record it just updated, image name included
+          const uploaded = await this.subirArchivo.uploadImage(data, id, type);
+          callback && callback(uploaded);
         },
         err => {
           console.log(err);
@@ -66,7 +67,7 @@ export class PictureService {
    * @function changePic
    * @description Abre modal de opciones (Para actualizar la imagen)
    */
-  changePicture(id: string, type: 'user' | 'product' = 'user', callback?: () => void) {
+  changePicture(id: string, type: 'user' | 'product' = 'user', callback?: (uploaded?: any) => void) {
     this.api.MostrarAlert(
       'Actualizar Fotografía',
       '¿Desde donde deseas seleccionar?',

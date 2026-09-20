@@ -12,18 +12,18 @@
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8" *ngIf="user$ | async as user">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
       <app-avatar
         (click)="updateUserPicture()"
         [size]="'large'"
-        [img]="(authService.user?.image  || '')"
+        [img]="(user?.image || '')"
       ></app-avatar>
       <p
         *ngIf="!editMode"
         class="mt-4 text-center text-2xl font-bold leading-9 tracking-tight "
       >
-        {{authService.user?.name}} {{authService.user?.lastName}}
+        {{user?.name}} {{user?.lastName}}
       </p>
       <h3
         class="text-center text-xl font-normal leading-9 tracking-tight "
@@ -35,7 +35,7 @@
       <div class="flex mt-4 w-full">
         <div class="w-1/2 mr-4">
           <app-input
-            [inputValue]="authService.user?.name ?? ''"
+            [inputValue]="user?.name ?? ''"
             [id]="'name'"
             [type]="'text'"
             [label]="'Nombre'"
@@ -47,7 +47,7 @@
 
         <div class="w-1/2">
           <app-input
-          [inputValue]="authService.user?.lastName ?? ''"
+          [inputValue]="user?.lastName ?? ''"
           [id]="'name'"
           [type]="'text'"
           [label]="'Apellido'"
@@ -62,7 +62,7 @@
       <div class="flex mt-4 w-full">
         <div class="w-1/2 mr-4">
           <app-input
-            [inputValue]="authService.user?.email || ''"
+            [inputValue]="user?.email || ''"
             [disabled]="true"
             [id]="'email'"
             [type]="'email'"
@@ -74,7 +74,7 @@
 
         <div class="w-1/2">
           <app-input
-            [inputValue]="authService.user?.phone || ''"
+            [inputValue]="user?.phone || ''"
             [id]="'phone'"
             [type]="'phone'"
             [label]="'Numero de telefono'"
