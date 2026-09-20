@@ -15,6 +15,7 @@ import { InputComponent } from './input/input.component';
 import { ProductCardComponent } from './product-card/product-card.component';
 import { ProductItemComponent } from './product-item/product-item.component';
 import { SelectComponent } from './select/select.component';
+import { SlideToConfirmComponent } from './slide-to-confirm/slide-to-confirm.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { SelectComponent } from './select/select.component';
     SelectComponent,
     FilterPopoverComponent,
     ProductCardComponent,
+    SlideToConfirmComponent,
   ],
   imports: [TranslocoModule, FormsModule, CommonModule, IonicModule, FormsModule, ReactiveFormsModule],
   exports: [
@@ -41,6 +43,7 @@ import { SelectComponent } from './select/select.component';
     SelectComponent,
     FilterPopoverComponent,
     ProductCardComponent,
+    SlideToConfirmComponent,
   ],
 })
 export class ComponentsModule {}

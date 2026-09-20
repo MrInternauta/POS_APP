@@ -117,17 +117,6 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.presentAlert(title, () => this.store.dispatch(CleanCart()), this.transloco.translate('cart.clean'));
   }
 
-  checkout() {
-    const title = this.transloco.translate('cart.checkoutQuestion');
-    this.presentAlert(
-      title,
-      () => {
-        this.finishCheckout();
-      },
-      this.transloco.translate('common.save')
-    ); //
-  }
-
   finishCheckout() {
     this.cartItems$()
       .pipe(take(1))

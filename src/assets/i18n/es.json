@@ -74,8 +74,7 @@
     "empty": "El carrito de compras está vacío",
     "clean": "Vaciar carrito",
     "cleanQuestion": "¿Está seguro de vaciar el carrito?",
-    "checkout": "Guardar venta",
-    "checkoutQuestion": "¿Está seguro de guardar la compra?",
+    "slideToCheckout": "Desliza para guardar la venta",
     "saved": "Orden guardada correctamente",
     "invalidQuantity": "La cantidad no es válida"
   },

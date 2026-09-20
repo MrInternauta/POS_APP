@@ -74,8 +74,7 @@
     "empty": "The shopping cart is empty",
     "clean": "Empty cart",
     "cleanQuestion": "Are you sure you want to empty the cart?",
-    "checkout": "Save sale",
-    "checkoutQuestion": "Are you sure you want to save this sale?",
+    "slideToCheckout": "Slide to save the sale",
     "saved": "Order saved successfully",
     "invalidQuantity": "That quantity is not valid"
   },

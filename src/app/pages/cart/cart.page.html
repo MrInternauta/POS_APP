@@ -115,14 +115,13 @@
       </div>
     </div>
 
-    <div class="flex w-full items-center justify-center">
-      <app-button
-        [disabled]="!total || cartHasStockIssues(observableResult)"
+    <div class="flex w-full items-center justify-center pb-2">
+      <app-slide-to-confirm
         class="w-3/4"
-        [label]="'cart.checkout' | transloco"
-        [size]="'large'"
-        (click)="checkout()">
-      </app-button>
+        [disabled]="!total || cartHasStockIssues(observableResult)"
+        [label]="'cart.slideToCheckout' | transloco"
+        (confirmed)="finishCheckout()">
+      </app-slide-to-confirm>
     </div>
   </ion-toolbar>
 </ion-footer>
