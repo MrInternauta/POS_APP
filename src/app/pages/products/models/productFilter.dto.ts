@@ -13,6 +13,9 @@ export interface ProductsFilterDto {
 
   categoryId?: string;
 
+  /** Ask for an exact set of products, used to refresh what the cart holds */
+  codes?: string[];
+
   /** Free text matched against name, description and code */
   search?: string;
 

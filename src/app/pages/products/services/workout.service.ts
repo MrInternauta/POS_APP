@@ -9,6 +9,9 @@ import { ProductsFilterDto } from '../models/productFilter.dto';
 const API_URL = `${environment.url}${API_PREFIX}products`;
 const API_URL_CATEGORY = `${environment.url}${API_PREFIX}categories`;
 
+/** The API refuses to return more than a page of products at once */
+const MAX_CODES = 50;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -24,6 +27,15 @@ export class WorkoutService {
   getProducts(params?: ProductsFilterDto) {
     return this.http.get<ArticleResponse | null>(API_URL, {
       params: toHttpParams(params),
+    });
+  }
+
+  /** The products behind a set of codes, to read their stock again */
+  getProductsByCodes(codes: string[]) {
+    return this.getProducts({
+      limit: Math.min(Math.max(codes.length, 1), MAX_CODES),
+      offset: 0,
+      codes: codes.slice(0, MAX_CODES),
     });
   }
 
@@ -48,6 +60,16 @@ function toHttpParams(params?: ProductsFilterDto): HttpParams {
   let httpParams = new HttpParams();
   Object.entries(params || {}).forEach(([key, value]) => {
     if (value === null || value === undefined || value === '') return;
+
+    if (Array.isArray(value)) {
+      value
+        .filter(item => item !== null && item !== undefined && item !== '')
+        .forEach(item => {
+          httpParams = httpParams.append(key, String(item));
+        });
+      return;
+    }
+
     httpParams = httpParams.set(key, String(value));
   });
   return httpParams;

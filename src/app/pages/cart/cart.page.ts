@@ -2,16 +2,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription, map, take, tap } from 'rxjs';
+import { Observable, Subscription, map, take } from 'rxjs';
 
 import { AuthService } from '../../auth/services';
 import { ModalInfoService } from '../../core/services/modal.service';
 import { AppState } from '../../core/state/app.reducer';
 import { ArticleItemResponse } from '../products/models';
+import { WorkoutService } from '../products/services/workout.service';
 import { ICheckoutRequest } from './models/checkout';
 import { CartService } from './services/cart.service';
-import { CleanCart, RemoveProductCart, UpdateProductCart } from './state/cart.actions';
+import { CleanCart, RefreshCartStock, RemoveProductCart, UpdateProductCart } from './state/cart.actions';
 import { selectTotal } from './state/cart.selector';
+import { CartInfo } from './state/cart.state';
 
 @Component({
   selector: 'app-cart',
@@ -26,23 +28,77 @@ export class Tab2Page implements OnDestroy, OnInit {
   message = 'This modal example uses the modalController to present and dismiss modals.';
   public historyWorkout!: Array<any>;
 
+  private stockSubscription$!: Subscription;
+
   constructor(
     private store: Store<AppState>,
     private alertController: AlertController,
     private cartService: CartService,
     private modalInfoService: ModalInfoService,
-    private authService: AuthService
+    private authService: AuthService,
+    private productService: WorkoutService
   ) {
     this.$observable = this.store.select('cart').pipe(
       map(item => {
         return Object.values(item?.Cart || {});
       })
     );
-    this.$total = this.store.select(selectTotal).pipe(tap(console.log));
+    this.$total = this.store.select(selectTotal);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.refreshStock();
+  }
+
+  /**
+   * The cart keeps a copy of each product, and it survives a restart, so its stock is as old as
+   * the moment the product was added. Ionic keeps the page alive between visits, which is why
+   * this runs on every entry and not only in ngOnInit.
+   */
+  ionViewWillEnter(): void {
+    this.refreshStock();
+  }
+
+  refreshStock(): void {
+    this.stockSubscription$?.unsubscribe();
+    this.stockSubscription$ = this.cartItems$()
+      .pipe(take(1))
+      .subscribe(items => {
+        const codes = items.map(item => item?.article?.code).filter(Boolean);
+
+        if (!codes.length) {
+          return;
+        }
+
+        this.productService
+          .getProductsByCodes(codes)
+          .pipe(take(1))
+          .subscribe(response => {
+            this.store.dispatch(RefreshCartStock({ articles: response?.products || [] }));
+          });
+      });
+  }
+
+  /** Stock left once what is already in the cart is taken out */
+  availableStock(item: CartInfo): number {
+    return this.stockOf(item) - Number(item?.quantity || 0);
+  }
+
+  cartHasStockIssues(items: CartInfo[] | null): boolean {
+    return (items || []).some(item => !this.hasEnoughStock(item));
+  }
+
+  hasEnoughStock(item: CartInfo): boolean {
+    return this.availableStock(item) >= 0 && this.stockOf(item) > 0;
+  }
+
+  private stockOf(item: CartInfo): number {
+    return Number(item?.article?.stock ?? 0) || 0;
+  }
+
+  private cartItems$(): Observable<CartInfo[]> {
+    return this.store.select('cart').pipe(map(item => Object.values(item?.Cart || {}) as CartInfo[]));
+  }
 
   /** Keeps a card from being re-rendered when only the quantity of another one changed */
   trackByCartItem(_index: number, item: { article?: ArticleItemResponse }) {
@@ -51,6 +107,7 @@ export class Tab2Page implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     this.$susctiption?.unsubscribe();
+    this.stockSubscription$?.unsubscribe();
   }
 
   clean() {
@@ -70,15 +127,20 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   finishCheckout() {
-    this.store
-      .select('cart')
-      .pipe(
-        map(item => {
-          return Object.values(item?.Cart || {});
-        })
-      )
+    this.cartItems$()
       .pipe(take(1))
       .subscribe(value => {
+        //The API would refuse the order anyway, this says which product is the problem
+        const withoutStock = value.filter(cartItem => !this.hasEnoughStock(cartItem));
+
+        if (withoutStock.length) {
+          this.modalInfoService.warning(
+            'No hay existencias suficientes',
+            withoutStock.map(cartItem => cartItem?.article?.name).join(', ')
+          );
+          return;
+        }
+
         const items = value.map(cartItem => {
           return {
             productId: cartItem.article.id,
@@ -111,12 +173,12 @@ export class Tab2Page implements OnDestroy, OnInit {
 
   valueChange(quantity: number, article: ArticleItemResponse) {
     if (quantity > 100 || quantity <= 0) {
-      this.modalInfoService.warning('El producto no cuenta con suficientes existencias', article.name);
+      this.modalInfoService.warning('La cantidad no es válida', article?.name || '');
       return;
     }
 
-    if (!article?.stock || parseInt(article?.stock || '0') < quantity) {
-      this.modalInfoService.warning('El producto no cuenta con suficientes existencias', article.name);
+    if (Number(article?.stock ?? 0) < quantity) {
+      this.modalInfoService.warning('El producto no cuenta con suficientes existencias', article?.name || '');
       return;
     }
 

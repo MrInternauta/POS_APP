@@ -60,6 +60,24 @@
                       <p>{{(workout?.article?.priceSell * workout.quantity) || 0 | currency}}</p>
                     </ion-col>
                   </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <p class="font-semibold">
+                        Existencias:
+                        <span
+                          class="font-normal"
+                          [ngClass]="{ 'text-danger-hbr': !hasEnoughStock(workout) }"
+                          >{{ workout?.article?.stock || 0 }}</span
+                        >
+                      </p>
+                      <p
+                        *ngIf="!hasEnoughStock(workout)"
+                        class="font-semibold text-danger-hbr flex items-center gap-1">
+                        <ion-icon name="warning-outline"></ion-icon>
+                        No hay existencias suficientes
+                      </p>
+                    </ion-col>
+                  </ion-row>
                 </ion-grid>
               </ion-card-content>
             </ion-card>
@@ -98,7 +116,12 @@
     </div>
 
     <div class="flex w-full items-center justify-center">
-      <app-button [disabled]="!total" class="w-3/4" [label]="'Guardar venta'" [size]="'large'" (click)="checkout()">
+      <app-button
+        [disabled]="!total || cartHasStockIssues(observableResult)"
+        class="w-3/4"
+        [label]="'Guardar venta'"
+        [size]="'large'"
+        (click)="checkout()">
       </app-button>
     </div>
   </ion-toolbar>
