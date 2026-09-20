@@ -44,6 +44,11 @@ export class Tab2Page implements OnDestroy, OnInit {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   ngOnInit(): void {}
 
+  /** Keeps a card from being re-rendered when only the quantity of another one changed */
+  trackByCartItem(_index: number, item: { article?: ArticleItemResponse }) {
+    return item?.article?.id ?? item?.article?.code;
+  }
+
   ngOnDestroy(): void {
     this.$susctiption?.unsubscribe();
   }

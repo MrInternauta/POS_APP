@@ -19,7 +19,7 @@
           </div>
 
           <div *ngIf="observableResult.length">
-            <ion-card *ngFor="let workout of observableResult" style="margin-bottom: 10px">
+            <ion-card *ngFor="let workout of observableResult; trackBy: trackByCartItem" style="margin-bottom: 10px">
               <ion-item>
                 <p class="uppercase text-lg font-semibold">{{workout.article?.name}}</p>
                 <!-- option popover menu -->

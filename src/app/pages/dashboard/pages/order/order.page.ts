@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { ItemResponse } from '../../models/order.model';
 import { OrderService } from '../../services/order.service';
 
 @Component({
@@ -16,6 +17,10 @@ export class OrderPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     return;
+  }
+
+  trackByOrderItem(_index: number, item: ItemResponse) {
+    return item?.id;
   }
 
   getTotal(priceSell: string = '', quantity?: number): number {

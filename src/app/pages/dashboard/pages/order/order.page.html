@@ -13,7 +13,7 @@
       <div class="flex min-h-full flex-col justify-start px-4 py-4 lg:px-6">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
           <div *ngIf="orderService?.itemSelected?.items?.length">
-            <ion-card *ngFor="let item of orderService?.itemSelected?.items" style="margin-bottom: 10px">
+            <ion-card *ngFor="let item of orderService?.itemSelected?.items; trackBy: trackByOrderItem" style="margin-bottom: 10px">
               <ion-item>
                 <p class="uppercase text-lg font-semibold">{{item?.product?.name}}</p>
               </ion-item>

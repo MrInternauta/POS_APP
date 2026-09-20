@@ -43,7 +43,7 @@
         </div>
       </div>
       <ion-list *ngIf="historyWorkout?.length">
-        <ion-item *ngFor="let workout of historyWorkout" detail="true" class="w-full"
+        <ion-item *ngFor="let workout of historyWorkout; trackBy: trackByOrder" detail="true" class="w-full"
           (click)="onItemClicked(workout)"
         >
         <div class="flex flex-col mb-2">

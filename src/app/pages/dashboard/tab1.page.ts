@@ -178,6 +178,10 @@ export class Tab1Page implements OnInit, OnDestroy {
 
     this.chart?.update();
   }
+  public trackByOrder(_index: number, order: OrderResponse) {
+    return order?.id;
+  }
+
   public onItemClicked(item: OrderResponse): void {
     this.orderService.itemSelected = item;
     this.router.navigate(['tabs', 'tab1', 'order']);
