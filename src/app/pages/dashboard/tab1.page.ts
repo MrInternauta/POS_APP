@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RefresherCustomEvent } from '@ionic/angular';
 import { Chart, ChartConfiguration, ChartEvent, ChartType } from 'chart.js';
 import { default as Annotation } from 'chartjs-plugin-annotation';
 import { BaseChartDirective } from 'ng2-charts';
@@ -26,14 +27,36 @@ export class Tab1Page implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription$ = this.orderService.getOrders().subscribe(response => {
-      this.historyWorkout = response?.orders || [];
-    });
+    this.loadOrders();
+  }
+
+  /**
+   * Ionic keeps the page alive between visits, so ngOnInit does not run again. Reloading on every
+   * entry is what brings the order that was just paid into the history.
+   */
+  ionViewWillEnter(): void {
+    this.loadOrders();
   }
 
   ngOnDestroy(): void {
     this.subscription$?.unsubscribe();
     this.historyWorkout = [];
+  }
+
+  loadOrders(onDone?: () => void): void {
+    this.subscription$?.unsubscribe();
+    this.subscription$ = this.orderService.getOrders().subscribe(
+      response => {
+        this.historyWorkout = response?.orders || [];
+        onDone?.();
+      },
+      () => onDone?.()
+    );
+  }
+
+  /** Pull to refresh, for a sale made somewhere else */
+  refreshOrders(event: RefresherCustomEvent): void {
+    this.loadOrders(() => event.target.complete());
   }
 
   public lineChartData: ChartConfiguration['data'] = {

@@ -18,6 +18,9 @@
 
 
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refreshOrders($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <div class="flex min-h-full flex-col justify-start px-4 py-4 lg:px-6">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
       <canvas
