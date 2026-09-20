@@ -15,6 +15,7 @@ import { catchError, timeout } from 'rxjs/operators';
 
 import { AuthService } from '../../auth/services/auth.service';
 import { IAuthState } from '../../auth/state/auth.state';
+import { ApiMessageService } from '../i18n/api-message.service';
 import { ModalInfoService } from '../services';
 import { AppState } from '../state';
 import { StatusCodes } from '../util';
@@ -28,7 +29,8 @@ export class AuthInterceptor implements HttpInterceptor {
     private store: Store<AppState>,
     public router: Router,
     private authService: AuthService,
-    private modalInfoService: ModalInfoService
+    private modalInfoService: ModalInfoService,
+    private apiMessage: ApiMessageService
   ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -40,24 +42,20 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       timeout({
         first: 30_000,
-        with: () => throwError(() => throwError('Error: Timeout - Sin respuesta del servidor')),
+        with: () => throwError(() => new Error(this.apiMessage.translate('timeout'))),
       }),
       catchError(error => {
-        //this.modalInfoService.error();
-        this.modalInfoService.error(error?.error?.message || 'Something is wrong', '');
+        //The API answers in english, this is where it is put in the language of the app
+        const message = this.apiMessage.translate(error?.error?.message ?? error?.statusText ?? error?.message);
 
-        console.log(error?.error?.message);
+        this.modalInfoService.error(message, '');
 
-        if (error instanceof HttpErrorResponse) {
-          if (error.status === StatusCodes.UNAUTHORIZED) {
-            // check for unauthorized error and redirect to login page.
-            this.redirect();
-            const err = error.error.message || error.statusText;
-            return throwError(err);
-          }
+        if (error instanceof HttpErrorResponse && error.status === StatusCodes.UNAUTHORIZED) {
+          // check for unauthorized error and redirect to login page.
+          this.redirect();
         }
-        const err = error.error.message || error.statusText;
-        return throwError(err);
+
+        return throwError(() => message);
       })
     );
   }

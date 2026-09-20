@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserDto } from '@gymTrack/auth/model/user.dto';
+import { TranslocoService } from '@jsverse/transloco';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
@@ -33,7 +34,8 @@ export class SignUp1Component implements OnInit, OnDestroy {
     private authService: AuthService,
     private _store: Store<AppState>,
     private modalInfoService: ModalInfoService,
-    private router: Router
+    private router: Router,
+    private transloco: TranslocoService
   ) {}
 
   ngOnInit(): void {
@@ -87,8 +89,10 @@ export class SignUp1Component implements OnInit, OnDestroy {
       () => {
         this.isLoading = false;
         //Signing up gives no token back, the new user still has to log in
-        this.modalInfoService.success('User created', 'Sign in with your new account', () =>
-          this.router.navigate(['authentication', 'login-1'], { replaceUrl: true })
+        this.modalInfoService.success(
+          this.transloco.translate('auth.userCreated'),
+          this.transloco.translate('auth.signInWithNewAccount'),
+          () => this.router.navigate(['authentication', 'login-1'], { replaceUrl: true })
         );
       },
       () => {

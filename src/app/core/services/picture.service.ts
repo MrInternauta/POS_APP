@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { Platform } from '@ionic/angular';
 
+import { TranslocoService } from '@jsverse/transloco';
 import { dataURLtoFile } from '../util/helpers';
+
 import { ToolsService } from './api.service';
 import { SubirarhivoService } from './file.service';
 import { ModalInfoService } from './modal.service';
@@ -16,7 +18,8 @@ export class PictureService {
     private api: ToolsService,
     public subirArchivo: SubirarhivoService,
     private platform: Platform,
-    private modalInfoService: ModalInfoService
+    private modalInfoService: ModalInfoService,
+    private transloco: TranslocoService
   ) {}
 
   /* The `sourceType` parameter in the `takePicture` method of the
@@ -42,7 +45,10 @@ export class PictureService {
           if (!imageData?.dataUrl) return;
           //restrict by size 2MB
           if (imageData?.dataUrl.length > 2097152) {
-            this.modalInfoService.error('Error', 'La imagen es muy pesada, intenta con otra.');
+            this.modalInfoService.error(
+              this.transloco.translate('common.somethingWrong'),
+              this.transloco.translate('picture.tooHeavy')
+            );
             return;
           }
           const data = dataURLtoFile(imageData?.dataUrl, 'file.png');
@@ -69,16 +75,16 @@ export class PictureService {
    */
   changePicture(id: string, type: 'user' | 'product' = 'user', callback?: (uploaded?: any) => void) {
     this.api.MostrarAlert(
-      'Actualizar Fotografía',
-      '¿Desde donde deseas seleccionar?',
+      this.transloco.translate('picture.title'),
+      this.transloco.translate('picture.question'),
       () => {
         this.takePicture(CameraSource.Photos, id, type, callback);
       },
       () => {
         this.takePicture(CameraSource.Camera, id, type, callback);
       },
-      'Galeria',
-      'Camara'
+      this.transloco.translate('picture.gallery'),
+      this.transloco.translate('picture.camera')
     );
   }
 }

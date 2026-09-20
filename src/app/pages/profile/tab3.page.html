@@ -1,6 +1,6 @@
 <ion-header [translucent]="false" class="ion-no-border">
   <ion-toolbar>
-    <ion-title> Perfil </ion-title>
+    <ion-title>{{ 'profile.title' | transloco }}</ion-title>
     <ion-buttons slot="end">
       <ion-button
       (click)="authService.logout()"
@@ -38,7 +38,7 @@
             [inputValue]="user?.name ?? ''"
             [id]="'name'"
             [type]="'text'"
-            [label]="'Nombre'"
+            [label]="'profile.name' | transloco"
             [required]="true"
             [maxLength]="100"
             (inputValueChange)="changeName($event)"
@@ -50,7 +50,7 @@
           [inputValue]="user?.lastName ?? ''"
           [id]="'name'"
           [type]="'text'"
-          [label]="'Apellido'"
+          [label]="'profile.lastName' | transloco"
           [required]="true"
           [maxLength]="100"
           (inputValueChange)="changelastName($event)"
@@ -66,7 +66,7 @@
             [disabled]="true"
             [id]="'email'"
             [type]="'email'"
-            [label]="'Correo electronico'"
+            [label]="'profile.email' | transloco"
             [required]="true"
             [maxLength]="100"
           ></app-input>
@@ -77,7 +77,7 @@
             [inputValue]="user?.phone || ''"
             [id]="'phone'"
             [type]="'phone'"
-            [label]="'Numero de telefono'"
+            [label]="'profile.phone' | transloco"
             [maxLength]="100"
             (inputValueChange)="changePhone($event)"
           ></app-input>
@@ -90,23 +90,38 @@
         <app-button
           [disabled]="!areChangesAvalible"
           [outline]="false"
-          [label]="'Guardar cambios'"
+          [label]="'profile.saveChanges' | transloco"
           size="large"
           (click)="editProfile()"
         ></app-button>
       </div>
 
       <div class="mt-8">
-        <p class="mb-2 font-semibold">Apariencia</p>
+        <p class="mb-2 font-semibold">{{ 'profile.appearance' | transloco }}</p>
         <ion-segment [value]="themeMode$ | async" (ionChange)="changeTheme($event)">
           <ion-segment-button value="system">
-            <ion-label>Sistema</ion-label>
+            <ion-label>{{ 'profile.themeSystem' | transloco }}</ion-label>
           </ion-segment-button>
           <ion-segment-button value="light">
-            <ion-label>Claro</ion-label>
+            <ion-label>{{ 'profile.themeLight' | transloco }}</ion-label>
           </ion-segment-button>
           <ion-segment-button value="dark">
-            <ion-label>Oscuro</ion-label>
+            <ion-label>{{ 'profile.themeDark' | transloco }}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+      <div class="mt-6 mb-8">
+        <p class="mb-2 font-semibold">{{ 'profile.language' | transloco }}</p>
+        <ion-segment [value]="language$ | async" (ionChange)="changeLanguage($event)">
+          <ion-segment-button value="es">
+            <ion-label>Español</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="en">
+            <ion-label>English</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="pt">
+            <ion-label>Português</ion-label>
           </ion-segment-button>
         </ion-segment>
       </div>

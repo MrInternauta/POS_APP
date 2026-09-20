@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 
+import { LanguageService } from './core/i18n/language.service';
 import { ThemeService } from './core/services/theme.service';
 
 @Component({
@@ -8,7 +9,11 @@ import { ThemeService } from './core/services/theme.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private themeService: ThemeService) {
+  constructor(
+    private themeService: ThemeService,
+    private languageService: LanguageService
+  ) {
     this.themeService.init();
+    this.languageService.init();
   }
 }

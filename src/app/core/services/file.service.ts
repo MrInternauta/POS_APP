@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '@gymTrack/environment';
 import { take } from 'rxjs';
 
+import { TranslocoService } from '@jsverse/transloco';
+
 import { API_PREFIX } from '../constants';
 import { ModalInfoService } from './modal.service';
 
@@ -15,7 +17,8 @@ export class SubirarhivoService {
   // tslint:disable-next-line: deprecation
   constructor(
     private modalInfoService: ModalInfoService,
-    private http: HttpClient
+    private http: HttpClient,
+    private transloco: TranslocoService
   ) {}
 
   /**
@@ -32,7 +35,7 @@ export class SubirarhivoService {
       const API_URL = `${environment.url}${API_PREFIX}image/${type}/${id}`;
       const res = await this.http.post(API_URL, fd).pipe(take(1)).toPromise();
       console.log(res);
-      this.modalInfoService.success('Imagen actualizada!', '');
+      this.modalInfoService.success(this.transloco.translate('picture.updated'), '');
       return res;
     } catch (error) {
       console.log(error);

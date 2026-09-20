@@ -1,6 +1,7 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { TranslocoService } from '@jsverse/transloco';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription, map, take } from 'rxjs';
 
@@ -36,7 +37,8 @@ export class Tab2Page implements OnDestroy, OnInit {
     private cartService: CartService,
     private modalInfoService: ModalInfoService,
     private authService: AuthService,
-    private productService: WorkoutService
+    private productService: WorkoutService,
+    private transloco: TranslocoService
   ) {
     this.$observable = this.store.select('cart').pipe(
       map(item => {
@@ -111,18 +113,18 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   clean() {
-    const title = '¿Esta seguro de vaciar el carrito?';
-    this.presentAlert(title, () => this.store.dispatch(CleanCart()), 'Vaciar carrito');
+    const title = this.transloco.translate('cart.cleanQuestion');
+    this.presentAlert(title, () => this.store.dispatch(CleanCart()), this.transloco.translate('cart.clean'));
   }
 
   checkout() {
-    const title = '¿Esta seguro de guardar la compra?';
+    const title = this.transloco.translate('cart.checkoutQuestion');
     this.presentAlert(
       title,
       () => {
         this.finishCheckout();
       },
-      'Guardar'
+      this.transloco.translate('common.save')
     ); //
   }
 
@@ -135,7 +137,7 @@ export class Tab2Page implements OnDestroy, OnInit {
 
         if (withoutStock.length) {
           this.modalInfoService.warning(
-            'No hay existencias suficientes',
+            this.transloco.translate('common.notEnoughStock'),
             withoutStock.map(cartItem => cartItem?.article?.name).join(', ')
           );
           return;
@@ -156,7 +158,7 @@ export class Tab2Page implements OnDestroy, OnInit {
           .checkoutProducts(dataCheckout)
           .pipe(take(1))
           .subscribe(() => {
-            this.modalInfoService.success('Orden guardada correctamente!', '');
+            this.modalInfoService.success(this.transloco.translate('cart.saved'), '');
             this.store.dispatch(CleanCart());
           });
         return value;
@@ -173,12 +175,12 @@ export class Tab2Page implements OnDestroy, OnInit {
 
   valueChange(quantity: number, article: ArticleItemResponse) {
     if (quantity > 100 || quantity <= 0) {
-      this.modalInfoService.warning('La cantidad no es válida', article?.name || '');
+      this.modalInfoService.warning(this.transloco.translate('cart.invalidQuantity'), article?.name || '');
       return;
     }
 
     if (Number(article?.stock ?? 0) < quantity) {
-      this.modalInfoService.warning('El producto no cuenta con suficientes existencias', article?.name || '');
+      this.modalInfoService.warning(this.transloco.translate('products.notEnough'), article?.name || '');
       return;
     }
 
@@ -186,18 +188,18 @@ export class Tab2Page implements OnDestroy, OnInit {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  async presentAlert(title = '¿Desea continuar?', next = () => {}, continueText = 'Continuar') {
+  async presentAlert(title = '', next = () => {}, continueText = '') {
     const alert = await this.alertController.create({
-      header: title,
+      header: title || this.transloco.translate('common.confirm'),
       buttons: [
         {
-          text: 'Cancelar',
+          text: this.transloco.translate('common.cancel'),
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           handler: () => {},
         },
 
         {
-          text: continueText,
+          text: continueText || this.transloco.translate('common.continue'),
           handler: next,
         },
       ],

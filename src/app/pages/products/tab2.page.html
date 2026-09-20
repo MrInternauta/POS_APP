@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title> Lista de productos </ion-title>
+    <ion-title>{{ 'products.title' | transloco }}</ion-title>
     <ion-buttons slot="end">
       <app-filter-popover [categories]="categories" (clickedItem)="clickedItem($event)" (clickedCategory)="clickedCategory($event)" [selectedFilteritem]="selectedFilteritem || filter.categoryId || ''"></app-filter-popover>
       
@@ -16,7 +16,7 @@
       (ionCancel)="hideSearch()"
       class="sm:mx-[25%] sm:w-auto"
       (ngModelChange)="searchFunction($event || '')"
-      placeholder="Buscar producto..."></ion-searchbar>
+      [placeholder]="'products.searchPlaceholder' | transloco"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
@@ -27,7 +27,7 @@
           *ngIf="!loading && !observableResult.Exercise?.products?.length"
           class="flex min-h-full flex-col justify-start items-center">
           <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-            <p class="text-center text-2xl font-bold leading-9 tracking-tight">No se encontraron productos</p>
+            <p class="text-center text-2xl font-bold leading-9 tracking-tight">{{ 'products.empty' | transloco }}</p>
           </div>
           <ion-icon name="sad-outline" size="large" class="text-center mt-4"></ion-icon>
         </div>
@@ -40,7 +40,7 @@
                 color="success"
                 [disabled]="!workout?.stock || workout?.stock <= 0">
                 <ion-icon slot="start" name="cart-outline"></ion-icon>
-                Agregar al carrito</ion-item-option
+                {{ 'products.addToCart' | transloco }}</ion-item-option
               >
             </ion-item-options>
 
@@ -56,7 +56,7 @@
             <ion-item-options slot="end">
               <ion-item-option (click)="edit(workout)" color="warning">
                 <ion-icon slot="start" name="pencil-outline"></ion-icon>
-                Editar</ion-item-option
+                {{ 'common.edit' | transloco }}</ion-item-option
               >
             </ion-item-options>
           </ion-item-sliding>
@@ -66,7 +66,7 @@
   </ng-container>
 
   <ion-infinite-scroll [disabled]="!hasMoreProducts" (ionInfinite)="loadNextPage($event)">
-    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más productos...">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" [loadingText]="'products.loadingMore' | transloco">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
 

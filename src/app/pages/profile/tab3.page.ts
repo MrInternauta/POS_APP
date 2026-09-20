@@ -1,9 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
 import { UserDto, UserUpdateDto } from '@gymTrack/auth/model/user.dto';
 import { AlertController, ToastController } from '@ionic/angular';
+import { TranslocoService } from '@jsverse/transloco';
 import { Observable, Subscription } from 'rxjs';
 
 import { AuthService } from '../../auth/services/auth.service';
+import { Language, LanguageService } from '../../core/i18n/language.service';
 import { ModalInfoService } from '../../core/services/modal.service';
 import { PictureService } from '../../core/services/picture.service';
 import { ThemeMode, ThemeService } from '../../core/services/theme.service';
@@ -20,6 +22,7 @@ export class Tab3Page implements OnDestroy {
   /** Followed by the view, so a saved change or a new picture shows up straight away */
   public user$: Observable<UserDto | null> = this.authService.user$;
   public themeMode$: Observable<ThemeMode> = this.themeService.mode$;
+  public language$: Observable<Language> = this.languageService.language$;
   private userToUpdate!: UserUpdateDto;
   constructor(
     private alertController: AlertController,
@@ -28,7 +31,9 @@ export class Tab3Page implements OnDestroy {
     private toastController: ToastController,
     private modalInfoService: ModalInfoService,
     private pictureService: PictureService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private languageService: LanguageService,
+    private transloco: TranslocoService
   ) {
     this.userToUpdate = {};
   }
@@ -37,11 +42,15 @@ export class Tab3Page implements OnDestroy {
     this.themeService.setMode(event?.detail?.value as ThemeMode);
   }
 
+  changeLanguage(event: any): void {
+    this.languageService.use(event?.detail?.value as Language);
+  }
+
   async sendResetPassword() {
     //TODO: Send email to reset
     const alert = await this.alertController.create({
-      header: 'Reset password',
-      message: 'An email will be sent, please, confirm the email to proceed',
+      header: this.transloco.translate('profile.resetPassword'),
+      message: this.transloco.translate('profile.resetPasswordMessage'),
       buttons: ['OK'],
     });
 
@@ -69,8 +78,8 @@ export class Tab3Page implements OnDestroy {
 
   async upgradePro() {
     const alert = await this.alertController.create({
-      header: 'Upgrade to PRO',
-      message: 'An email will be sent to proceed',
+      header: this.transloco.translate('profile.upgrade'),
+      message: this.transloco.translate('profile.upgradeMessage'),
       buttons: ['OK'],
     });
 
@@ -132,9 +141,9 @@ export class Tab3Page implements OnDestroy {
 
   presentModal(text = '', type: 'warning' | 'success' = 'warning') {
     if (type == 'warning') {
-      this.modalInfoService.warning(text || 'No hay cambios pendientes para guardar', '');
+      this.modalInfoService.warning(text || this.transloco.translate('profile.noChanges'), '');
     } else {
-      this.modalInfoService.success(text || 'Guardado correctamente', '');
+      this.modalInfoService.success(text || this.transloco.translate('profile.saved'), '');
     }
   }
 

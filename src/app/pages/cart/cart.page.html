@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title> Carrito de compras </ion-title>
+    <ion-title>{{ 'cart.title' | transloco }}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
@@ -12,7 +12,7 @@
             *ngIf="!observableResult || !observableResult.length"
             class="flex min-h-full flex-col justify-start items-center">
             <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-              <p class="text-center text-2xl font-bold leading-9 tracking-tight">Carrito de compras vacio</p>
+              <p class="text-center text-2xl font-bold leading-9 tracking-tight">{{ 'cart.empty' | transloco }}</p>
             </div>
 
             <ion-icon name="sad-outline" size="large" class="text-center mt-4"></ion-icon>
@@ -41,9 +41,9 @@
                     </ion-col>
 
                     <ion-col size="5">
-                      <ion-card-subtitle><strong>Quantity:</strong></ion-card-subtitle>
-                      <ion-card-subtitle><strong>Price:</strong></ion-card-subtitle>
-                      <ion-card-subtitle><strong>Subtotal:</strong></ion-card-subtitle>
+                      <ion-card-subtitle><strong>{{ 'common.quantity' | transloco }}:</strong></ion-card-subtitle>
+                      <ion-card-subtitle><strong>{{ 'common.price' | transloco }}:</strong></ion-card-subtitle>
+                      <ion-card-subtitle><strong>{{ 'common.subtotal' | transloco }}:</strong></ion-card-subtitle>
                     </ion-col>
                     <ion-col class="customCol">
                       <ng-container>
@@ -63,7 +63,7 @@
                   <ion-row>
                     <ion-col>
                       <p class="font-semibold">
-                        Existencias:
+                        {{ 'common.stock' | transloco }}:
                         <span
                           class="font-normal"
                           [ngClass]="{ 'text-danger-hbr': !hasEnoughStock(workout) }"
@@ -74,7 +74,7 @@
                         *ngIf="!hasEnoughStock(workout)"
                         class="font-semibold text-danger-hbr flex items-center gap-1">
                         <ion-icon name="warning-outline"></ion-icon>
-                        No hay existencias suficientes
+                        {{ 'common.notEnoughStock' | transloco }}
                       </p>
                     </ion-col>
                   </ion-row>
@@ -102,7 +102,7 @@
     <div class="flex justify-center text-center py-2" *ngIf="total">
       <div class="row">
         <div class="col">
-          <p>Total</p>
+          <p>{{ 'common.total' | transloco }}</p>
         </div>
 
         <div class="col">
@@ -119,7 +119,7 @@
       <app-button
         [disabled]="!total || cartHasStockIssues(observableResult)"
         class="w-3/4"
-        [label]="'Guardar venta'"
+        [label]="'cart.checkout' | transloco"
         [size]="'large'"
         (click)="checkout()">
       </app-button>

@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
 import { AlertController, InfiniteScrollCustomEvent, ModalController, ToastController } from '@ionic/angular';
+import { TranslocoService } from '@jsverse/transloco';
 import { Store } from '@ngrx/store';
 // eslint-disable-next-line
 import { debounceTime, distinctUntilChanged, map, Observable, Subject, Subscription, take } from 'rxjs';
@@ -54,7 +55,8 @@ export class Tab2Page implements OnDestroy, OnInit {
     private exercisesService: WorkoutService,
     private modalInfoService: ModalInfoService,
     private modalCtrl: ModalController,
-    private productService: WorkoutService
+    private productService: WorkoutService,
+    private transloco: TranslocoService
   ) {
     this.$observable = this.store.select('exercises');
   }
@@ -125,7 +127,7 @@ export class Tab2Page implements OnDestroy, OnInit {
         onDone?.(false);
         const toast = await this.toastController.create({
           cssClass: 'my-custom-toast',
-          header: 'Algo salio mal: ',
+          header: this.transloco.translate('common.somethingWrong'),
           message: error,
           duration: 3000,
           position: 'top',
@@ -171,11 +173,11 @@ export class Tab2Page implements OnDestroy, OnInit {
     } catch (error) {
       if (error == 'cordova_not_available') {
         const alert = await this.alertController.create({
-          header: 'Scanner no disponible',
-          message: '¿Quieres buscarlo manualmente?',
+          header: this.transloco.translate('products.scannerUnavailable'),
+          message: this.transloco.translate('products.searchManually'),
           buttons: [
             {
-              text: 'Buscar',
+              text: this.transloco.translate('common.search'),
               role: 'cancel',
               cssClass: 'secondary',
               handler: () => {
@@ -183,7 +185,7 @@ export class Tab2Page implements OnDestroy, OnInit {
               },
             },
             {
-              text: 'Cancelar',
+              text: this.transloco.translate('common.cancel'),
               handler: () => {},
             },
           ],
@@ -222,16 +224,16 @@ export class Tab2Page implements OnDestroy, OnInit {
       .subscribe(async (products: Array<ArticleItemResponse> | null) => {
         if (!products?.length || !products[0]) {
           const alert = await this.alertController.create({
-            header: 'Producto no encontrado',
-            message: '¿Quieres registrarlo?',
+            header: this.transloco.translate('products.notFound'),
+            message: this.transloco.translate('products.registerQuestion'),
             buttons: [
               {
-                text: 'Cancelar',
+                text: this.transloco.translate('common.cancel'),
                 role: 'cancel',
                 cssClass: 'secondary',
               },
               {
-                text: 'Registrar',
+                text: this.transloco.translate('products.register'),
                 handler: () => {
                   this.openModal({
                     id: '',
@@ -250,11 +252,11 @@ export class Tab2Page implements OnDestroy, OnInit {
           return;
         }
         const alert = await this.alertController.create({
-          header: 'Producto encontrado',
-          message: '¿Quieres agregar al carrito?',
+          header: this.transloco.translate('products.found'),
+          message: this.transloco.translate('products.addQuestion'),
           buttons: [
             {
-              text: 'Editar',
+              text: this.transloco.translate('common.edit'),
               role: 'cancel',
               cssClass: 'secondary',
               handler: () => {
@@ -262,7 +264,7 @@ export class Tab2Page implements OnDestroy, OnInit {
               },
             },
             {
-              text: 'Agregar al Carrito',
+              text: this.transloco.translate('products.addToCart'),
               handler: () => {
                 this.addToCard(products[0], 1);
               },
@@ -277,7 +279,7 @@ export class Tab2Page implements OnDestroy, OnInit {
     if (!article?.stock || parseInt(article?.stock || '0') < quantity) {
       const toast = await this.toastController.create({
         cssClass: 'my-custom-toast',
-        header: 'Producto no cuenta con suficientes existencias: ',
+        header: this.transloco.translate('products.notEnough'),
         message: article.name,
         duration: 3000,
         position: 'top',
@@ -309,7 +311,7 @@ export class Tab2Page implements OnDestroy, OnInit {
   async presentProductAddedModal(article: ArticleItemResponse) {
     const toast = await this.toastController.create({
       cssClass: 'my-custom-toast',
-      header: 'Producto agregado al carrito: ',
+      header: this.transloco.translate('products.added'),
       message: article.name,
       duration: 3000,
       position: 'top',

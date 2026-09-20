@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="cancel()">Cancelar</ion-button>
+      <ion-button (click)="cancel()">{{ 'common.cancel' | transloco }}</ion-button>
     </ion-buttons>
-    <ion-title>Detalle de producto</ion-title>
+    <ion-title>{{ 'products.detailTitle' | transloco }}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
@@ -19,7 +19,7 @@
             (inputValueChange)="changeName($event)"
             [id]="'name'"
             [type]="'text'"
-            [label]="'Nombre del producto*'"
+            [label]="'products.nameLabel' | transloco"
             [required]="true"
             [maxLength]="100"
             [disabled]="!!product?.id || !!product?.name"></app-input>
@@ -31,7 +31,7 @@
           <app-input
             [id]="'code'"
             [type]="'text'"
-            [label]="'Código de barras*'"
+            [label]="'products.codeLabel' | transloco"
             [required]="true"
             [maxLength]="100"
             [inputValue]="code || ''"
@@ -44,7 +44,7 @@
           <app-input
             [id]="'stock'"
             [type]="'number'"
-            [label]="'Número de existencias*'"
+            [label]="'products.stockLabel' | transloco"
             [required]="false"
             [maxLength]="100"
             [inputValue]="stock || ''"
@@ -59,8 +59,8 @@
             [disabled]="!this.categories || !this.categories.length"
             [size]="'regular'"
             [id]="'select'"
-            [label]="'Seleccionar categoria*'"
-            [placeholder]="'Seleccionar categoria'"
+            [label]="'products.categoryLabel' | transloco"
+            [placeholder]="'products.categoryPlaceholder' | transloco"
             (inputValueChange)="changeSelect($event)"></app-select>
         </div>
       </div>
@@ -70,7 +70,7 @@
           <app-input
             [id]="'price'"
             [type]="'number'"
-            [label]="'Precio de Compra'"
+            [label]="'products.buyPriceLabel' | transloco"
             [required]="false"
             [maxLength]="100"
             [inputValue]="price || ''"
@@ -81,7 +81,7 @@
           <app-input
             [id]="'price_sell'"
             [type]="'number'"
-            [label]="'Precio de venta*'"
+            [label]="'products.sellPriceLabel' | transloco"
             [required]="true"
             [maxLength]="100"
             [inputValue]="price_sell || ''"
@@ -94,7 +94,7 @@
           <app-input
             [id]="'description'"
             [type]="'text'"
-            [label]="'Descripción'"
+            [label]="'common.description' | transloco"
             [required]="false"
             [maxLength]="200"
             [inputValue]="description || ''"
@@ -106,7 +106,7 @@
         <app-button
           (click)="confirm()"
           [outline]="false"
-          [label]="'Guardar'"
+          [label]="'common.save' | transloco"
           [disabled]="!isValidForm"
           size="large"></app-button>
       </div>

@@ -8,66 +8,66 @@
       <div nz-col nzXs="24" nzSm="18" nzMd="12" nzXl="8" nzXXl="6">
         <div class="rounded-6 mt-[25px] shadow_[0px_5px_20px_rgba(173,181,217, 0.03)] dark:shadow_[0px_5px_15px_rgba(0, 0, 0, .1)] bg-white dark:bg-[#1b1d2a]">
           <div class="p-[25px] text-center border-b border-regular dark:border-white/10 top">
-            <h2 class="text-18 font-semibold leading-[1] mb-0 text-dark dark:text-white/[.87] title">Sign Up MiniPOS</h2>
+            <h2 class="text-18 font-semibold leading-[1] mb-0 text-dark dark:text-white/[.87] title">{{ 'auth.signUp' | transloco }} MiniPOS</h2>
           </div>
           <div class="py-[30px] px-[40px] content">
             <form nz-form [formGroup]="signUpForm" class="login-form" nzLayout="vertical" (ngSubmit)="submitForm()">
               <nz-form-item  class="block">
                 <nz-form-label nzRequired nzFor="Name"
                   class="text-[14px] w-full leading-[1.4285714286] font-medium [&>label]:text-dark [&>label]:dark:text-white/[.87] mb-[8px] capitalize inline-block">
-                  Name</nz-form-label>
-                <nz-form-control nzErrorTip="Please input your Name!">
-                  <input type="text" nz-input formControlName="name" placeholder="Name" id="Name"
+                  {{ 'profile.name' | transloco }}</nz-form-label>
+                <nz-form-control [nzErrorTip]="'auth.nameRequired' | transloco">
+                  <input type="text" nz-input formControlName="name" [placeholder]="'profile.name' | transloco" id="Name"
                     class="flex items-center shadow-none py-[10px] px-[20px] h-[48px] border-1 border-regular dark:border-white/10 rounded-4 w-full text-[14px] font-normal leading-[1.5] placeholder:text-[#A0A0A0] dark:bg-white/10 dark:text-white/60">
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
                 <nz-form-label nzRequired nzFor="lastName"
                   class=" text-[14px] leading-[1.4285714286] font-medium [&>label]:text-dark [&>label]:dark:text-white/[.87] capitalize inline-block">
-                  Last name</nz-form-label>
-                <nz-form-control nzErrorTip="Please input your last name!">
-                  <input type="text" nz-input formControlName="lastName" placeholder="Last Name" id="Last name"
+                  {{ 'profile.lastName' | transloco }}</nz-form-label>
+                <nz-form-control [nzErrorTip]="'auth.lastNameRequired' | transloco">
+                  <input type="text" nz-input formControlName="lastName" [placeholder]="'profile.lastName' | transloco" id="Last name"
                     class="flex items-center shadow-none py-[10px] px-[20px] h-[48px] border-1 border-regular dark:border-white/10 rounded-4 w-full text-[14px] font-normal leading-[1.5] placeholder:text-[#A0A0A0] dark:bg-white/10 dark:text-white/60">
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
                 <nz-form-label nzRequired nzFor="phone"
                   class=" text-[14px] leading-[1.4285714286] font-medium [&>label]:text-dark [&>label]:dark:text-white/[.87] capitalize inline-block">
-                  Phone</nz-form-label>
-                <nz-form-control nzErrorTip="Please input a valid mexican phone, 10 digits!">
-                  <input type="text" nz-input formControlName="phone" placeholder="Phone" id="phone" phone
+                  {{ 'profile.phone' | transloco }}</nz-form-label>
+                <nz-form-control [nzErrorTip]="'auth.phoneRequired' | transloco">
+                  <input type="text" nz-input formControlName="phone" [placeholder]="'profile.phone' | transloco" id="phone" phone
                     class="flex items-center shadow-none py-[10px] px-[20px] h-[48px] border-1 border-regular dark:border-white/10 rounded-4 w-full text-[14px] font-normal leading-[1.5] placeholder:text-[#A0A0A0] dark:bg-white/10 dark:text-white/60">
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
                 <nz-form-label nzRequired nzFor="email"
                   class=" text-[14px] leading-[1.4285714286] font-medium [&>label]:text-dark [&>label]:dark:text-white/[.87] capitalize inline-block">
-                  Email</nz-form-label>
-                <nz-form-control nzErrorTip="The input is not valid E-mail!">
-                  <input type="text" nz-input formControlName="email" placeholder="Email" id="email"
+                  {{ 'profile.email' | transloco }}</nz-form-label>
+                <nz-form-control [nzErrorTip]="'auth.emailInvalid' | transloco">
+                  <input type="text" nz-input formControlName="email" [placeholder]="'profile.email' | transloco" id="email"
                     class="flex items-center shadow-none py-[10px] px-[20px] h-[48px] border-1 border-regular dark:border-white/10 rounded-4 w-full text-[14px] font-normal leading-[1.5] placeholder:text-[#A0A0A0] dark:bg-white/10 dark:text-white/60">
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
                 <nz-form-label nzRequired nzFor="password"
                   class=" text-[14px] leading-[1.4285714286] font-medium [&>label]:text-dark [&>label]:dark:text-white/[.87] capitalize inline-block">
-                  Password</nz-form-label>
-                <nz-form-control nzErrorTip="Please input a password of at least 5 characters!">
-                  <input type="password" nz-input formControlName="password" placeholder="Password" id="password"
+                  {{ 'auth.password' | transloco }}</nz-form-label>
+                <nz-form-control [nzErrorTip]="'auth.passwordRequired' | transloco">
+                  <input type="password" nz-input formControlName="password" [placeholder]="'auth.password' | transloco" id="password"
                     class="flex items-center shadow-none py-[10px] px-[20px] h-[48px] border-1 border-regular dark:border-white/10 rounded-4 w-full text-[14px] font-normal leading-[1.5] placeholder:text-[#A0A0A0] dark:bg-white/10 dark:text-white/60">
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
                 <nz-form-label nzRequired nzFor="checkPassword"
                   class=" text-[14px] leading-[1.4285714286] font-medium [&>label]:text-dark [&>label]:dark:text-white/[.87] capitalize inline-block">
-                  Confirm password</nz-form-label>
+                  {{ 'auth.confirmPassword' | transloco }}</nz-form-label>
                 <nz-form-control [nzErrorTip]="checkPasswordErrorTpl">
-                  <input type="password" nz-input formControlName="checkPassword" placeholder="Confirm password"
+                  <input type="password" nz-input formControlName="checkPassword" [placeholder]="'auth.confirmPassword' | transloco"
                     id="checkPassword"
                     class="flex items-center shadow-none py-[10px] px-[20px] h-[48px] border-1 border-regular dark:border-white/10 rounded-4 w-full text-[14px] font-normal leading-[1.5] placeholder:text-[#A0A0A0] dark:bg-white/10 dark:text-white/60">
                   <ng-template #checkPasswordErrorTpl let-control>
-                    <ng-container *ngIf="control.hasError('required')">Please confirm your password!</ng-container>
-                    <ng-container *ngIf="control.hasError('confirm')">The two passwords are not the same!</ng-container>
+                    <ng-container *ngIf="control.hasError('required')">{{ 'auth.confirmPasswordRequired' | transloco }}</ng-container>
+                    <ng-container *ngIf="control.hasError('confirm')">{{ 'auth.passwordsDoNotMatch' | transloco }}</ng-container>
                   </ng-template>
                 </nz-form-control>
               </nz-form-item>
@@ -82,7 +82,7 @@
               <nz-form-item>
                 <nz-form-control>
                   <div>
-                    <button type="submit" nz-button [nzLoading]="isLoading" [disabled]="isLoading" class="login-form-button login-form-margin inline-flex items-center justify-center w-full h-[48px] text-14 rounded-6 font-medium bg-primary text-white cursor-pointer hover:bg-primary-hbr transition duration-300" [nzType]="'primary'">Sign Up</button>
+                    <button type="submit" nz-button [nzLoading]="isLoading" [disabled]="isLoading" class="login-form-button login-form-margin inline-flex items-center justify-center w-full h-[48px] text-14 rounded-6 font-medium bg-primary text-white cursor-pointer hover:bg-primary-hbr transition duration-300" [nzType]="'primary'">{{ 'auth.signUp' | transloco }}</button>
                   </div>
                 </nz-form-control>
               </nz-form-item>
@@ -100,9 +100,9 @@
           <div class="text-center p-[25px] rounded-b-6 bg-deepBG dark:bg-[#282a37]">
             <p
               class="text-[14px] font-medium text-theme-gray dark:text-white/60 inline-flex items-center gap-[6px] mb-0">
-              Already have an account?<a
+              {{ 'auth.haveAccount' | transloco }}<a
                 class="transition duration-300 text-primary hover:text-dark dark:hover:text-white/[.87]"
-                routerLink="/authentication/login-1">Sign In</a>
+                routerLink="/authentication/login-1">{{ 'auth.signIn' | transloco }}</a>
             </p>
           </div>
         </div>

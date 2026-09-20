@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title> Orden # {{orderService.itemSelected?.id}}</ion-title>
+    <ion-title>{{ 'orders.order' | transloco }} #{{orderService.itemSelected?.id}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -26,9 +26,9 @@
                     </ion-col>
 
                     <ion-col size="5">
-                      <ion-card-subtitle><strong>Quantity:</strong></ion-card-subtitle>
-                      <ion-card-subtitle><strong>Price:</strong></ion-card-subtitle>
-                      <ion-card-subtitle><strong>Subtotal:</strong></ion-card-subtitle>
+                      <ion-card-subtitle><strong>{{ 'common.quantity' | transloco }}:</strong></ion-card-subtitle>
+                      <ion-card-subtitle><strong>{{ 'common.price' | transloco }}:</strong></ion-card-subtitle>
+                      <ion-card-subtitle><strong>{{ 'common.subtotal' | transloco }}:</strong></ion-card-subtitle>
                     </ion-col>
                     <ion-col class="customCol">
                       <p>{{item?.quantity }}</p>
@@ -52,7 +52,7 @@
     <div class="flex justify-center text-center py-2">
       <div class="row">
         <div class="col">
-          <p class="mb-0">Total</p>
+          <p class="mb-0">{{ 'common.total' | transloco }}</p>
         </div>
 
         <div class="col">
@@ -63,7 +63,7 @@
           </div>
         </div>
 
-        <ion-label> Fecha de creación: {{orderService.itemSelected?.createAt | date: 'dd/MM/yyyy HH:mm'}} </ion-label>
+        <ion-label>{{ 'common.createdAt' | transloco }}: {{orderService.itemSelected?.createAt | date: 'dd/MM/yyyy HH:mm'}}</ion-label>
         <br />
       </div>
     </div>
