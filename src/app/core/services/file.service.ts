@@ -34,12 +34,12 @@ export class SubirarhivoService {
       fd.append('file', archivo);
       const API_URL = `${environment.url}${API_PREFIX}image/${type}/${id}`;
       const res = await this.http.post(API_URL, fd).pipe(take(1)).toPromise();
-      console.log(res);
       this.modalInfoService.success(this.transloco.translate('picture.updated'), '');
       return res;
     } catch (error) {
+      //The interceptor already showed what went wrong; answering null says it did not happen
       console.log(error);
-      return error;
+      return null;
     }
   }
 

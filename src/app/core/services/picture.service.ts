@@ -9,6 +9,17 @@ import { ToolsService } from './api.service';
 import { SubirarhivoService } from './file.service';
 import { ModalInfoService } from './modal.service';
 
+/** jpeg on iOS, png on android, and jpg spelled out so the served type matches the bytes */
+function extensionOf(photo: Photo): string {
+  const format = String(photo?.format || '').toLowerCase();
+
+  if (format === 'png') {
+    return 'png';
+  }
+
+  return 'jpeg';
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -51,12 +62,26 @@ export class PictureService {
             );
             return;
           }
-          const data = dataURLtoFile(imageData?.dataUrl, 'file.png');
+
+          //The name carries the real format. The API stores the file under that extension and
+          //serves it with the matching content type, and iOS refuses to paint an image whose
+          //content type does not match its bytes.
+          const data = dataURLtoFile(imageData?.dataUrl, `file.${extensionOf(imageData)}`);
+
+          if (!data) {
+            this.modalInfoService.error(this.transloco.translate('common.somethingWrong'), '');
+            return;
+          }
+
           //The API answers with the record it just updated, image name included
           const uploaded = await this.subirArchivo.uploadImage(data, id, type);
-          callback && callback(uploaded);
+
+          if (uploaded) {
+            callback && callback(uploaded);
+          }
         },
         err => {
+          //Picking nothing lands here too, which is not worth a message
           console.log(err);
         }
       );

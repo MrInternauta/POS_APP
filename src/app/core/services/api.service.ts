@@ -128,6 +128,8 @@ export class ToolsService {
     cssClass: string = 'alerta-personalizada-aceptcancel',
     subHeader = ''
   ) {
+    let chosen: (() => void) | null = null;
+
     const alert = await this.alertController.create({
       header,
       subHeader,
@@ -139,19 +141,26 @@ export class ToolsService {
           text: textcancel || this.transloco.translate('common.cancel'),
           cssClass: 'danger',
           handler: () => {
-            cancelCallback();
+            chosen = cancelCallback;
           },
         },
         {
           text: textAcept || this.transloco.translate('common.continue'),
           cssClass: 'success',
           handler: () => {
-            aceptCallback();
+            chosen = aceptCallback;
           },
         },
       ],
     });
     await alert.present();
+
+    //iOS will not open the camera or the gallery while the alert is still on its way out, so the
+    //answer is acted on once it is really gone. Dismissing by the backdrop chooses nothing.
+    await alert.onDidDismiss();
+    //The assignments happen inside the button handlers, which the compiler does not follow
+    const answer = chosen as (() => void) | null;
+    answer?.();
   }
   /**
    * @author Felipe De Jesus
