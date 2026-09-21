@@ -2,12 +2,13 @@ import { en_US, NZ_I18N } from 'ng-zorro-antd/i18n';
 
 import { LocationStrategy, PathLocationStrategy, registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
-import { NgModule } from '@angular/core';
+import { isDevMode, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { AuthModule } from '@gymTrack/auth';
 import { CoreModule } from '@gymTrack/core';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { provideTransloco } from '@jsverse/transloco';
 import { EffectsModule } from '@ngrx/effects';
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -23,6 +24,8 @@ import { NgChartsModule } from 'ng2-charts';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PermissionsEffects } from './auth/state/permissions.effects';
+import { DEFAULT_LANGUAGE, LANGUAGES } from './core/i18n/language.service';
+import { TranslocoHttpLoader } from './core/i18n/transloco.loader';
 import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
 import { CartEffects } from './pages/cart/state/cart.effects';
 import { ExercisesEffects } from './pages/products/state/workout.effects';
@@ -63,6 +66,18 @@ registerLocaleData(en);
     },
     ThemeConstantService,
     provideHttpClient(withInterceptorsFromDi()),
+    provideTransloco({
+      config: {
+        availableLangs: [...LANGUAGES],
+        defaultLang: DEFAULT_LANGUAGE,
+        fallbackLang: DEFAULT_LANGUAGE,
+        //An API message with no entry in the files is shown as it arrived, not as a warning
+        missingHandler: { logMissingKey: false, useFallbackTranslation: true },
+        reRenderOnLangChange: true,
+        prodMode: !isDevMode(),
+      },
+      loader: TranslocoHttpLoader,
+    }),
   ],
 })
 export class AppModule {}

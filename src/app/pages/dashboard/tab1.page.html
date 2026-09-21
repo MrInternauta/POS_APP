@@ -1,6 +1,6 @@
 <ion-header [translucent]="false" class="ion-no-border">
   <ion-toolbar>
-    <ion-title> Historial de compras</ion-title>
+    <ion-title>{{ 'orders.title' | transloco }}</ion-title>
     <!-- <ion-buttons slot="end">
       <app-filter-popover></app-filter-popover>
     </ion-buttons> -->
@@ -11,13 +11,16 @@
     show-cancel-button="focus"
     show-clear-button="never"
     cancel-button-icon="trash"
-    placeholder="Buscar..."
+    [placeholder]="'orders.searchPlaceholder' | transloco"
     ></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refreshOrders($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <div class="flex min-h-full flex-col justify-start px-4 py-4 lg:px-6">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
       <canvas
@@ -36,21 +39,21 @@
       >
         <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
           <h2
-            class="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
+            class="mt-4 text-center text-2xl font-bold leading-9 tracking-tight"
           >
-            Lorem ipsum dolor sit amet consectetur
+            {{ 'orders.empty' | transloco }}
           </h2>
         </div>
       </div>
       <ion-list *ngIf="historyWorkout?.length">
-        <ion-item *ngFor="let workout of historyWorkout" detail="true" class="w-full"
+        <ion-item *ngFor="let workout of historyWorkout; trackBy: trackByOrder" detail="true" class="w-full"
           (click)="onItemClicked(workout)"
         >
         <div class="flex flex-col mb-2">
-          <p class="font-bold leading-9 tracking-tight mb-1 uppercase">Orden #{{workout?.id}}</p>
+          <p class="font-bold leading-9 tracking-tight mb-1 uppercase">{{ 'orders.order' | transloco }} #{{workout?.id}}</p>
           <ion-label>
-            <p>Total: ${{workout?.total}}</p>
-            <p>Fecha de creación: {{workout?.createAt | date}}</p>
+            <p>{{ 'common.total' | transloco }}: ${{workout?.total}}</p>
+            <p>{{ 'common.createdAt' | transloco }}: {{workout?.createAt | date: 'dd/MM/yyyy HH:mm'}}</p>
           </ion-label>
         </div>
         </ion-item>

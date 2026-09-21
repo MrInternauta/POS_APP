@@ -20,7 +20,7 @@
           'block rounded-md border-0 text-center': size === 'small',
           'px-4 py-3.5': size !== 'small',
         }"
-        class="block w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6" />
+        class="block w-full rounded-md border-0 bg-white text-body shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:bg-white/10 dark:text-white/60 dark:ring-white/10 sm:text-sm sm:leading-6" />
     </ng-container>
 
     <input
@@ -41,7 +41,7 @@
         'block rounded-md border-0 text-center': size === 'small',
         'px-4 py-3.5': size !== 'small',
       }"
-      class="block w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6" />
+      class="block w-full rounded-md border-0 bg-white text-body shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:bg-white/10 dark:text-white/60 dark:ring-white/10 sm:text-sm sm:leading-6" />
     <label *ngIf="hasError" class="mt-2 ml-2 block text-sm font-medium leading-6 text-red-600">{{ hasError }}</label>
   </div>
 </div>

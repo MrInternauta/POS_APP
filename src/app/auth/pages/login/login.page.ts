@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslocoService } from '@jsverse/transloco';
 import { Store } from '@ngrx/store';
 
 // import  socialIcons  from './../../../../assets/data/pages/social-items.json';
@@ -26,7 +27,8 @@ export class LoginPage extends ComponentBase implements OnInit, OnDestroy {
     private _store: Store<AppState>,
     private fb: FormBuilder,
     private router: Router,
-    private modalInfoService: ModalInfoService
+    private modalInfoService: ModalInfoService,
+    private transloco: TranslocoService
   ) {
     super();
   }
@@ -45,15 +47,14 @@ export class LoginPage extends ComponentBase implements OnInit, OnDestroy {
       this._authService.login(this.validateForm.value, this.validateForm.value.remember).subscribe(
         res => {
           if (!res) {
-            this.modalInfoService.error('Something is wrong', '');
-            this.validateForm.hasError('Something is wrong');
+            this.modalInfoService.error(this.transloco.translate('common.somethingWrong'), '');
             return;
           }
           this.router.navigate(['tabs', 'tab2'], { replaceUrl: true });
         },
-        login => {
-          this.modalInfoService.error('Something is wrong', login || '');
-          this.validateForm.hasError('Something is wrong');
+        () => {
+          //The interceptor already shows what the API answered
+          this.isLoading = false;
         }
       );
     } else {

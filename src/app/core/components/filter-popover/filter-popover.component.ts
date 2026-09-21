@@ -25,6 +25,10 @@ export class FilterPopoverComponent implements OnInit, OnDestroy {
     this.categories = [];
   }
 
+  trackByCategory(_index: number, category: CategoryItemResponse) {
+    return category?.id;
+  }
+
   presentPopover(e: Event) {
     this.popover.event = e;
     this.isOpen = true;

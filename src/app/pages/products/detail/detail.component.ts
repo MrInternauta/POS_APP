@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
+import { TranslocoService } from '@jsverse/transloco';
 import { ISelectItem } from '../../../core/models/iselect.item';
 import { ModalInfoService } from '../../../core/services/modal.service';
 import { PictureService } from '../../../core/services/picture.service';
@@ -30,7 +31,8 @@ export class DetailComponent implements OnDestroy, OnInit {
     private productService: WorkoutService,
     private modalInfoService: ModalInfoService,
     private modalCtrl: ModalController,
-    private pictureService: PictureService
+    private pictureService: PictureService,
+    private transloco: TranslocoService
   ) {
     this.getCategories();
   }
@@ -117,7 +119,7 @@ export class DetailComponent implements OnDestroy, OnInit {
       this.subscription$ = this.productService.postProduct(product).subscribe(
         res => {
           this.removeSubscription();
-          this.modalInfoService.success('El producto fue creado!', '');
+          this.modalInfoService.success(this.transloco.translate('products.created'), '');
           return this.modalCtrl.dismiss(res, 'created');
         },
         error => {
@@ -140,7 +142,7 @@ export class DetailComponent implements OnDestroy, OnInit {
     this.subscription$ = this.productService.putProduct(this.product.id, product).subscribe(
       res => {
         this.removeSubscription();
-        this.modalInfoService.success('El producto fue actualizado!', '');
+        this.modalInfoService.success(this.transloco.translate('products.updated'), '');
         return this.modalCtrl.dismiss(res, 'updated');
       },
       error => {

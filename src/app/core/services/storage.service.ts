@@ -1,16 +1,28 @@
 import { Injectable, Injector } from '@angular/core';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class StorageService {
   constructor(private injector: Injector) {}
 
   setLocal(key: string, obj: any) {
-    localStorage.setItem(key, JSON.stringify(obj));
+    try {
+      localStorage.setItem(key, JSON.stringify(obj));
+    } catch (error) {
+      //A full or unavailable storage must not break whatever asked to save
+      console.log('storage error', error);
+    }
   }
 
   getLocal(key: string) {
-    const obj = localStorage.getItem(key);
-    return obj ? JSON.parse(obj) : null;
+    try {
+      const obj = localStorage.getItem(key);
+      return obj ? JSON.parse(obj) : null;
+    } catch (error) {
+      console.log('storage error', error);
+      return null;
+    }
   }
 
   localDeleteAll() {

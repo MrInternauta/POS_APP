@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { StoreModule } from '@ngrx/store';
+import { META_REDUCERS, StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
+import { StorageService } from '../services/storage.service';
 import { appReducers } from './app.reducer';
+import { persistStateMetaReducer } from './persist.meta-reducer';
 
 @NgModule({
   declarations: [],
@@ -16,6 +18,14 @@ import { appReducers } from './app.reducer';
       logOnly: true,
       connectInZone: true,
     }),
+  ],
+  providers: [
+    {
+      provide: META_REDUCERS,
+      deps: [StorageService],
+      useFactory: persistStateMetaReducer,
+      multi: true,
+    },
   ],
 })
 export class AppStoreModule {}

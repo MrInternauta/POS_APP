@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-avatar',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<img
     class="rounded mx-auto shadow-md border-white transition duration-200 transform hover:scale-110 object-cover"
     [ngClass]="{

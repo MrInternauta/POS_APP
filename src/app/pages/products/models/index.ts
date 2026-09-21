@@ -1,5 +1,9 @@
 export interface ArticleResponse {
   products: ArticleItemResponse[];
+  /** Amount of products matching the filter, ignoring limit/offset */
+  total?: number;
+  limit?: number;
+  offset?: number;
 }
 
 export interface ArticleItemResponse {
@@ -34,4 +38,18 @@ export interface CategoryItemResponse {
   id: number;
   name: string;
   image: string;
+}
+
+export interface ProductImportError {
+  row: number;
+  code?: string;
+  message: string;
+}
+
+export interface ProductImportSummary {
+  total: number;
+  created: number;
+  updated: number;
+  failed: number;
+  errors: ProductImportError[];
 }

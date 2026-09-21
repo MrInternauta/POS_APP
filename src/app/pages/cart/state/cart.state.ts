@@ -1,17 +1,14 @@
 import { Action, createReducer, on } from '@ngrx/store';
+import { ArticleItemResponse } from '../../products/models/index';
 import {
   AddProductCart,
   CheckedOut,
-  CheckedOutType,
   CleanCart,
+  RefreshCartStock,
   RemoveProductCart,
   UpdateProductCart,
   setTotal,
-  setTotalType,
 } from './cart.actions';
-import { ArticleItemResponse } from '../../products/models/index';
-import { map, catchError, EMPTY } from 'rxjs';
-import { ICheckoutRequest } from '../models/checkout';
 
 export interface CartInfo {
   article: ArticleItemResponse;
@@ -47,8 +44,6 @@ const _CartReducer = createReducer(
       };
     }
 
-    console.log('Already exists', state.Cart[article.code]);
-
     if (!state.Cart[article.code]) {
       return {
         ...state,
@@ -59,11 +54,10 @@ const _CartReducer = createReducer(
       };
     }
 
-    const newQuantity =
-      Number(state.Cart[article.code]?.quantity) + Number(quantity || 1);
+    const newQuantity = Number(state.Cart[article.code]?.quantity) + Number(quantity || 1);
 
     if (newQuantity <= 0) {
-      let newStateCart = {
+      const newStateCart = {
         ...state.Cart,
         [article.code]: { article, quantity: newQuantity },
       };
@@ -112,10 +106,8 @@ const _CartReducer = createReducer(
 
     const newQuantity = Number(quantity || 1);
 
-    console.log('Already exists');
-
     if (newQuantity <= 0) {
-      let newStateCart = {
+      const newStateCart = {
         ...state.Cart,
         [article.code]: { article, quantity: newQuantity },
       };
@@ -136,9 +128,9 @@ const _CartReducer = createReducer(
       },
     };
   }),
-  on(CleanCart, (state) => ({ ...state, Cart: null })),
+  on(CleanCart, state => ({ ...state, Cart: null })),
 
-  on(CheckedOut, (state) => {
+  on(CheckedOut, state => {
     return { ...state, Cart: null };
   }),
   on(RemoveProductCart, (state, { code }) => {
@@ -148,8 +140,6 @@ const _CartReducer = createReducer(
       }
     }
     const newCart = { ...state.Cart };
-    console.log(newCart);
-
     delete newCart[code];
     return {
       ...state,
@@ -159,6 +149,24 @@ const _CartReducer = createReducer(
 
   on(setTotal, (state, { total }) => {
     return { ...state, total };
+  }),
+
+  //The cart keeps a copy of each product, this brings that copy up to date with the API.
+  //A product the API no longer returns is kept with no stock rather than removed behind your back.
+  on(RefreshCartStock, (state, { articles }) => {
+    if (!state?.Cart) {
+      return { ...state };
+    }
+
+    const byCode = new Map((articles || []).map(article => [String(article?.code), article]));
+
+    const refreshedCart = Object.entries(state.Cart).reduce((cart: Record<string, CartInfo>, [code, item]) => {
+      const fresh = byCode.get(String(code));
+      cart[code] = fresh ? { ...item, article: fresh } : { ...item, article: { ...item.article, stock: '0' } };
+      return cart;
+    }, {});
+
+    return { ...state, Cart: refreshedCart };
   })
 );
 

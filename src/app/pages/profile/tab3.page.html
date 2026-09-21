@@ -1,6 +1,6 @@
 <ion-header [translucent]="false" class="ion-no-border">
   <ion-toolbar>
-    <ion-title> Perfil </ion-title>
+    <ion-title>{{ 'profile.title' | transloco }}</ion-title>
     <ion-buttons slot="end">
       <ion-button
       (click)="authService.logout()"
@@ -12,18 +12,18 @@
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8" *ngIf="user$ | async as user">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
       <app-avatar
         (click)="updateUserPicture()"
         [size]="'large'"
-        [img]="(authService.user?.image  || '')"
+        [img]="(user?.image || '')"
       ></app-avatar>
       <p
         *ngIf="!editMode"
         class="mt-4 text-center text-2xl font-bold leading-9 tracking-tight "
       >
-        {{authService.user?.name}} {{authService.user?.lastName}}
+        {{user?.name}} {{user?.lastName}}
       </p>
       <h3
         class="text-center text-xl font-normal leading-9 tracking-tight "
@@ -35,10 +35,10 @@
       <div class="flex mt-4 w-full">
         <div class="w-1/2 mr-4">
           <app-input
-            [inputValue]="authService.user?.name ?? ''"
+            [inputValue]="user?.name ?? ''"
             [id]="'name'"
             [type]="'text'"
-            [label]="'Nombre'"
+            [label]="'profile.name' | transloco"
             [required]="true"
             [maxLength]="100"
             (inputValueChange)="changeName($event)"
@@ -47,10 +47,10 @@
 
         <div class="w-1/2">
           <app-input
-          [inputValue]="authService.user?.lastName ?? ''"
+          [inputValue]="user?.lastName ?? ''"
           [id]="'name'"
           [type]="'text'"
-          [label]="'Apellido'"
+          [label]="'profile.lastName' | transloco"
           [required]="true"
           [maxLength]="100"
           (inputValueChange)="changelastName($event)"
@@ -62,11 +62,11 @@
       <div class="flex mt-4 w-full">
         <div class="w-1/2 mr-4">
           <app-input
-            [inputValue]="authService.user?.email || ''"
+            [inputValue]="user?.email || ''"
             [disabled]="true"
             [id]="'email'"
             [type]="'email'"
-            [label]="'Correo electronico'"
+            [label]="'profile.email' | transloco"
             [required]="true"
             [maxLength]="100"
           ></app-input>
@@ -74,10 +74,10 @@
 
         <div class="w-1/2">
           <app-input
-            [inputValue]="authService.user?.phone || ''"
+            [inputValue]="user?.phone || ''"
             [id]="'phone'"
             [type]="'phone'"
-            [label]="'Numero de telefono'"
+            [label]="'profile.phone' | transloco"
             [maxLength]="100"
             (inputValueChange)="changePhone($event)"
           ></app-input>
@@ -90,10 +90,40 @@
         <app-button
           [disabled]="!areChangesAvalible"
           [outline]="false"
-          [label]="'Guardar cambios'"
+          [label]="'profile.saveChanges' | transloco"
           size="large"
           (click)="editProfile()"
         ></app-button>
+      </div>
+
+      <div class="mt-8">
+        <p class="mb-2 font-semibold">{{ 'profile.appearance' | transloco }}</p>
+        <ion-segment [value]="themeMode$ | async" (ionChange)="changeTheme($event)">
+          <ion-segment-button value="system">
+            <ion-label>{{ 'profile.themeSystem' | transloco }}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="light">
+            <ion-label>{{ 'profile.themeLight' | transloco }}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="dark">
+            <ion-label>{{ 'profile.themeDark' | transloco }}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+      <div class="mt-6 mb-8">
+        <p class="mb-2 font-semibold">{{ 'profile.language' | transloco }}</p>
+        <ion-segment [value]="language$ | async" (ionChange)="changeLanguage($event)">
+          <ion-segment-button value="es">
+            <ion-label>Español</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="en">
+            <ion-label>English</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="pt">
+            <ion-label>Português</ion-label>
+          </ion-segment-button>
+        </ion-segment>
       </div>
     </div>
   </div>

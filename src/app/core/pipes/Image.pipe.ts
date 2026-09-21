@@ -1,7 +1,14 @@
-import { Pipe, PipeTransform } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Pipe, PipeTransform } from '@angular/core';
 import { environment } from '@gymTrack/environment';
+
 import { API_PREFIX } from '../constants';
+import { forgetImage, getCachedImage, imageCacheKey, rememberImage } from './image-cache';
+
+const PLACEHOLDER = {
+  user: 'assets/images/placeholder.jpg',
+  product: 'assets/images/no-image.jpg',
+};
 
 @Pipe({
   name: 'images',
@@ -13,6 +20,7 @@ export class ImagesPipe implements PipeTransform {
   transform(img: string, tipo: 'user' | 'product' = 'user'): any {
     return this.getImage(img, tipo);
   }
+
   /**
    * @author Felipe De Jesus
    * @version 0.0.1
@@ -32,30 +40,38 @@ export class ImagesPipe implements PipeTransform {
   }
 
   getImage(img: string, type: 'user' | 'product' = 'user') {
-    return new Promise(resolve => {
-      if (!img) {
-        if (type == 'user') {
-          return resolve('assets/images/placeholder.jpg');
-        }
-        return resolve('assets/images/no-image.jpg');
-      }
+    if (!img) {
+      return Promise.resolve(PLACEHOLDER[type]);
+    }
+
+    //The profile picture carries a timestamp when it changes, which is what expires its entry
+    const key = imageCacheKey(type, img);
+    const cached = getCachedImage(key);
+
+    if (cached) {
+      return cached;
+    }
+
+    const pending = new Promise(resolve => {
       // La peticion regresa una img y se pasa a una url temporal para poder ser usada
       this.GetImagen(img, type).subscribe(
         value => {
           const reader = new FileReader();
           reader.readAsDataURL(value);
           reader.onloadend = () => {
-            const imagenTemp = reader.result;
-            resolve(imagenTemp);
+            resolve(reader.result);
           };
         },
         () => {
-          if (type == 'user') {
-            return resolve('assets/images/placeholder.jpg');
-          }
-          return resolve('assets/images/no-image.jpg');
+          //A picture that failed is not remembered, the next row is free to try again
+          forgetImage(key);
+          resolve(PLACEHOLDER[type]);
         }
       );
     });
+
+    rememberImage(key, pending);
+
+    return pending;
   }
 }

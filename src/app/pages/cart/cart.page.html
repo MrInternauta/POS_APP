@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title> Carrito de compras </ion-title>
+    <ion-title>{{ 'cart.title' | transloco }}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
@@ -12,14 +12,14 @@
             *ngIf="!observableResult || !observableResult.length"
             class="flex min-h-full flex-col justify-start items-center">
             <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-              <p class="text-center text-2xl font-bold leading-9 tracking-tight">Carrito de compras vacio</p>
+              <p class="text-center text-2xl font-bold leading-9 tracking-tight">{{ 'cart.empty' | transloco }}</p>
             </div>
 
             <ion-icon name="sad-outline" size="large" class="text-center mt-4"></ion-icon>
           </div>
 
           <div *ngIf="observableResult.length">
-            <ion-card *ngFor="let workout of observableResult" style="margin-bottom: 10px">
+            <ion-card *ngFor="let workout of observableResult; trackBy: trackByCartItem" style="margin-bottom: 10px">
               <ion-item>
                 <p class="uppercase text-lg font-semibold">{{workout.article?.name}}</p>
                 <!-- option popover menu -->
@@ -41,9 +41,9 @@
                     </ion-col>
 
                     <ion-col size="5">
-                      <ion-card-subtitle><strong>Quantity:</strong></ion-card-subtitle>
-                      <ion-card-subtitle><strong>Price:</strong></ion-card-subtitle>
-                      <ion-card-subtitle><strong>Subtotal:</strong></ion-card-subtitle>
+                      <ion-card-subtitle><strong>{{ 'common.quantity' | transloco }}:</strong></ion-card-subtitle>
+                      <ion-card-subtitle><strong>{{ 'common.price' | transloco }}:</strong></ion-card-subtitle>
+                      <ion-card-subtitle><strong>{{ 'common.subtotal' | transloco }}:</strong></ion-card-subtitle>
                     </ion-col>
                     <ion-col class="customCol">
                       <ng-container>
@@ -58,6 +58,24 @@
 
                       <p>{{workout?.article?.priceSell | currency }}</p>
                       <p>{{(workout?.article?.priceSell * workout.quantity) || 0 | currency}}</p>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <p class="font-semibold">
+                        {{ 'common.stock' | transloco }}:
+                        <span
+                          class="font-normal"
+                          [ngClass]="{ 'text-danger-hbr': !hasEnoughStock(workout) }"
+                          >{{ workout?.article?.stock || 0 }}</span
+                        >
+                      </p>
+                      <p
+                        *ngIf="!hasEnoughStock(workout)"
+                        class="font-semibold text-danger-hbr flex items-center gap-1">
+                        <ion-icon name="warning-outline"></ion-icon>
+                        {{ 'common.notEnoughStock' | transloco }}
+                      </p>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
@@ -84,7 +102,7 @@
     <div class="flex justify-center text-center py-2" *ngIf="total">
       <div class="row">
         <div class="col">
-          <p>Total</p>
+          <p>{{ 'common.total' | transloco }}</p>
         </div>
 
         <div class="col">
@@ -97,9 +115,13 @@
       </div>
     </div>
 
-    <div class="flex w-full items-center justify-center">
-      <app-button [disabled]="!total" class="w-3/4" [label]="'Guardar venta'" [size]="'large'" (click)="checkout()">
-      </app-button>
+    <div class="flex w-full items-center justify-center pb-2">
+      <app-slide-to-confirm
+        class="w-3/4"
+        [disabled]="!total || cartHasStockIssues(observableResult)"
+        [label]="'cart.slideToCheckout' | transloco"
+        (confirmed)="finishCheckout()">
+      </app-slide-to-confirm>
     </div>
   </ion-toolbar>
 </ion-footer>

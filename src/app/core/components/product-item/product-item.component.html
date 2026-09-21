@@ -9,32 +9,39 @@
         <app-avatar  class="h-20 w-20 mr-4" [size]="'regular'" [img]="image || ''" [type]="'product'"></app-avatar>
       </ion-avatar>
       <ion-label>
-        <p class="font-semibold" *ngIf="stock">
-          Stock:
+        <p class="font-semibold">
+          {{ 'common.stock' | transloco }}:
           <span
             class="font-normal"
-            [ngClass]="{ 'text-danger-hbr': !stock || stock <= 5, 'text-warning': stock <= 15 && stock > 5 }"
-            >{{ stock || "0" }}</span
+            [ngClass]="{
+              'text-danger-hbr': stockValue <= 5,
+              'text-warning': stockValue <= 15 && stockValue > 5
+            }"
+            >{{ stockValue }}</span
           >
         </p>
+        <p *ngIf="isOutOfStock" class="font-semibold text-danger-hbr flex items-center gap-1">
+          <ion-icon name="warning-outline"></ion-icon>
+          {{ 'common.outOfStock' | transloco }}
+        </p>
         <p class="font-semibold" *ngIf="price">
-          Price: <span class="font-normal">{{ price | currency }}</span>
+          {{ 'common.price' | transloco }}: <span class="font-normal">{{ price | currency }}</span>
         </p>
         <p class="font-semibold" *ngIf="category">
-          Category:
+          {{ 'common.category' | transloco }}:
           <span class="font-normal">{{ category }}</span>
         </p>
         <p *ngIf="description" class="font-semibold">
-          Description:
+          {{ 'common.description' | transloco }}:
           <span class="font-normal">{{ description }}</span>
         </p>
         <p *ngIf="quantity" class="font-semibold">
-          Quantity:
+          {{ 'common.quantity' | transloco }}:
           <span class="font-normal">{{ quantity }}</span>
         </p>
     
         <p *ngIf="quantity && price" class="font-semibold">
-          Subtotal:
+          {{ 'common.subtotal' | transloco }}:
           <span class="font-normal">{{ subtotal | currency }}</span>
         </p>
       </ion-label>

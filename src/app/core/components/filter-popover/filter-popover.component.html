@@ -1,6 +1,11 @@
 <ng-container>
-  <ion-button color="primary" (click)="presentPopover($event)" [fill]="selectedFilteritem !== '' ? 'solid' : ''">
-    Filtrar
+  <ion-button
+    color="primary"
+    [title]="'filters.filter' | transloco"
+    [fill]="selectedFilteritem !== '' ? 'solid' : ''"
+    (click)="presentPopover($event)">
+    <!-- On a phone the toolbar only has room for the icon -->
+    <span class="hidden sm:inline">{{ 'filters.filter' | transloco }}</span>
     <ion-icon slot="end" name="filter-outline"></ion-icon>
   </ion-button>
   <ion-popover #popover [isOpen]="isOpen" (didDismiss)="isOpen = false">
@@ -9,18 +14,20 @@
         <ion-list>
           <ion-item-group>
             <ion-item-divider>
-              <ion-label> Ordenar por</ion-label>
+              <ion-label>{{ 'filters.sortBy' | transloco }}</ion-label>
             </ion-item-divider>
-            <ion-item [button]="true" [detail]="false" (click)="onItemClicked('more')" [ngClass]="{'active': selectedFilteritem === 'more'}" >Más existencias</ion-item>
-            <ion-item [button]="true" [detail]="false" (click)="onItemClicked('less')" [ngClass]="{'active': selectedFilteritem === 'less'}">Menos existencias</ion-item>
+            <ion-item [button]="true" [detail]="false" (click)="onItemClicked('az')" [ngClass]="{'active': selectedFilteritem === 'az'}">{{ 'filters.alphabeticalAsc' | transloco }}</ion-item>
+            <ion-item [button]="true" [detail]="false" (click)="onItemClicked('za')" [ngClass]="{'active': selectedFilteritem === 'za'}">{{ 'filters.alphabeticalDesc' | transloco }}</ion-item>
+            <ion-item [button]="true" [detail]="false" (click)="onItemClicked('more')" [ngClass]="{'active': selectedFilteritem === 'more'}" >{{ 'filters.moreStock' | transloco }}</ion-item>
+            <ion-item [button]="true" [detail]="false" (click)="onItemClicked('less')" [ngClass]="{'active': selectedFilteritem === 'less'}">{{ 'filters.lessStock' | transloco }}</ion-item>
           </ion-item-group>
 
           <ion-item-group>
             <ion-item-divider>
-              <ion-label> Filtrar por</ion-label>
+              <ion-label>{{ 'filters.filterBy' | transloco }}</ion-label>
             </ion-item-divider>
 
-            <ion-item [button]="true" id="nested-trigger" [ngClass]="{'active': selectedFilteritem !== '' && selectedFilteritem !== 'less' && selectedFilteritem !== 'more'}">Categorias</ion-item>
+            <ion-item [button]="true" id="nested-trigger" [ngClass]="{'active': selectedFilteritem !== '' && selectedFilteritem !== 'less' && selectedFilteritem !== 'more' && selectedFilteritem !== 'az' && selectedFilteritem !== 'za'}">{{ 'filters.categories' | transloco }}</ion-item>
             <ion-popover trigger="nested-trigger" [dismissOnSelect]="true" side="end">
               <ng-template>
                 <ion-content>
@@ -29,7 +36,7 @@
                       [ngClass]="{'active': selectedFilteritem === item?.id + '' }"
                       [button]="true"
                       [detail]="false"
-                      *ngFor="let item of categories"
+                      *ngFor="let item of categories; trackBy: trackByCategory"
                       (click)="onCategoryClicked(item?.id)"
                       >{{ item.name }}</ion-item
                     >
@@ -38,7 +45,7 @@
               </ng-template>
             </ion-popover>
             <ion-item [button]="true" [detail]="false" (click)="onItemClicked('clear')"
-              >Borrar filtros <ion-icon slot="end" name="trash"></ion-icon>
+              >{{ 'filters.clear' | transloco }} <ion-icon slot="end" name="trash"></ion-icon>
             </ion-item>
           </ion-item-group>
         </ion-list>

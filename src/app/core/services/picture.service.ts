@@ -2,10 +2,23 @@ import { Injectable } from '@angular/core';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { Platform } from '@ionic/angular';
 
+import { TranslocoService } from '@jsverse/transloco';
 import { dataURLtoFile } from '../util/helpers';
+
 import { ToolsService } from './api.service';
 import { SubirarhivoService } from './file.service';
 import { ModalInfoService } from './modal.service';
+
+/** jpeg on iOS, png on android, and jpg spelled out so the served type matches the bytes */
+function extensionOf(photo: Photo): string {
+  const format = String(photo?.format || '').toLowerCase();
+
+  if (format === 'png') {
+    return 'png';
+  }
+
+  return 'jpeg';
+}
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +29,8 @@ export class PictureService {
     private api: ToolsService,
     public subirArchivo: SubirarhivoService,
     private platform: Platform,
-    private modalInfoService: ModalInfoService
+    private modalInfoService: ModalInfoService,
+    private transloco: TranslocoService
   ) {}
 
   /* The `sourceType` parameter in the `takePicture` method of the
@@ -27,7 +41,7 @@ export class PictureService {
     sourceType: CameraSource = CameraSource.Camera,
     id: string,
     type: 'user' | 'product' = 'user',
-    callback?: () => void
+    callback?: (uploaded?: any) => void
   ) => {
     this.platform.ready().then(() => {
       Camera.getPhoto({
@@ -42,14 +56,32 @@ export class PictureService {
           if (!imageData?.dataUrl) return;
           //restrict by size 2MB
           if (imageData?.dataUrl.length > 2097152) {
-            this.modalInfoService.error('Error', 'La imagen es muy pesada, intenta con otra.');
+            this.modalInfoService.error(
+              this.transloco.translate('common.somethingWrong'),
+              this.transloco.translate('picture.tooHeavy')
+            );
             return;
           }
-          const data = dataURLtoFile(imageData?.dataUrl, 'file.png');
-          await this.subirArchivo.uploadImage(data, id, type);
-          callback && callback();
+
+          //The name carries the real format. The API stores the file under that extension and
+          //serves it with the matching content type, and iOS refuses to paint an image whose
+          //content type does not match its bytes.
+          const data = dataURLtoFile(imageData?.dataUrl, `file.${extensionOf(imageData)}`);
+
+          if (!data) {
+            this.modalInfoService.error(this.transloco.translate('common.somethingWrong'), '');
+            return;
+          }
+
+          //The API answers with the record it just updated, image name included
+          const uploaded = await this.subirArchivo.uploadImage(data, id, type);
+
+          if (uploaded) {
+            callback && callback(uploaded);
+          }
         },
         err => {
+          //Picking nothing lands here too, which is not worth a message
           console.log(err);
         }
       );
@@ -66,18 +98,18 @@ export class PictureService {
    * @function changePic
    * @description Abre modal de opciones (Para actualizar la imagen)
    */
-  changePicture(id: string, type: 'user' | 'product' = 'user', callback?: () => void) {
+  changePicture(id: string, type: 'user' | 'product' = 'user', callback?: (uploaded?: any) => void) {
     this.api.MostrarAlert(
-      'Actualizar Fotografía',
-      '¿Desde donde deseas seleccionar?',
+      this.transloco.translate('picture.title'),
+      this.transloco.translate('picture.question'),
       () => {
         this.takePicture(CameraSource.Photos, id, type, callback);
       },
       () => {
         this.takePicture(CameraSource.Camera, id, type, callback);
       },
-      'Galeria',
-      'Camara'
+      this.transloco.translate('picture.gallery'),
+      this.transloco.translate('picture.camera')
     );
   }
 }

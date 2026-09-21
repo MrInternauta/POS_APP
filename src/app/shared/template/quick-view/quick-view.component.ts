@@ -1,28 +1,31 @@
-import { Component, ChangeDetectorRef, Optional, OnInit,OnDestroy } from '@angular/core';
-import { ThemeConstantService } from '../../services/theme-constant.service';
-import { Directionality, Direction } from '@angular/cdk/bidi';
-import { takeUntil } from 'rxjs/operators';
+import { Direction, Directionality } from '@angular/cdk/bidi';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, Optional } from '@angular/core';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { ThemeService } from '../../../core/services/theme.service';
+import { ThemeConstantService } from '../../services/theme-constant.service';
 
 @Component({
   selector: 'app-quick-view',
   templateUrl: './quick-view.component.html',
-  styles: [`
-    :host ::ng-deep .theme-config nz-switch .ant-switch{
-      @apply bg-deep dark:bg-white/10 h-[25px] min-w-[50px];
-    }
-    :host ::ng-deep .theme-config nz-switch .ant-switch.ant-switch-checked{
-      @apply bg-primary;
-    }
-    :host ::ng-deep .theme-config nz-switch .ant-switch.ant-switch-checked .ant-switch-handle {
+  styles: [
+    `
+      :host ::ng-deep .theme-config nz-switch .ant-switch {
+        @apply bg-deep dark:bg-white/10 h-[25px] min-w-[50px];
+      }
+      :host ::ng-deep .theme-config nz-switch .ant-switch.ant-switch-checked {
+        @apply bg-primary;
+      }
+      :host ::ng-deep .theme-config nz-switch .ant-switch.ant-switch-checked .ant-switch-handle {
         left: calc(100% - 21px);
-    }
-    :host ::ng-deep .theme-config nz-switch .ant-switch .ant-switch-handle{
-      @apply top-[3px] left-[3px] w-[18px] h-[18px];
-    }
-  `]
+      }
+      :host ::ng-deep .theme-config nz-switch .ant-switch .ant-switch-handle {
+        @apply top-[3px] left-[3px] w-[18px] h-[18px];
+      }
+    `,
+  ],
 })
-export class QuickViewComponent implements OnInit {
+export class QuickViewComponent implements OnInit, OnDestroy {
   direction: 'ltr' | 'rtl' = 'ltr';
   isFolded!: boolean;
   isFoldedTop!: boolean;
@@ -33,38 +36,35 @@ export class QuickViewComponent implements OnInit {
 
   constructor(
     private themeService: ThemeConstantService,
+    private appTheme: ThemeService,
     private cdr: ChangeDetectorRef,
     @Optional() private directionality: Directionality
   ) {
-    this.isDarkMode = JSON.parse(localStorage.getItem('isDarkMode') || 'false');
+    this.isDarkMode = this.appTheme.isDark;
     this.isRTL = JSON.parse(localStorage.getItem('isRTL') || 'false');
   }
 
   ngOnInit(): void {
-    this.themeService.isMenuFoldedChanges
-      .subscribe((isFolded) => (this.isFolded = isFolded));
+    this.themeService.isMenuFoldedChanges.subscribe(isFolded => (this.isFolded = isFolded));
 
     if (this.directionality) {
-      this.directionality.change
-        ?.pipe(takeUntil(this.destroy$))
-        .subscribe((direction: Direction) => {
-          this.direction = direction;
-          this.cdr.detectChanges();
-        });
+      this.directionality.change?.pipe(takeUntil(this.destroy$)).subscribe((direction: Direction) => {
+        this.direction = direction;
+        this.cdr.detectChanges();
+      });
 
       this.direction = this.isRTL ? 'rtl' : 'ltr';
       this.updateDirection();
     }
 
-    const isDarkModeEnabled = localStorage.getItem('darkModeEnabled');
     const isListClassEnabled = localStorage.getItem('listClassEnabled');
 
-    if (isDarkModeEnabled === 'true') {
-      const body = document.querySelector('body');
+    //The ThemeService already decided whether the app is dark, the logo follows it
+    if (this.appTheme.isDark) {
       const logoImg = document.getElementById('logo-img') as HTMLImageElement;
       const logoFoldImg = document.getElementById('logo-fold-img') as HTMLImageElement;
-      logoImg.src = 'assets/images/logo/logo-white.png';
-      logoFoldImg.src = 'assets/images/logo/logo-fold.png';
+      if (logoImg) logoImg.src = 'assets/images/logo/logo-white.png';
+      if (logoFoldImg) logoFoldImg.src = 'assets/images/logo/logo-fold.png';
     }
 
     if (isListClassEnabled === 'true') {
@@ -78,34 +78,29 @@ export class QuickViewComponent implements OnInit {
   }
 
   toggleDarkMode() {
-    const body = document.querySelector('body');
-    if (!body) {
-      return
-    }
-    body?.classList.toggle('dark');
+    //The ThemeService owns the class and what is remembered, this only flips it
+    this.appTheme.setMode(this.appTheme.isDark ? 'light' : 'dark');
 
-    const isDarkModeEnabled = body?.classList.contains('dark');
-    localStorage.setItem('darkModeEnabled', isDarkModeEnabled.toString());
+    const isDarkModeEnabled = this.appTheme.isDark;
 
     const logoImg = document.getElementById('logo-img') as HTMLImageElement;
     const logoFoldImg = document.getElementById('logo-fold-img') as HTMLImageElement;
 
-    if (isDarkModeEnabled) {
-      logoImg.src = 'assets/images/logo/logo-white.png';
-      logoFoldImg.src = 'assets/images/logo/logo-fold.png';
-    } else {
-      logoImg.src = 'assets/images/logo/logo-dark.png';
+    if (logoImg) {
+      logoImg.src = isDarkModeEnabled ? 'assets/images/logo/logo-white.png' : 'assets/images/logo/logo-dark.png';
+    }
+
+    if (logoFoldImg) {
       logoFoldImg.src = 'assets/images/logo/logo-fold.png';
     }
 
     this.isDarkMode = isDarkModeEnabled;
-    localStorage.setItem('isDarkMode', JSON.stringify(this.isDarkMode));
   }
 
   toggleListClass() {
     const list = document.querySelector('#my-list');
     if (!list) {
-      return
+      return;
     }
 
     list.classList.toggle('custom-class');
@@ -139,10 +134,10 @@ export class QuickViewComponent implements OnInit {
     const body = document.querySelector('.hexadash-top-menu');
     const button = document.querySelector('.custom-scrollbar') as HTMLElement;
     if (!body) {
-      return
+      return;
     }
     if (!sidebar) {
-      return
+      return;
     }
     if (window.innerWidth >= 991) {
       if (this.isFoldedTop) {

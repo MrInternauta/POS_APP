@@ -1,13 +1,10 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { NavController } from '@ionic/angular';
 import { Network } from '@awesome-cordova-plugins/network/ngx';
+import { NavController } from '@ionic/angular';
+import { TranslocoService } from '@jsverse/transloco';
 
-import {
-  LoadingController,
-  ToastController,
-  AlertController,
-} from '@ionic/angular';
+import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +20,8 @@ export class ToolsService {
     public toastController: ToastController,
     public alertController: AlertController,
     private navCtrl: NavController,
-    private network: Network
+    private network: Network,
+    private transloco: TranslocoService
   ) {}
 
   //Navega hacia una pagina y destruye la anterior
@@ -44,7 +42,7 @@ export class ToolsService {
     });
 
     // watch network for a connection
-    let connectSubscription = this.network.onConnect().subscribe(async () => {
+    this.network.onConnect().subscribe(async () => {
       //Quitar alert solo cuando ya se aya puessto el alert
       if (wasDismissed) {
         this.alertInternet.dismiss();
@@ -123,13 +121,15 @@ export class ToolsService {
   async MostrarAlert(
     header: string,
     message: string,
-    cancelCallback: Function,
-    aceptCallback: Function,
-    textcancel: string = 'Cancelar',
-    textAcept: string = 'Aceptar',
+    cancelCallback: () => void,
+    aceptCallback: () => void,
+    textcancel: string = '',
+    textAcept: string = '',
     cssClass: string = 'alerta-personalizada-aceptcancel',
     subHeader = ''
   ) {
+    let chosen: (() => void) | null = null;
+
     const alert = await this.alertController.create({
       header,
       subHeader,
@@ -138,22 +138,29 @@ export class ToolsService {
       cssClass,
       buttons: [
         {
-          text: textcancel,
+          text: textcancel || this.transloco.translate('common.cancel'),
           cssClass: 'danger',
           handler: () => {
-            cancelCallback();
+            chosen = cancelCallback;
           },
         },
         {
-          text: textAcept,
+          text: textAcept || this.transloco.translate('common.continue'),
           cssClass: 'success',
           handler: () => {
-            aceptCallback();
+            chosen = aceptCallback;
           },
         },
       ],
     });
     await alert.present();
+
+    //iOS will not open the camera or the gallery while the alert is still on its way out, so the
+    //answer is acted on once it is really gone. Dismissing by the backdrop chooses nothing.
+    await alert.onDidDismiss();
+    //The assignments happen inside the button handlers, which the compiler does not follow
+    const answer = chosen as (() => void) | null;
+    answer?.();
   }
   /**
    * @author Felipe De Jesus
@@ -173,13 +180,13 @@ export class ToolsService {
     backdropDismiss = true,
     buttons = [
       {
-        text: 'OK',
+        text: this.transloco.translate('common.ok'),
         cssClass: 'success',
         handler: () => {},
       },
     ]
   ) {
-    let alert = await this.alertController.create({
+    const alert = await this.alertController.create({
       header,
       subHeader,
       message,
@@ -197,9 +204,9 @@ export class ToolsService {
    */
   async InternetAlert() {
     this.alertInternet = await this.alertController.create({
-      header: 'Sin conexión',
+      header: this.transloco.translate('errors.noConnection'),
       subHeader: '',
-      message: 'Favor de verificar su conexión a internet',
+      message: this.transloco.translate('errors.noConnectionMessage'),
       // buttons:['Ok'],
       backdropDismiss: false,
     });
@@ -214,10 +221,9 @@ export class ToolsService {
    */
   async VersionAppAlert() {
     this.alerVersionApp = await this.alertController.create({
-      header: 'Actualiza la app',
+      header: this.transloco.translate('errors.updateApp'),
       subHeader: '',
-      message:
-        'Tienes una versión anterior, por favor actualiza la app para seguir disfrutando del servicio.',
+      message: this.transloco.translate('errors.updateAppMessage'),
       // buttons: ['Ok'],
       backdropDismiss: false,
     });

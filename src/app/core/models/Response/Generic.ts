@@ -1,4 +1,4 @@
-import { User } from '@gymTrack/core';
+import { User } from '../usuario.model';
 
 export interface GenericResponse<T> {
   statusCode: number;

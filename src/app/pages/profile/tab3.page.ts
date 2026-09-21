@@ -1,11 +1,14 @@
 import { Component, OnDestroy } from '@angular/core';
-import { UserUpdateDto } from '@gymTrack/auth/model/user.dto';
+import { UserDto, UserUpdateDto } from '@gymTrack/auth/model/user.dto';
 import { AlertController, ToastController } from '@ionic/angular';
-import { Subscription } from 'rxjs';
+import { TranslocoService } from '@jsverse/transloco';
+import { Observable, Subscription } from 'rxjs';
 
 import { AuthService } from '../../auth/services/auth.service';
+import { Language, LanguageService } from '../../core/i18n/language.service';
 import { ModalInfoService } from '../../core/services/modal.service';
 import { PictureService } from '../../core/services/picture.service';
+import { ThemeMode, ThemeService } from '../../core/services/theme.service';
 import { ProfileService } from './services/profile.service';
 
 @Component({
@@ -16,6 +19,10 @@ import { ProfileService } from './services/profile.service';
 export class Tab3Page implements OnDestroy {
   public editMode = false;
   $susctiption!: Subscription;
+  /** Followed by the view, so a saved change or a new picture shows up straight away */
+  public user$: Observable<UserDto | null> = this.authService.user$;
+  public themeMode$: Observable<ThemeMode> = this.themeService.mode$;
+  public language$: Observable<Language> = this.languageService.language$;
   private userToUpdate!: UserUpdateDto;
   constructor(
     private alertController: AlertController,
@@ -23,16 +30,27 @@ export class Tab3Page implements OnDestroy {
     private userService: ProfileService,
     private toastController: ToastController,
     private modalInfoService: ModalInfoService,
-    private pictureService: PictureService
+    private pictureService: PictureService,
+    private themeService: ThemeService,
+    private languageService: LanguageService,
+    private transloco: TranslocoService
   ) {
     this.userToUpdate = {};
+  }
+
+  changeTheme(event: any): void {
+    this.themeService.setMode(event?.detail?.value as ThemeMode);
+  }
+
+  changeLanguage(event: any): void {
+    this.languageService.use(event?.detail?.value as Language);
   }
 
   async sendResetPassword() {
     //TODO: Send email to reset
     const alert = await this.alertController.create({
-      header: 'Reset password',
-      message: 'An email will be sent, please, confirm the email to proceed',
+      header: this.transloco.translate('profile.resetPassword'),
+      message: this.transloco.translate('profile.resetPasswordMessage'),
       buttons: ['OK'],
     });
 
@@ -40,18 +58,28 @@ export class Tab3Page implements OnDestroy {
   }
 
   updateUserPicture() {
-    this.pictureService.changePicture(this.authService._auth?.user?.id?.toString() || '', 'user', () => {
-      //update the image in the view
-      if (this.authService._auth?.user?.image) {
-        this.authService._auth.user.image = this.authService._auth.user.image + '?' + new Date().getTime();
+    this.pictureService.changePicture(this.authService.user?.id?.toString() || '', 'user', uploaded => {
+      const image = uploaded?.image;
+
+      if (!image) {
+        return;
       }
+
+      const user = this.authService.user;
+
+      if (!user) {
+        return;
+      }
+
+      //The file keeps its name, the timestamp is what makes the view ask for it again
+      this.saveUser({ ...user, image: `${image}?${new Date().getTime()}` });
     });
   }
 
   async upgradePro() {
     const alert = await this.alertController.create({
-      header: 'Upgrade to PRO',
-      message: 'An email will be sent to proceed',
+      header: this.transloco.translate('profile.upgrade'),
+      message: this.transloco.translate('profile.upgradeMessage'),
       buttons: ['OK'],
     });
 
@@ -82,7 +110,9 @@ export class Tab3Page implements OnDestroy {
       console.log(usertoUpdate);
       this.$susctiption = this.userService.putUser(String(this.authService.user?.id), usertoUpdate).subscribe(res => {
         this.presentModal(res.message, 'success');
-        this.authService.saveStorage(res?.user?.id?.toString() || '', this.authService._auth?.token || '', res.user);
+        //The API answers with the whole user, but not with its image, which it never changes here
+        this.saveUser({ ...this.authService.user, ...res.user, image: this.authService.user?.image } as UserDto);
+        this.userToUpdate = {};
         this.editMode = false;
       });
     } else {
@@ -100,11 +130,20 @@ export class Tab3Page implements OnDestroy {
     this.userToUpdate['phone'] = $event as string;
   }
 
+  /** Pushes the user through the auth service, which keeps memory, storage and the store together */
+  private saveUser(user: UserDto) {
+    this.authService.saveStorage(
+      user?.id?.toString() || this.authService._auth?.id?.toString() || '',
+      this.authService._auth?.token || '',
+      user
+    );
+  }
+
   presentModal(text = '', type: 'warning' | 'success' = 'warning') {
     if (type == 'warning') {
-      this.modalInfoService.warning(text || 'No hay cambios pendientes para guardar', '');
+      this.modalInfoService.warning(text || this.transloco.translate('profile.noChanges'), '');
     } else {
-      this.modalInfoService.success(text || 'Guardado correctamente', '');
+      this.modalInfoService.success(text || this.transloco.translate('profile.saved'), '');
     }
   }
 

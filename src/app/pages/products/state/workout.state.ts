@@ -1,7 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { loadedExercise } from './workout.actions';
-import { IExercise } from '@gymTrack/core';
-import { ArticleItemResponse, ArticleResponse } from '../models';
+import { ArticleResponse } from '../models';
+import { loadedExercise, loadedMoreExercise } from './workout.actions';
 
 export const ExerciseFeatureKey = 'Exercise';
 export interface ExerciseState {
@@ -17,6 +16,14 @@ const _ExerciseReducer = createReducer(
   on(loadedExercise, (state, { Exercise }) => ({
     ...state,
     [ExerciseFeatureKey]: Exercise,
+  })),
+  //A next page keeps the products already loaded and appends the new ones
+  on(loadedMoreExercise, (state, { Exercise }) => ({
+    ...state,
+    [ExerciseFeatureKey]: {
+      ...Exercise,
+      products: [...(state[ExerciseFeatureKey]?.products || []), ...(Exercise?.products || [])],
+    },
   }))
 );
 

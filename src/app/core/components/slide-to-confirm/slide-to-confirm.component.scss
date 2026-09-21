@@ -1,0 +1,4 @@
+/* The knob owns the horizontal gesture, so the page must not scroll under the finger */
+.slide-knob {
+  touch-action: none;
+}
