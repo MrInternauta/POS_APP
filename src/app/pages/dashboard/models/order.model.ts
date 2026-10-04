@@ -16,5 +16,7 @@ export interface OrderResponse {
 export interface ItemResponse {
   id: number;
   quantity: number;
+  //The price it sold at; the product's own price may have changed since
+  unitPrice?: number;
   product: ArticleItemResponse;
 }

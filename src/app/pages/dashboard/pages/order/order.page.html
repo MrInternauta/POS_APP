@@ -32,8 +32,8 @@
                     </ion-col>
                     <ion-col class="customCol">
                       <p>{{item?.quantity }}</p>
-                      <p>{{item?.product?.priceSell | currency }}</p>
-                      <p>{{ getTotal(item?.product?.priceSell, item?.quantity) | currency }}</p>
+                      <p>{{ (item?.unitPrice ?? item?.product?.priceSell) | currency }}</p>
+                      <p>{{ getTotal(item?.unitPrice ?? item?.product?.priceSell, item?.quantity) | currency }}</p>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
