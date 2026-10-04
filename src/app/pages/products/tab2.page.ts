@@ -1,7 +1,7 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
+import { CapacitorBarcodeScanner, CapacitorBarcodeScannerTypeHint } from '@capacitor/barcode-scanner';
 import { AlertController, InfiniteScrollCustomEvent, ModalController, ToastController } from '@ionic/angular';
 import { TranslocoService } from '@jsverse/transloco';
 import { Store } from '@ngrx/store';
@@ -53,7 +53,6 @@ export class Tab2Page implements OnDestroy, OnInit {
   constructor(
     private toastController: ToastController,
     private store: Store<AppState>,
-    private barcodeScanner: BarcodeScanner,
     public router: Router,
     public activatedRoute: ActivatedRoute,
     private alertController: AlertController,
@@ -223,37 +222,43 @@ export class Tab2Page implements OnDestroy, OnInit {
 
   async scanCode() {
     try {
-      const barcodeData = await this.barcodeScanner.scan();
-      console.log('Barcode data', barcodeData);
-      if (!barcodeData.text) {
+      const { ScanResult } = await CapacitorBarcodeScanner.scanBarcode({
+        hint: CapacitorBarcodeScannerTypeHint.ALL,
+        cancelButtonAccessibilityLabel: this.transloco.translate('common.cancel'),
+      });
+      if (!ScanResult) {
         console.log('Invalid code');
       }
-      this.searchbyCode(barcodeData.text || '');
+      this.searchbyCode(ScanResult || '');
     } catch (error) {
-      if (error == 'cordova_not_available') {
-        const alert = await this.alertController.create({
-          header: this.transloco.translate('products.scannerUnavailable'),
-          message: this.transloco.translate('products.searchManually'),
-          buttons: [
-            {
-              text: this.transloco.translate('common.search'),
-              role: 'cancel',
-              cssClass: 'secondary',
-              handler: () => {
-                this.focusButton();
-              },
-            },
-            {
-              text: this.transloco.translate('common.cancel'),
-              handler: () => {},
-            },
-          ],
-        });
-        alert.present();
-
+      //Closing the scanner is a choice, not a failure worth an alert
+      if (
+        String((error as Error)?.message || error)
+          .toLowerCase()
+          .includes('cancel')
+      ) {
         return;
       }
       console.log('Error', error);
+      const alert = await this.alertController.create({
+        header: this.transloco.translate('products.scannerUnavailable'),
+        message: this.transloco.translate('products.searchManually'),
+        buttons: [
+          {
+            text: this.transloco.translate('common.search'),
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: () => {
+              this.focusButton();
+            },
+          },
+          {
+            text: this.transloco.translate('common.cancel'),
+            handler: () => {},
+          },
+        ],
+      });
+      alert.present();
     }
   }
 
