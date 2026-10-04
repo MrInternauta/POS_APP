@@ -63,7 +63,7 @@ export class QuickViewComponent implements OnInit, OnDestroy {
     if (this.appTheme.isDark) {
       const logoImg = document.getElementById('logo-img') as HTMLImageElement;
       const logoFoldImg = document.getElementById('logo-fold-img') as HTMLImageElement;
-      if (logoImg) logoImg.src = 'assets/images/logo/logo-white.png';
+      if (logoImg) logoImg.src = 'assets/images/logo/logo-white.svg';
       if (logoFoldImg) logoFoldImg.src = 'assets/images/logo/logo-fold.png';
     }
 
@@ -87,7 +87,7 @@ export class QuickViewComponent implements OnInit, OnDestroy {
     const logoFoldImg = document.getElementById('logo-fold-img') as HTMLImageElement;
 
     if (logoImg) {
-      logoImg.src = isDarkModeEnabled ? 'assets/images/logo/logo-white.png' : 'assets/images/logo/logo-dark.png';
+      logoImg.src = isDarkModeEnabled ? 'assets/images/logo/logo-white.svg' : 'assets/images/logo/logo-dark.svg';
     }
 
     if (logoFoldImg) {

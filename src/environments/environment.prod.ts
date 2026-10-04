@@ -1,4 +1,5 @@
 export const environment = {
-  url: 'http://nestpos.eba-i2uaxmst.us-east-1.elasticbeanstalk.com/',
+  //The Android workflow writes the API_URL repository variable here before it builds
+  url: 'https://pos-nest.vercel.app/',
   production: true,
 };

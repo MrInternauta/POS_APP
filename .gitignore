@@ -67,3 +67,6 @@ testem.log
 .DS_Store
 Thumbs.db
 playstore
+
+# El material promocional de la ficha sí se versiona
+!promo/playstore/

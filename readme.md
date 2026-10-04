@@ -1,12 +1,28 @@
-android.enableJetifier=true
+<p align="center">
+  <img src="promo/github/banner-1280x640.png" alt="Mini POS" width="100%">
+</p>
 
-cd android &&
-./gradlew assembleRelease &&
+## Description
 
----
+ionic store - point of sales
 
-jarsigner -keystore /Users/feliperamirez/upload.jks -storepass password /Users/feliperamirez/Projects/POS_APP/android/app/build/outputs/apk/release/app-release-unsigned.apk upload
+## Screenshots
 
-&&
+<p align="center">
+  <img src="promo/github/screens-2400x1000.png" alt="Acceso, productos, carrito, historial y perfil" width="100%">
+</p>
 
-/Users/feliperamirez/Library/Android/sdk/build-tools/34.0.0/zipalign 4 /Users/feliperamirez/Projects/POS_APP/android/app/build/outputs/apk/release/app-release-unsigned.apk /Users/feliperamirez/Projects/POS_APP/android/app/build/outputs/apk/release/app-release-signed.apk
+El material para la ficha de Play Store y el resto de las piezas están en
+[`promo/`](promo/README.md).
+
+## Installation
+
+```bash
+npm install
+```
+
+## Running the app with ionci
+
+```bash
+ionic serve
+```

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Network } from '@awesome-cordova-plugins/network/ngx';
+import { Network } from '@capacitor/network';
 import { NavController } from '@ionic/angular';
 import { TranslocoService } from '@jsverse/transloco';
 
@@ -20,7 +20,6 @@ export class ToolsService {
     public toastController: ToastController,
     public alertController: AlertController,
     private navCtrl: NavController,
-    private network: Network,
     private transloco: TranslocoService
   ) {}
 
@@ -34,21 +33,17 @@ export class ToolsService {
 
   verifyNetwork() {
     let wasDismissed = false;
-    // watch network for a disconnection
-    this.network.onDisconnect().subscribe(async () => {
-      wasDismissed = true;
-      this.InternetAlert();
-      console.log('Sin conexion');
-    });
-
-    // watch network for a connection
-    this.network.onConnect().subscribe(async () => {
+    Network.addListener('networkStatusChange', status => {
+      // watch network for a disconnection
+      if (!status.connected) {
+        wasDismissed = true;
+        this.InternetAlert();
+        console.log('Sin conexion');
+        return;
+      }
       //Quitar alert solo cuando ya se aya puessto el alert
       if (wasDismissed) {
-        this.alertInternet.dismiss();
-      }
-      //Validar la version si aun no se ha validado
-      if (!this.alerVersionApp) {
+        this.alertInternet?.dismiss();
       }
     });
   }
