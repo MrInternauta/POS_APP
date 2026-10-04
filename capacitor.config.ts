@@ -7,7 +7,6 @@ const config: CapacitorConfig = {
   loggingBehavior: 'debug',
   server: {
     androidScheme: 'http',
-    cleartext: true,
   },
   backgroundColor: '#ffffff',
   android: {
