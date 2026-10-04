@@ -23,11 +23,11 @@ export class OrderPage implements OnInit, OnDestroy {
     return item?.id;
   }
 
-  getTotal(priceSell: string = '', quantity?: number): number {
-    if (!priceSell || !quantity) {
+  getTotal(price: string | number = '', quantity?: number): number {
+    if (!price || !quantity) {
       return 0;
     }
 
-    return parseFloat(priceSell) * quantity;
+    return Number(price) * quantity;
   }
 }
