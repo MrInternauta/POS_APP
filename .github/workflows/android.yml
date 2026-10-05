@@ -16,6 +16,8 @@ jobs:
     env:
       # Only a push to master signs and ships; a pull request just proves the app still builds
       RELEASE: ${{ github.event_name != 'pull_request' }}
+      # Google only accepts API uploads once the first bundle went in by hand through the Play Console
+      CAN_PUBLISH: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -60,7 +62,7 @@ jobs:
 
       # Internal testing only; promoting to production stays a decision made in the Play Console
       - name: Upload to the internal track
-        if: env.RELEASE == 'true'
+        if: env.RELEASE == 'true' && env.CAN_PUBLISH == 'true'
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
