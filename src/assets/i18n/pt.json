@@ -143,6 +143,29 @@
     "noConnection": "Sem conexão",
     "noConnectionMessage": "Verifique sua conexão com a internet",
     "updateApp": "Atualize o aplicativo",
-    "updateAppMessage": "Você está em uma versão anterior, atualize o aplicativo para continuar usando o serviço"
+    "updateAppMessage": "Você está em uma versão anterior, atualize o aplicativo para continuar usando o serviço",
+    "Mercado Pago is not turned on for this store": "O Mercado Pago não está ativado para esta loja",
+    "Mercado Pago is not configured": "O Mercado Pago não está configurado no servidor",
+    "Mercado Pago has no access token on the server": "O Mercado Pago não está configurado no servidor",
+    "Mercado Pago refused the request": "O Mercado Pago recusou a solicitação",
+    "Choose a terminal before turning Mercado Pago on": "Escolha uma maquininha antes de ativar o Mercado Pago"
+  },
+  "payments": {
+    "howToPay": "Como o cliente vai pagar?",
+    "cash": "Dinheiro",
+    "mercadoPago": "Mercado Pago (maquininha)",
+    "sending": "Enviando a cobrança para a maquininha...",
+    "payOnTerminal": "Pague na maquininha",
+    "waiting": "Aguardando o pagamento do cliente",
+    "lostTrack": "Não foi possível consultar o status da cobrança",
+    "checkAgain": "Consultar novamente",
+    "cancelCharge": "Cancelar cobrança",
+    "failed": "O pagamento foi recusado",
+    "canceled": "A cobrança foi cancelada",
+    "settingsTitle": "Pagamentos",
+    "terminal": "Maquininha Point",
+    "chooseTerminal": "Escolha uma maquininha",
+    "noTerminals": "Nenhuma maquininha na conta",
+    "acceptMercadoPago": "Aceitar Mercado Pago"
   }
 }

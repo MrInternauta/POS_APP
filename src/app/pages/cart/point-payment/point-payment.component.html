@@ -1,0 +1,32 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>{{ "payments.mercadoPago" | transloco }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div class="flex min-h-full flex-col items-center justify-center gap-4 text-center">
+    <p class="text-4xl font-bold">{{ total | currency: "MXN" : "symbol-narrow" | lowercase }}</p>
+
+    <ng-container *ngIf="!payment">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>{{ "payments.sending" | transloco }}</p>
+    </ng-container>
+
+    <ng-container *ngIf="payment && !lostTrack">
+      <ion-icon name="card-outline" class="text-6xl"></ion-icon>
+      <p class="text-xl font-semibold">{{ "payments.payOnTerminal" | transloco }}</p>
+      <p class="text-sm opacity-70">{{ "payments.waiting" | transloco }}</p>
+      <ion-spinner name="dots"></ion-spinner>
+    </ng-container>
+
+    <ng-container *ngIf="payment && lostTrack">
+      <ion-icon name="cloud-offline-outline" class="text-6xl"></ion-icon>
+      <p>{{ "payments.lostTrack" | transloco }}</p>
+      <ion-button fill="outline" (click)="watch()">{{ "payments.checkAgain" | transloco }}</ion-button>
+    </ng-container>
+
+    <ion-button *ngIf="payment" color="danger" fill="clear" [disabled]="canceling" (click)="cancel()">
+      {{ "payments.cancelCharge" | transloco }}
+    </ion-button>
+  </div>
+</ion-content>

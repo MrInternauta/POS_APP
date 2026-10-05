@@ -2,13 +2,17 @@ import { Component, OnDestroy } from '@angular/core';
 import { UserDto, UserUpdateDto } from '@gymTrack/auth/model/user.dto';
 import { AlertController, ToastController } from '@ionic/angular';
 import { TranslocoService } from '@jsverse/transloco';
-import { Observable, Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Observable, Subscription, map, take } from 'rxjs';
 
 import { AuthService } from '../../auth/services/auth.service';
+import { selectUser } from '../../auth/state/auth.state';
 import { Language, LanguageService } from '../../core/i18n/language.service';
 import { ModalInfoService } from '../../core/services/modal.service';
 import { PictureService } from '../../core/services/picture.service';
 import { ThemeMode, ThemeService } from '../../core/services/theme.service';
+import { AppState } from '../../core/state/app.reducer';
+import { MpTerminal, PaymentsService, StoreSettings } from '../cart/services/payments.service';
 import { ProfileService } from './services/profile.service';
 
 @Component({
@@ -24,6 +28,12 @@ export class Tab3Page implements OnDestroy {
   public themeMode$: Observable<ThemeMode> = this.themeService.mode$;
   public language$: Observable<Language> = this.languageService.language$;
   private userToUpdate!: UserUpdateDto;
+  /** Store-wide payment settings, only an admin sees or changes them */
+  public isAdmin$: Observable<boolean> = this.store
+    .select(selectUser)
+    .pipe(map(user => String(user?.role?.name || '').toLowerCase() === 'admin'));
+  public paymentSettings: StoreSettings | null = null;
+  public terminals: MpTerminal[] = [];
   constructor(
     private alertController: AlertController,
     public authService: AuthService,
@@ -33,9 +43,37 @@ export class Tab3Page implements OnDestroy {
     private pictureService: PictureService,
     private themeService: ThemeService,
     private languageService: LanguageService,
-    private transloco: TranslocoService
+    private transloco: TranslocoService,
+    private paymentsService: PaymentsService,
+    private store: Store<AppState>
   ) {
     this.userToUpdate = {};
+  }
+
+  ionViewWillEnter(): void {
+    this.isAdmin$.pipe(take(1)).subscribe(isAdmin => isAdmin && this.loadPaymentSettings());
+  }
+
+  loadPaymentSettings(): void {
+    this.paymentsService
+      .settings()
+      .pipe(take(1))
+      .subscribe(settings => (this.paymentSettings = settings));
+    this.paymentsService
+      .terminals()
+      .pipe(take(1))
+      .subscribe(terminals => (this.terminals = terminals));
+  }
+
+  changePaymentSettings(changes: Partial<StoreSettings>): void {
+    this.paymentsService
+      .updateSettings(changes)
+      .pipe(take(1))
+      .subscribe({
+        next: settings => (this.paymentSettings = settings),
+        //The API said why; the controls go back to what is really saved
+        error: () => this.loadPaymentSettings(),
+      });
   }
 
   changeTheme(event: any): void {

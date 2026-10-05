@@ -143,6 +143,29 @@
     "noConnection": "No connection",
     "noConnectionMessage": "Please check your internet connection",
     "updateApp": "Update the app",
-    "updateAppMessage": "You are on an older version, please update the app to keep using the service"
+    "updateAppMessage": "You are on an older version, please update the app to keep using the service",
+    "Mercado Pago is not turned on for this store": "Mercado Pago is not turned on for this store",
+    "Mercado Pago is not configured": "Mercado Pago is not set up on the server",
+    "Mercado Pago has no access token on the server": "Mercado Pago is not set up on the server",
+    "Mercado Pago refused the request": "Mercado Pago refused the request",
+    "Choose a terminal before turning Mercado Pago on": "Choose a terminal before turning Mercado Pago on"
+  },
+  "payments": {
+    "howToPay": "How is the customer paying?",
+    "cash": "Cash",
+    "mercadoPago": "Mercado Pago (terminal)",
+    "sending": "Sending the charge to the terminal...",
+    "payOnTerminal": "Pay on the terminal",
+    "waiting": "Waiting for the customer to pay",
+    "lostTrack": "Couldn't check the charge's status",
+    "checkAgain": "Check again",
+    "cancelCharge": "Cancel charge",
+    "failed": "The payment was declined",
+    "canceled": "The charge was canceled",
+    "settingsTitle": "Payments",
+    "terminal": "Point terminal",
+    "chooseTerminal": "Choose a terminal",
+    "noTerminals": "No terminals on the account",
+    "acceptMercadoPago": "Accept Mercado Pago"
   }
 }

@@ -111,6 +111,30 @@
         </ion-segment>
       </div>
 
+      <div class="mt-8" *ngIf="(isAdmin$ | async) && paymentSettings">
+        <p class="mb-2 font-semibold">{{ 'payments.settingsTitle' | transloco }}</p>
+        <ion-list lines="none">
+          <ion-item>
+            <ion-select
+              [label]="'payments.terminal' | transloco"
+              [placeholder]="(terminals.length ? 'payments.chooseTerminal' : 'payments.noTerminals') | transloco"
+              [value]="paymentSettings.mpTerminalId"
+              [disabled]="!terminals.length"
+              (ionChange)="changePaymentSettings({ mpTerminalId: $event.detail.value })">
+              <ion-select-option *ngFor="let terminal of terminals" [value]="terminal.id">{{ terminal.id }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-toggle
+              [checked]="paymentSettings.mercadoPagoEnabled"
+              [disabled]="!paymentSettings.mpTerminalId"
+              (ionChange)="changePaymentSettings({ mercadoPagoEnabled: $event.detail.checked })">
+              {{ 'payments.acceptMercadoPago' | transloco }}
+            </ion-toggle>
+          </ion-item>
+        </ion-list>
+      </div>
+
       <div class="mt-6 mb-8">
         <p class="mb-2 font-semibold">{{ 'profile.language' | transloco }}</p>
         <ion-segment [value]="language$ | async" (ionChange)="changeLanguage($event)">
