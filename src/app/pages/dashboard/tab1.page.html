@@ -23,16 +23,6 @@
   </ion-refresher>
   <div class="flex min-h-full flex-col justify-start px-4 py-4 lg:px-6">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
-      <canvas
-      *ngIf="false" 
-        baseChart
-        class="chart"
-        [data]="lineChartData"
-        [options]="lineChartOptions"
-        [type]="lineChartType"
-        (chartHover)="chartHovered($event)"
-        (chartClick)="chartClicked($event)"
-      ></canvas>
       <div
         *ngIf="!historyWorkout?.length"
         class="flex min-h-full flex-col justify-center"

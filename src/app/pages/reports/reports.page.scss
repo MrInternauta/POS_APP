@@ -1,0 +1,8 @@
+//The theme's global heading color is dark in both modes
+h2 {
+  color: var(--ion-text-color);
+}
+
+.kpi {
+  background: var(--ion-item-background, var(--ion-background-color));
+}

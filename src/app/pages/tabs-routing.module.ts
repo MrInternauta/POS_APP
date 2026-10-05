@@ -1,6 +1,25 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { inject, NgModule } from '@angular/core';
+import { CanActivateFn, Router, RouterModule, Routes } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { map, take } from 'rxjs';
+
+import { selectUser } from '../auth/state';
 import { TabsPage } from './tabs.page';
+
+/**
+ * The API refuses the reports to anyone else; this keeps them from landing on an empty page.
+ * It reads the store, like the tab button does: right after a login the store already has the
+ * user while AuthService's own copy may not.
+ */
+const adminOnly: CanActivateFn = () => {
+  const router = inject(Router);
+  return inject(Store)
+    .select(selectUser)
+    .pipe(
+      take(1),
+      map(user => String(user?.role?.name ?? '').toUpperCase() === 'ADMIN' || router.createUrlTree(['/tabs/tab2']))
+    );
+};
 
 const routes: Routes = [
   {
@@ -30,6 +49,11 @@ const routes: Routes = [
         data: { roles: ['ADMIN', 'CASHIER', 'CLIENT'] },
         path: 'tab4',
         loadChildren: () => import('./cart/cart.module').then(m => m.Tab2PageModule),
+      },
+      {
+        canActivate: [adminOnly],
+        path: 'reports',
+        loadChildren: () => import('./reports/reports.module').then(m => m.ReportsPageModule),
       },
       {
         path: '',
