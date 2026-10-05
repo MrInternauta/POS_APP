@@ -18,7 +18,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { NgChartsModule } from 'ng2-charts';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PermissionsEffects } from './auth/state/permissions.effects';
@@ -48,7 +47,6 @@ registerLocaleData(en);
     SharedModule,
     NzBreadCrumbModule,
     NzSpinModule,
-    NgChartsModule,
     NgApexchartsModule,
     FullCalendarModule,
     AngularSvgIconModule.forRoot(),

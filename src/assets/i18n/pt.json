@@ -144,5 +144,30 @@
     "noConnectionMessage": "Verifique sua conexão com a internet",
     "updateApp": "Atualize o aplicativo",
     "updateAppMessage": "Você está em uma versão anterior, atualize o aplicativo para continuar usando o serviço"
+  },
+  "reports": {
+    "title": "Relatórios",
+    "revenue": "Vendas",
+    "profit": "Lucro",
+    "orders": "Pedidos",
+    "averageTicket": "Ticket médio",
+    "periods": {
+      "day": "Hoje",
+      "week": "Semana",
+      "month": "Mês"
+    },
+    "vsPrevious": {
+      "day": "vs. ontem até agora",
+      "week": "vs. semana passada",
+      "month": "vs. mês passado"
+    },
+    "monthly": "Últimos 12 meses",
+    "topProducts": "Mais vendidos",
+    "thisMonth": "Este mês",
+    "byQuantity": "Por unidades",
+    "byRevenue": "Por vendas",
+    "empty": "Ainda não há vendas este mês",
+    "unit": "unidade",
+    "units": "unidades"
   }
 }
