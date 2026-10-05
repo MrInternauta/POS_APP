@@ -1,17 +1,19 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController, ModalController } from '@ionic/angular';
 import { TranslocoService } from '@jsverse/transloco';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription, map, take } from 'rxjs';
+import { Observable, Subscription, firstValueFrom, map, take } from 'rxjs';
 
 import { AuthService } from '../../auth/services';
 import { ModalInfoService } from '../../core/services/modal.service';
 import { AppState } from '../../core/state/app.reducer';
 import { ArticleItemResponse } from '../products/models';
 import { WorkoutService } from '../products/services/workout.service';
-import { ICheckoutRequest } from './models/checkout';
+import { ICheckoutRequest, ItemRequest } from './models/checkout';
+import { PointPaymentComponent } from './point-payment/point-payment.component';
 import { CartService } from './services/cart.service';
+import { PaymentsService } from './services/payments.service';
 import { CleanCart, RefreshCartStock, RemoveProductCart, UpdateProductCart } from './state/cart.actions';
 import { selectTotal } from './state/cart.selector';
 import { CartInfo } from './state/cart.state';
@@ -30,6 +32,8 @@ export class Tab2Page implements OnDestroy, OnInit {
   public historyWorkout!: Array<any>;
 
   private stockSubscription$!: Subscription;
+  /** Whether the store takes Mercado Pago; asked again on every visit, an admin may have just turned it on */
+  private mercadoPagoEnabled = false;
 
   constructor(
     private store: Store<AppState>,
@@ -38,7 +42,10 @@ export class Tab2Page implements OnDestroy, OnInit {
     private modalInfoService: ModalInfoService,
     private authService: AuthService,
     private productService: WorkoutService,
-    private transloco: TranslocoService
+    private transloco: TranslocoService,
+    private paymentsService: PaymentsService,
+    private actionSheetController: ActionSheetController,
+    private modalController: ModalController
   ) {
     this.$observable = this.store.select('cart').pipe(
       map(item => {
@@ -59,6 +66,10 @@ export class Tab2Page implements OnDestroy, OnInit {
    */
   ionViewWillEnter(): void {
     this.refreshStock();
+    this.paymentsService
+      .mercadoPagoEnabled()
+      .pipe(take(1))
+      .subscribe(enabled => (this.mercadoPagoEnabled = enabled));
   }
 
   refreshStock(): void {
@@ -138,20 +149,68 @@ export class Tab2Page implements OnDestroy, OnInit {
             quantity: cartItem.quantity,
           };
         });
-        const dataCheckout: ICheckoutRequest = {
-          userId: this.authService?._auth?.id || '',
-          items,
-        };
-
-        this.cartService
-          .checkoutProducts(dataCheckout)
-          .pipe(take(1))
-          .subscribe(() => {
-            this.modalInfoService.success(this.transloco.translate('cart.saved'), '');
-            this.store.dispatch(CleanCart());
-          });
-        return value;
+        if (this.mercadoPagoEnabled) {
+          this.choosePaymentMethod(items);
+          return;
+        }
+        this.payInCash(items);
       });
+  }
+
+  private async choosePaymentMethod(items: ItemRequest[]) {
+    const sheet = await this.actionSheetController.create({
+      header: this.transloco.translate('payments.howToPay'),
+      buttons: [
+        { text: this.transloco.translate('payments.cash'), icon: 'cash-outline', handler: () => this.payInCash(items) },
+        {
+          text: this.transloco.translate('payments.mercadoPago'),
+          icon: 'card-outline',
+          handler: () => {
+            this.payOnTerminal(items);
+          },
+        },
+        { text: this.transloco.translate('common.cancel'), role: 'cancel' },
+      ],
+    });
+    await sheet.present();
+  }
+
+  private payInCash(items: ItemRequest[]) {
+    const dataCheckout: ICheckoutRequest = {
+      userId: this.authService?._auth?.id || '',
+      items,
+    };
+
+    this.cartService
+      .checkoutProducts(dataCheckout)
+      .pipe(take(1))
+      .subscribe(() => {
+        this.modalInfoService.success(this.transloco.translate('cart.saved'), '');
+        this.store.dispatch(CleanCart());
+      });
+  }
+
+  /** The cart is only emptied once the terminal says paid; otherwise the cashier can try again */
+  private async payOnTerminal(items: ItemRequest[]) {
+    const total = await firstValueFrom(this.$total);
+    const modal = await this.modalController.create({
+      component: PointPaymentComponent,
+      componentProps: { items, total },
+      backdropDismiss: false,
+    });
+    await modal.present();
+
+    const { role } = await modal.onDidDismiss();
+    if (role === 'paid') {
+      this.modalInfoService.success(this.transloco.translate('cart.saved'), '');
+      this.store.dispatch(CleanCart());
+      return;
+    }
+    if (role === 'failed' || role === 'canceled') {
+      this.modalInfoService.warning(this.transloco.translate(`payments.${role}`), '');
+    }
+    //The stock held by the charge is back on the shelf
+    this.refreshStock();
   }
 
   update(article: ArticleItemResponse, quantity: number) {

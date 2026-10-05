@@ -143,6 +143,29 @@
     "noConnection": "Sin conexión",
     "noConnectionMessage": "Favor de verificar su conexión a internet",
     "updateApp": "Actualiza la app",
-    "updateAppMessage": "Tienes una versión anterior, por favor actualiza la app para seguir disfrutando del servicio"
+    "updateAppMessage": "Tienes una versión anterior, por favor actualiza la app para seguir disfrutando del servicio",
+    "Mercado Pago is not turned on for this store": "Mercado Pago no está activado para esta tienda",
+    "Mercado Pago is not configured": "Mercado Pago no está configurado en el servidor",
+    "Mercado Pago has no access token on the server": "Mercado Pago no está configurado en el servidor",
+    "Mercado Pago refused the request": "Mercado Pago rechazó la solicitud",
+    "Choose a terminal before turning Mercado Pago on": "Elija una terminal antes de activar Mercado Pago"
+  },
+  "payments": {
+    "howToPay": "¿Cómo paga el cliente?",
+    "cash": "Efectivo",
+    "mercadoPago": "Mercado Pago (terminal)",
+    "sending": "Enviando el cobro a la terminal...",
+    "payOnTerminal": "Pague en la terminal",
+    "waiting": "Esperando a que el cliente pague",
+    "lostTrack": "No se pudo consultar el estado del cobro",
+    "checkAgain": "Consultar de nuevo",
+    "cancelCharge": "Cancelar cobro",
+    "failed": "El pago fue rechazado",
+    "canceled": "El cobro fue cancelado",
+    "settingsTitle": "Pagos",
+    "terminal": "Terminal Point",
+    "chooseTerminal": "Elija una terminal",
+    "noTerminals": "No hay terminales en la cuenta",
+    "acceptMercadoPago": "Aceptar Mercado Pago"
   }
 }
