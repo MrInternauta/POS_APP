@@ -6,10 +6,19 @@ import { Tab2Page } from './cart.page';
 
 import { TranslocoModule } from '@jsverse/transloco';
 import { ComponentsModule } from '../../core/components/components.module';
+import { CustomersModule } from '../customers/customers.module';
 import { Tab2PageRoutingModule } from './cart-routing.module';
 
 @NgModule({
-  imports: [TranslocoModule, IonicModule, CommonModule, FormsModule, Tab2PageRoutingModule, ComponentsModule],
+  imports: [
+    TranslocoModule,
+    IonicModule,
+    CommonModule,
+    FormsModule,
+    Tab2PageRoutingModule,
+    ComponentsModule,
+    CustomersModule,
+  ],
   declarations: [Tab2Page],
 })
 export class Tab2PageModule {}

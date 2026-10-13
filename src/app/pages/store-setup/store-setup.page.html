@@ -1,0 +1,70 @@
+<ion-content>
+  <div
+    class="relative main-content py-[80px] bg-top bg-no-repeat bg-[url('/assets/images/shape/admin-bg-light.png')] dark:bg-[url('/assets/images/shape/admin-bg-dark.png')] dark:bg-[#010312] bg-contain min-h-full">
+    <div class="text-center">
+      <img class="inline dark:hidden" src="../../../assets/images/logo/logo-dark.svg" alt="MiniPOS" />
+      <img class="hidden dark:inline" src="../../../assets/images/logo/logo-white.svg" alt="MiniPOS" />
+    </div>
+    <div class="mx-auto mt-[25px] w-full max-w-md px-4">
+      <div class="rounded-6 bg-white dark:bg-[#1b1d2a]">
+        <div class="p-[25px] text-center border-b border-regular dark:border-white/[.05]">
+          <h2 class="text-18 font-semibold leading-[1] mb-2 text-dark dark:text-white/[.87]">
+            {{ 'storeSetup.title' | transloco }}
+          </h2>
+          <p class="text-13 text-light dark:text-white/60">{{ 'storeSetup.subtitle' | transloco }}</p>
+        </div>
+        <form class="py-[30px] px-[30px] flex flex-col gap-5" [formGroup]="form" (ngSubmit)="submit()">
+          <label class="flex flex-col gap-2">
+            <span class="text-[14px] font-medium text-dark dark:text-white/[.87]"
+              >{{ 'storeSetup.name' | transloco }} *</span
+            >
+            <input
+              formControlName="name"
+              maxlength="255"
+              autocomplete="organization"
+              [placeholder]="'storeSetup.namePlaceholder' | transloco"
+              class="h-[48px] px-[20px] border-1 border-regular dark:border-white/10 rounded-4 w-full text-[14px] placeholder:text-[#A0A0A0] dark:bg-white/10 dark:text-white/80" />
+            <span *ngIf="form.get('name')?.touched && form.get('name')?.invalid" class="text-13 text-red-600">
+              {{ 'storeSetup.nameRequired' | transloco }}
+            </span>
+          </label>
+          <label class="flex flex-col gap-2">
+            <span class="text-[14px] font-medium text-dark dark:text-white/[.87]"
+              >{{ 'storeSetup.phone' | transloco }}</span
+            >
+            <input
+              formControlName="phone"
+              type="tel"
+              maxlength="50"
+              autocomplete="tel"
+              class="h-[48px] px-[20px] border-1 border-regular dark:border-white/10 rounded-4 w-full text-[14px] dark:bg-white/10 dark:text-white/80" />
+          </label>
+          <label class="flex flex-col gap-2">
+            <span class="text-[14px] font-medium text-dark dark:text-white/[.87]"
+              >{{ 'storeSetup.address' | transloco }}</span
+            >
+            <input
+              formControlName="address"
+              maxlength="255"
+              autocomplete="street-address"
+              class="h-[48px] px-[20px] border-1 border-regular dark:border-white/10 rounded-4 w-full text-[14px] dark:bg-white/10 dark:text-white/80" />
+          </label>
+          <button
+            type="submit"
+            [disabled]="saving"
+            class="inline-flex items-center justify-center w-full h-[48px] text-14 rounded-6 font-medium bg-primary text-white hover:bg-primary-hbr transition duration-300 disabled:opacity-60">
+            {{ (saving ? 'storeSetup.creating' : 'storeSetup.create') | transloco }}
+          </button>
+          <button *ngIf="current$ | async; else noStore" type="button" (click)="back()" class="text-13 text-primary">
+            {{ 'common.cancel' | transloco }}
+          </button>
+          <ng-template #noStore>
+            <button type="button" (click)="logout()" class="text-13 text-light dark:text-white/60">
+              {{ 'storeSetup.logout' | transloco }}
+            </button>
+          </ng-template>
+        </form>
+      </div>
+    </div>
+  </div>
+</ion-content>

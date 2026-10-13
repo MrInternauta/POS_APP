@@ -14,7 +14,7 @@ import { Store } from '@ngrx/store';
 // eslint-disable-next-line
 import { debounceTime, distinctUntilChanged, map, Observable, Subject, Subscription, take } from 'rxjs';
 
-import { selectUser } from '../../auth/state/auth.state';
+import { selectCanManage } from '../../auth/state/auth.state';
 import { ModalInfoService } from '../../core/services/modal.service';
 import { AppState } from '../../core/state/app.reducer';
 import { AddProductCart } from '../cart/state/cart.actions';
@@ -81,10 +81,7 @@ export class Tab2Page implements OnDestroy, OnInit {
     private actionSheetController: ActionSheetController
   ) {
     this.$observable = this.store.select('exercises');
-    this.isAdmin$ = this.store.select(selectUser).pipe(
-      map(user => String(user?.role?.name || '').toLowerCase() === 'admin'),
-      distinctUntilChanged()
-    );
+    this.isAdmin$ = this.store.select(selectCanManage).pipe(distinctUntilChanged());
   }
 
   ngOnInit(): void {

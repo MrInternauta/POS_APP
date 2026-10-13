@@ -81,7 +81,8 @@
     "cleanQuestion": "¿Está seguro de vaciar el carrito?",
     "slideToCheckout": "Desliza para guardar la venta",
     "saved": "Orden guardada correctamente",
-    "invalidQuantity": "La cantidad no es válida"
+    "invalidQuantity": "La cantidad no es válida",
+    "customer": "Cliente"
   },
   "orders": {
     "title": "Historial de compras",
@@ -149,7 +150,11 @@
     "noConnectionMessage": "Favor de verificar su conexión a internet",
     "updateApp": "Actualiza la app",
     "updateAppMessage": "Tienes una versión anterior, por favor actualiza la app para seguir disfrutando del servicio",
-    "email must be an email": "El correo electrónico no es válido"
+    "email must be an email": "El correo electrónico no es válido",
+    "Choose or create a store first": "Primero crea o elige una tienda",
+    "You do not belong to this store": "No perteneces a esta tienda",
+    "This store is switched off": "Esta tienda está desactivada",
+    "The default customer cannot be deleted": "El cliente predeterminado no se puede eliminar"
   },
   "reports": {
     "title": "Reportes",
@@ -297,5 +302,37 @@
       "other": "{{count}} órdenes"
     },
     "more": "y {{count}} más"
+  },
+  "storeSetup": {
+    "title": "Crea tu tienda",
+    "subtitle": "Para empezar a vender, abre tu tienda. Serás su dueño y podrás sumar a tu equipo.",
+    "name": "Nombre de la tienda",
+    "namePlaceholder": "Ej. Abarrotes Doña Lupe",
+    "nameRequired": "Escribe el nombre de la tienda",
+    "phone": "Teléfono",
+    "address": "Dirección",
+    "create": "Crear tienda",
+    "creating": "Creando…",
+    "logout": "Cerrar sesión"
+  },
+  "customers": {
+    "title": "Clientes",
+    "pickTitle": "Elegir cliente",
+    "close": "Cerrar",
+    "add": "Nuevo cliente",
+    "edit": "Editar cliente",
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "email": "Correo electrónico",
+    "notes": "Notas",
+    "nameRequired": "Escribe el nombre del cliente",
+    "searchPlaceholder": "Buscar por nombre, teléfono o correo…",
+    "empty": "No hay clientes con esa búsqueda",
+    "default": "Cliente predeterminado: lo que se vende sin elegir a nadie",
+    "defaultName": "Público en general",
+    "remove": "Eliminar cliente",
+    "removeMessage": "{{name}} ya no aparecerá. Sus ventas pasadas lo conservan.",
+    "removeConfirm": "Eliminar",
+    "more": "y {{count}} más: busca para encontrarlos"
   }
 }

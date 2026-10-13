@@ -81,7 +81,8 @@
     "cleanQuestion": "Tem certeza de que deseja esvaziar o carrinho?",
     "slideToCheckout": "Deslize para salvar a venda",
     "saved": "Pedido salvo com sucesso",
-    "invalidQuantity": "A quantidade não é válida"
+    "invalidQuantity": "A quantidade não é válida",
+    "customer": "Cliente"
   },
   "orders": {
     "title": "Histórico de compras",
@@ -149,7 +150,11 @@
     "noConnectionMessage": "Verifique sua conexão com a internet",
     "updateApp": "Atualize o aplicativo",
     "updateAppMessage": "Você está em uma versão anterior, atualize o aplicativo para continuar usando o serviço",
-    "email must be an email": "O e-mail não é válido"
+    "email must be an email": "O e-mail não é válido",
+    "Choose or create a store first": "Primeiro crie ou escolha uma loja",
+    "You do not belong to this store": "Você não pertence a esta loja",
+    "This store is switched off": "Esta loja está desativada",
+    "The default customer cannot be deleted": "O cliente padrão não pode ser excluído"
   },
   "reports": {
     "title": "Relatórios",
@@ -297,5 +302,37 @@
       "other": "{{count}} pedidos"
     },
     "more": "e mais {{count}}"
+  },
+  "storeSetup": {
+    "title": "Crie sua loja",
+    "subtitle": "Para começar a vender, abra sua loja. Você será o dono e poderá adicionar sua equipe.",
+    "name": "Nome da loja",
+    "namePlaceholder": "Ex. Mercearia da Lupe",
+    "nameRequired": "Digite o nome da loja",
+    "phone": "Telefone",
+    "address": "Endereço",
+    "create": "Criar loja",
+    "creating": "Criando…",
+    "logout": "Sair"
+  },
+  "customers": {
+    "title": "Clientes",
+    "pickTitle": "Escolher cliente",
+    "close": "Fechar",
+    "add": "Novo cliente",
+    "edit": "Editar cliente",
+    "name": "Nome",
+    "phone": "Telefone",
+    "email": "E-mail",
+    "notes": "Notas",
+    "nameRequired": "Digite o nome do cliente",
+    "searchPlaceholder": "Buscar por nome, telefone ou e-mail…",
+    "empty": "Nenhum cliente com essa busca",
+    "default": "Cliente padrão: o que uma venda recebe quando ninguém é escolhido",
+    "defaultName": "Público em geral",
+    "remove": "Remover cliente",
+    "removeMessage": "{{name}} não aparecerá mais. Suas vendas passadas o mantêm.",
+    "removeConfirm": "Remover",
+    "more": "e mais {{count}}: busque para encontrá-los"
   }
 }

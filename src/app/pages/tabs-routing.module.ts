@@ -3,7 +3,7 @@ import { CanActivateFn, Router, RouterModule, Routes } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map, take } from 'rxjs';
 
-import { selectUser } from '../auth/state';
+import { selectCanManage, selectStore } from '../auth/state';
 import { TabsPage } from './tabs.page';
 
 /**
@@ -14,10 +14,21 @@ import { TabsPage } from './tabs.page';
 const adminOnly: CanActivateFn = () => {
   const router = inject(Router);
   return inject(Store)
-    .select(selectUser)
+    .select(selectCanManage)
     .pipe(
       take(1),
-      map(user => String(user?.role?.name ?? '').toUpperCase() === 'ADMIN' || router.createUrlTree(['/tabs/tab2']))
+      map(canManage => canManage || router.createUrlTree(['/tabs/tab2']))
+    );
+};
+
+/** Every tab works inside a store: someone without one is taken to open theirs */
+const storeRequired: CanActivateFn = () => {
+  const router = inject(Router);
+  return inject(Store)
+    .select(selectStore)
+    .pipe(
+      take(1),
+      map(store => !!store || router.createUrlTree(['/store', 'new']))
     );
 };
 
@@ -25,6 +36,7 @@ const routes: Routes = [
   {
     path: 'tabs',
     component: TabsPage,
+    canActivate: [storeRequired],
     children: [
       {
         // canActivate: [RoleGuardGuard],
