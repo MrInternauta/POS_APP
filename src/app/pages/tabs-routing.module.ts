@@ -56,6 +56,12 @@ const routes: Routes = [
         loadChildren: () => import('./reports/reports.module').then(m => m.ReportsPageModule),
       },
       {
+        //It answers from the reports, which the API only gives an admin
+        canActivate: [adminOnly],
+        path: 'assistant',
+        loadChildren: () => import('./assistant/assistant.module').then(m => m.AssistantPageModule),
+      },
+      {
         path: '',
         redirectTo: '/tabs/tab2',
         pathMatch: 'full',

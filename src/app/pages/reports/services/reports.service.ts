@@ -5,6 +5,7 @@ import { API_PREFIX } from 'src/app/core/constants';
 import { environment } from '../../../../environments/environment';
 import {
   MonthlyResponse,
+  ProductInsightsResponse,
   ReportPeriod,
   SummaryResponse,
   TopProductsBy,
@@ -30,5 +31,9 @@ export class ReportsService {
 
   getMonthly(months = 12) {
     return this.http.get<MonthlyResponse>(`${API_URL}/monthly`, { params: { months } });
+  }
+
+  getProductInsights() {
+    return this.http.get<ProductInsightsResponse>(`${API_URL}/product-insights`);
   }
 }

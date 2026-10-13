@@ -210,5 +210,92 @@
     "nameTooShort": "El nombre necesita al menos {{min}} caracteres",
     "removeMessage": "{{name}} ya no aparecerá. Sus productos conservan sus datos.",
     "removeConfirm": "Eliminar"
+  },
+  "assistant": {
+    "title": "Asistente",
+    "placeholder": "Pregunta algo sobre tu tienda…",
+    "send": "Enviar",
+    "typing": "Escribiendo…",
+    "greeting": "¡Hola! Soy tu asistente de MiniPOS. Pregúntame por tus ventas, tu inventario o cómo mejorar tus productos. Elige una opción o escríbeme.",
+    "notUnderstood": "No entendí la pregunta. Prueba con una de estas opciones:",
+    "error": "No pude traer esa información. Inténtalo de nuevo en un momento.",
+    "help": "Puedo contarte cómo van tus ventas, qué se vende más, qué se está acabando y qué productos conviene revisar. También te preparo el reporte en PDF.",
+    "options": {
+      "salesDay": "📊 Ventas de hoy",
+      "salesWeek": "📊 Ventas de la semana",
+      "salesMonth": "📊 Ventas del mes",
+      "topProducts": "🏆 Más vendidos",
+      "monthly": "📈 Ventas por mes",
+      "lowStock": "📦 Poco stock",
+      "outOfStock": "⛔ Agotados",
+      "insights": "💡 Sugerencias",
+      "pdf": "📄 Reporte en PDF",
+      "help": "❓ ¿Qué puedo preguntar?"
+    },
+    "when": {
+      "day": "Hoy",
+      "week": "Esta semana",
+      "month": "Este mes"
+    },
+    "compared": {
+      "day": "ayer a esta hora",
+      "week": "la semana pasada a estas alturas",
+      "month": "el mes pasado a estas alturas"
+    },
+    "sales": {
+      "none": "{{when}} todavía no hay ventas.",
+      "total": "{{when}} llevas {{revenue}} en ventas con {{orders}}.",
+      "up": "Es {{pct}}% más que {{compared}}. ¡Vas bien!",
+      "down": "Es {{pct}}% menos que {{compared}}.",
+      "same": "Igual que {{compared}}."
+    },
+    "top": {
+      "none": "Este mes todavía no hay ventas.",
+      "intro": "Este mes, lo que más te deja es {{name}}. Así va el top por ventas:"
+    },
+    "monthly": {
+      "none": "Todavía no hay ventas registradas.",
+      "intro": "En los últimos 12 meses vendiste {{total}}. Tu mejor mes fue {{best}} con {{bestRevenue}}."
+    },
+    "stock": {
+      "low": "Tienes {{count}} productos con {{threshold}} existencias o menos. Estos son los que menos tienen:",
+      "out": "Tienes {{count}} productos agotados:",
+      "noneLow": "Ningún producto tiene {{threshold}} existencias o menos. ¡Buen trabajo!",
+      "noneOut": "No tienes productos agotados.",
+      "soldOut": "Agotado"
+    },
+    "insights": {
+      "intro": "Revisé tu catálogo y esto es lo que conviene atender:",
+      "none": "No encontré nada que mejorar. ¡Tu catálogo está en orden!",
+      "belowCost": "Se venden al costo o con pérdida ({{count}})",
+      "prices": "Compra {{cost}} · Venta {{price}}",
+      "runningOut": "Se acaban en menos de {{days}} días ({{count}})",
+      "sold": "{{sold}} vendidos en {{days}} días",
+      "daysLeft": "{{days}} días",
+      "noRecentSales": "Sin ventas en {{days}} días ({{count}})",
+      "incomplete": "Les falta información ({{count}})"
+    },
+    "missing": {
+      "category": "categoría",
+      "provider": "proveedor",
+      "image": "imagen",
+      "description": "descripción"
+    },
+    "pdf": {
+      "ready": "Listo, preparé el reporte {{report}} en PDF.",
+      "button": "Descargar reporte",
+      "day": "de hoy",
+      "week": "de la semana",
+      "month": "del mes"
+    },
+    "units": {
+      "one": "{{count}} pza",
+      "other": "{{count}} pzas"
+    },
+    "orders": {
+      "one": "{{count}} orden",
+      "other": "{{count}} órdenes"
+    },
+    "more": "y {{count}} más"
   }
 }

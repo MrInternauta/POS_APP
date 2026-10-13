@@ -13,6 +13,8 @@ export interface ProductsFilterDto {
 
   categoryId?: string;
   providerId?: string;
+  /** Only products with this many units or fewer, 0 for the ones that ran out */
+  maxStock?: number;
 
   /** Ask for an exact set of products, used to refresh what the cart holds */
   codes?: string[];

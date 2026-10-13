@@ -210,5 +210,92 @@
     "nameTooShort": "The name needs at least {{min}} characters",
     "removeMessage": "{{name}} will no longer show up. Its products keep their data.",
     "removeConfirm": "Remove"
+  },
+  "assistant": {
+    "title": "Assistant",
+    "placeholder": "Ask something about your store…",
+    "send": "Send",
+    "typing": "Typing…",
+    "greeting": "Hi! I'm your MiniPOS assistant. Ask me about your sales, your stock or how to improve your products. Pick an option or type a question.",
+    "notUnderstood": "I didn't get that. Try one of these:",
+    "error": "I couldn't get that information. Try again in a moment.",
+    "help": "I can tell you how sales are going, what sells best, what is running out and which products need a look. I can also prepare the PDF report.",
+    "options": {
+      "salesDay": "📊 Today's sales",
+      "salesWeek": "📊 This week's sales",
+      "salesMonth": "📊 This month's sales",
+      "topProducts": "🏆 Best sellers",
+      "monthly": "📈 Sales by month",
+      "lowStock": "📦 Low stock",
+      "outOfStock": "⛔ Sold out",
+      "insights": "💡 Suggestions",
+      "pdf": "📄 PDF report",
+      "help": "❓ What can I ask?"
+    },
+    "when": {
+      "day": "Today",
+      "week": "This week",
+      "month": "This month"
+    },
+    "compared": {
+      "day": "yesterday by this time",
+      "week": "last week by this point",
+      "month": "last month by this point"
+    },
+    "sales": {
+      "none": "{{when}} there are no sales yet.",
+      "total": "{{when}} you've sold {{revenue}} across {{orders}}.",
+      "up": "That's {{pct}}% more than {{compared}}. Nice!",
+      "down": "That's {{pct}}% less than {{compared}}.",
+      "same": "Same as {{compared}}."
+    },
+    "top": {
+      "none": "No sales this month yet.",
+      "intro": "This month {{name}} brings in the most. Here is the top by revenue:"
+    },
+    "monthly": {
+      "none": "No sales recorded yet.",
+      "intro": "Over the last 12 months you sold {{total}}. Your best month was {{best}} with {{bestRevenue}}."
+    },
+    "stock": {
+      "low": "{{count}} products have {{threshold}} units or fewer. These have the least:",
+      "out": "{{count}} products are sold out:",
+      "noneLow": "No product has {{threshold}} units or fewer. Well done!",
+      "noneOut": "Nothing is sold out.",
+      "soldOut": "Sold out"
+    },
+    "insights": {
+      "intro": "I went through your catalogue and this is worth a look:",
+      "none": "Nothing to improve. Your catalogue is in order!",
+      "belowCost": "Selling at cost or at a loss ({{count}})",
+      "prices": "Cost {{cost}} · Price {{price}}",
+      "runningOut": "Running out within {{days}} days ({{count}})",
+      "sold": "{{sold}} sold in {{days}} days",
+      "daysLeft": "{{days}} days",
+      "noRecentSales": "No sales in {{days}} days ({{count}})",
+      "incomplete": "Missing information ({{count}})"
+    },
+    "missing": {
+      "category": "category",
+      "provider": "provider",
+      "image": "image",
+      "description": "description"
+    },
+    "pdf": {
+      "ready": "Done, here is {{report}} report as a PDF.",
+      "button": "Download report",
+      "day": "today's",
+      "week": "this week's",
+      "month": "this month's"
+    },
+    "units": {
+      "one": "{{count}} unit",
+      "other": "{{count}} units"
+    },
+    "orders": {
+      "one": "{{count}} order",
+      "other": "{{count}} orders"
+    },
+    "more": "and {{count}} more"
   }
 }

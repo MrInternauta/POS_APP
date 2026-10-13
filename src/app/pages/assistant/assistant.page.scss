@@ -1,0 +1,111 @@
+.bubble {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+//The logo's purple for what the user wrote, the surface for the answers
+.bubble-user {
+  background: #8231d3;
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+}
+
+.bubble-assistant {
+  align-self: flex-start;
+  background: var(--ion-color-step-100, #f1f1f1);
+  color: var(--ion-text-color);
+  border-bottom-left-radius: 4px;
+}
+
+.avatar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8231d3, #5840ff);
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.card {
+  border-radius: 12px;
+  border: 1px solid var(--ion-color-step-150, #e5e7eb);
+  background: var(--ion-color-step-50, #fafafa);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+}
+
+//Ionic gives every paragraph a margin, a row only wants its own padding
+.card p,
+.bubble {
+  margin: 0;
+}
+
+.row + .row {
+  border-top: 1px solid var(--ion-color-step-100, #f1f1f1);
+}
+
+.typing {
+  display: inline-flex;
+  gap: 4px;
+
+  span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.4;
+    animation: blink 1.2s infinite ease-in-out;
+  }
+
+  span:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  span:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+}
+
+@keyframes blink {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 0.9;
+    transform: translateY(-3px);
+  }
+}
+
+.question {
+  flex: 1;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  border-radius: 20px;
+  background: var(--ion-color-step-100, #f1f1f1);
+}
+
+//The assistant's purple, filled lightly so a chip reads as something to tap
+.suggestion {
+  --background: rgba(130, 49, 211, 0.14);
+  --color: #a46ae6;
+  margin: 0;
+  border: 1px solid rgba(130, 49, 211, 0.45);
+  font-size: 0.85rem;
+}
