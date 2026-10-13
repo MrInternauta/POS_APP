@@ -6,6 +6,8 @@ import { Tab3Page } from './tab3.page';
 
 import { TranslocoModule } from '@jsverse/transloco';
 import { ComponentsModule } from '../../core/components/components.module';
+import { CustomersModule } from '../customers/customers.module';
+import { StoreManageModule } from '../store/store-manage.module';
 import { Tab3PageRoutingModule } from './tab3-routing.module';
 
 @NgModule({
@@ -16,7 +18,8 @@ import { Tab3PageRoutingModule } from './tab3-routing.module';
     FormsModule,
     Tab3PageRoutingModule,
     ComponentsModule,
-    // CoreModule,
+    CustomersModule,
+    StoreManageModule,
   ],
   declarations: [Tab3Page],
 })

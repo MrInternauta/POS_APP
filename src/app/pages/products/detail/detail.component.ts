@@ -35,6 +35,8 @@ export class DetailComponent implements OnDestroy, OnInit {
   /** Only an admin can read the providers, so for anyone else the field is not shown */
   providers: Array<ISelectItem> = [];
   isAdmin = false;
+  /** Shown in the store's public catalogue; only whoever runs the store changes it */
+  isPublic = false;
   didSomeChange!: boolean;
   constructor(
     private productService: WorkoutService,
@@ -80,6 +82,7 @@ export class DetailComponent implements OnDestroy, OnInit {
       this.price = this.product?.price;
       this.price_sell = this.product?.priceSell;
       this.description = this.product?.description;
+      this.isPublic = !!this.product?.isPublic;
       console.log(this.product);
     }
 
@@ -146,6 +149,7 @@ export class DetailComponent implements OnDestroy, OnInit {
         description: this.description,
         categoryId: toRelationId(this.categoryId),
         providerId: toRelationId(this.providerId),
+        ...(this.isAdmin ? { isPublic: this.isPublic } : {}),
       };
 
       this.subscription$ = this.productService.postProduct(product).subscribe(
@@ -171,6 +175,7 @@ export class DetailComponent implements OnDestroy, OnInit {
       description: this.description,
       categoryId: toRelationId(this.categoryId),
       providerId: toRelationId(this.providerId),
+      ...(this.isAdmin ? { isPublic: this.isPublic } : {}),
     };
     this.subscription$ = this.productService.putProduct(this.product.id, product).subscribe(
       res => {
@@ -216,6 +221,11 @@ export class DetailComponent implements OnDestroy, OnInit {
 
   changeSelect(event: string) {
     this.categoryId = event;
+    this.didSomeChange = true;
+  }
+
+  changePublic(event: Event) {
+    this.isPublic = !!(event as CustomEvent).detail.checked;
     this.didSomeChange = true;
   }
 

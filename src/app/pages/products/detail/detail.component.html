@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="cancel()">{{ 'common.cancel' | transloco }}</ion-button>
+      <ion-button (click)="cancel()">{{ "common.cancel" | transloco }}</ion-button>
     </ion-buttons>
-    <ion-title>{{ 'products.detailTitle' | transloco }}</ion-title>
+    <ion-title>{{ "products.detailTitle" | transloco }}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
@@ -76,6 +76,15 @@
             [placeholder]="'products.providerPlaceholder' | transloco"
             (inputValueChange)="changeProvider($event)"></app-select>
         </div>
+      </div>
+
+      <div *ngIf="isAdmin" class="flex mt-4 w-full">
+        <ion-item lines="none" class="w-full public-toggle">
+          <ion-toggle [checked]="isPublic" (ionChange)="changePublic($event)" justify="space-between">
+            {{ "products.isPublic" | transloco }}
+            <p class="text-xs opacity-70 whitespace-normal">{{ "products.isPublicHelp" | transloco }}</p>
+          </ion-toggle>
+        </ion-item>
       </div>
 
       <div class="flex mt-4 w-full">

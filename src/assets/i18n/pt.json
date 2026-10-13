@@ -60,7 +60,9 @@
     "noCategory": "Sem categoria",
     "noProvider": "Sem fornecedor",
     "providerLabel": "Fornecedor",
-    "providerPlaceholder": "Selecionar fornecedor"
+    "providerPlaceholder": "Selecionar fornecedor",
+    "isPublic": "Mostrar no catálogo público",
+    "isPublicHelp": "Qualquer pessoa com o link da loja verá o nome, o preço e se há estoque"
   },
   "filters": {
     "filter": "Filtrar",
@@ -154,7 +156,13 @@
     "Choose or create a store first": "Primeiro crie ou escolha uma loja",
     "You do not belong to this store": "Você não pertence a esta loja",
     "This store is switched off": "Esta loja está desativada",
-    "The default customer cannot be deleted": "O cliente padrão não pode ser excluído"
+    "The default customer cannot be deleted": "O cliente padrão não pode ser excluído",
+    "The current password is wrong": "A senha atual está incorreta",
+    "The store needs at least one owner": "A loja precisa de pelo menos um dono",
+    "A new account needs a name and a temporary password": "Uma conta nova precisa de nome e senha temporária",
+    "This person already works in the store": "Essa pessoa já trabalha na loja",
+    "This email cannot be added": "Esse e-mail não pode ser adicionado",
+    "Store not found": "Loja não encontrada"
   },
   "reports": {
     "title": "Relatórios",
@@ -333,6 +341,75 @@
     "remove": "Remover cliente",
     "removeMessage": "{{name}} não aparecerá mais. Suas vendas passadas o mantêm.",
     "removeConfirm": "Remover",
+    "more": "e mais {{count}}: busque para encontrá-los"
+  },
+  "myStore": {
+    "title": "Minha loja",
+    "superAdmin": "Super admin",
+    "details": "Dados da loja",
+    "team": "Equipe",
+    "customers": "Clientes",
+    "catalog": "Catálogo público",
+    "catalogHelp": "O que qualquer pessoa vê com o link da sua loja",
+    "catalogOpen": "Abrir catálogo",
+    "catalogCopy": "Copiar link",
+    "catalogCopied": "Link copiado",
+    "switch": "Trocar de loja",
+    "switched": "Agora você trabalha em {{name}}",
+    "create": "Criar outra loja",
+    "saved": "Dados da loja salvos"
+  },
+  "team": {
+    "title": "Equipe",
+    "add": "Adicionar alguém",
+    "addHelp": "Se o e-mail já tem conta, entra com a própria senha. Se não, a conta é criada com a senha temporária que você der.",
+    "addConfirm": "Adicionar",
+    "email": "E-mail",
+    "name": "Nome (conta nova)",
+    "lastName": "Sobrenome",
+    "phone": "Telefone",
+    "tempPassword": "Senha temporária (conta nova)",
+    "tempPasswordHelp": "8 caracteres ou mais. Peça para trocá-la ao entrar.",
+    "emailRequired": "Digite o e-mail da pessoa",
+    "passwordShort": "A senha temporária precisa de pelo menos {{min}} caracteres",
+    "added": "Pessoa adicionada",
+    "you": "você",
+    "changeRole": "Trocar função",
+    "changeRoleMessage": "{{name}} passará a ser {{role}}.",
+    "changeRoleConfirm": "Trocar",
+    "remove": "Remover da equipe",
+    "removeMessage": "{{name}} não poderá mais trabalhar nesta loja. A conta continua existindo.",
+    "removeConfirm": "Remover",
+    "slideHelp": "Deslize uma pessoa para trocar a função ou removê-la.",
+    "roles": {
+      "OWNER": "Dono",
+      "CASHIER": "Caixa"
+    }
+  },
+  "adminStores": {
+    "title": "Lojas",
+    "count": "{{count}} lojas na plataforma",
+    "members": "{{count}} pessoas",
+    "noOwner": "Sem dono",
+    "active": "Ativa",
+    "enter": "Entrar"
+  },
+  "password": {
+    "change": "Trocar senha",
+    "current": "Senha atual",
+    "new": "Nova senha",
+    "repeat": "Repita a nova senha",
+    "tooShort": "A nova senha precisa de pelo menos {{min}} caracteres",
+    "mismatch": "As novas senhas não coincidem",
+    "changed": "Senha trocada"
+  },
+  "publicCatalog": {
+    "title": "Catálogo",
+    "search": "Buscar produto…",
+    "notFound": "Esta loja não existe ou não está disponível",
+    "empty": "Esta loja ainda não tem produtos públicos",
+    "inStock": "Disponível",
+    "outOfStock": "Esgotado",
     "more": "e mais {{count}}: busque para encontrá-los"
   }
 }

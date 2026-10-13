@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">{{ "customers.close" | transloco }}</ion-button>
+    </ion-buttons>
+    <ion-title>{{ "adminStores.title" | transloco }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md px-4 py-4">
+    <p class="text-xs opacity-70 mb-2">{{ "adminStores.count" | transloco: { count: total } }}</p>
+    <ion-list>
+      <ion-item *ngFor="let store of stores; trackBy: trackById">
+        <ion-label>
+          <h2 class="member-name">{{ store.name }}</h2>
+          <p>{{ store.owners.join(", ") || ("adminStores.noOwner" | transloco) }}</p>
+          <p>{{ "adminStores.members" | transloco: { count: store.members } }} · /{{ store.slug }}</p>
+        </ion-label>
+        <ion-toggle
+          slot="end"
+          [checked]="store.active"
+          [attr.aria-label]="'adminStores.active' | transloco"
+          (ionChange)="toggle(store, $event)"></ion-toggle>
+        <ion-button slot="end" fill="clear" (click)="enter(store)">{{ "adminStores.enter" | transloco }}</ion-button>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

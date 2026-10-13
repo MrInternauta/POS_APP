@@ -1,0 +1,100 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">{{ "customers.close" | transloco }}</ion-button>
+    </ion-buttons>
+    <ion-title>{{ "team.title" | transloco }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="!adding" color="primary" [title]="'team.add' | transloco" (click)="startAdding()">
+        <ion-icon slot="icon-only" name="person-add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md px-4 py-4 flex flex-col gap-4">
+    <form *ngIf="adding" class="card p-4 flex flex-col gap-3" (ngSubmit)="add()">
+      <p class="font-semibold">{{ "team.add" | transloco }}</p>
+      <p class="text-xs opacity-70">{{ "team.addHelp" | transloco }}</p>
+      <ion-input
+        name="email"
+        type="email"
+        fill="outline"
+        [label]="'team.email' | transloco"
+        labelPlacement="stacked"
+        autocomplete="off"
+        [(ngModel)]="draft.email"></ion-input>
+      <ion-input
+        name="name"
+        fill="outline"
+        [label]="'team.name' | transloco"
+        labelPlacement="stacked"
+        [(ngModel)]="draft.name"></ion-input>
+      <ion-input
+        name="lastName"
+        fill="outline"
+        [label]="'team.lastName' | transloco"
+        labelPlacement="stacked"
+        [(ngModel)]="draft.lastName"></ion-input>
+      <ion-input
+        name="phone"
+        type="tel"
+        fill="outline"
+        [label]="'team.phone' | transloco"
+        labelPlacement="stacked"
+        [(ngModel)]="draft.phone"></ion-input>
+      <ion-input
+        name="password"
+        type="text"
+        fill="outline"
+        [label]="'team.tempPassword' | transloco"
+        labelPlacement="stacked"
+        autocomplete="off"
+        [helperText]="'team.tempPasswordHelp' | transloco"
+        [(ngModel)]="draft.password"></ion-input>
+      <ion-segment name="role" [(ngModel)]="draft.role">
+        <ion-segment-button value="CASHIER">
+          <ion-label>{{ "team.roles.CASHIER" | transloco }}</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="OWNER">
+          <ion-label>{{ "team.roles.OWNER" | transloco }}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+      <div class="flex gap-2 justify-end">
+        <ion-button fill="clear" type="button" (click)="adding = false">{{ "common.cancel" | transloco }}</ion-button>
+        <ion-button type="submit" [disabled]="saving">{{ "team.addConfirm" | transloco }}</ion-button>
+      </div>
+    </form>
+
+    <ion-list *ngIf="members.length">
+      <ion-item-sliding *ngFor="let member of members; trackBy: trackById">
+        <ion-item>
+          <ion-avatar slot="start" class="initials">{{ (member.user.name || "?").charAt(0) }}</ion-avatar>
+          <ion-label>
+            <h2 class="member-name">
+              {{ member.user.name }} {{ member.user.lastName }}
+              <span *ngIf="member.user.id === currentUserId" class="text-xs opacity-70"
+                >({{ "team.you" | transloco }})</span
+              >
+            </h2>
+            <p>{{ member.user.email }}</p>
+          </ion-label>
+          <span slot="end" class="role-badge" [class.owner]="member.role === 'OWNER'">
+            {{ "team.roles." + member.role | transloco }}
+          </span>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="warning" (click)="changeRole(member)">
+            <ion-icon slot="start" name="swap-horizontal-outline"></ion-icon>
+            {{ "team.changeRole" | transloco }}
+          </ion-item-option>
+          <ion-item-option color="danger" (click)="remove(member)">
+            <ion-icon slot="start" name="person-remove-outline"></ion-icon>
+            {{ "team.removeConfirm" | transloco }}
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+    <p *ngIf="members.length" class="text-xs opacity-70">{{ "team.slideHelp" | transloco }}</p>
+  </div>
+</ion-content>
