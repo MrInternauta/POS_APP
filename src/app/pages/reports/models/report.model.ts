@@ -44,3 +44,33 @@ export interface MonthTotals extends SalesTotals {
 export interface MonthlyResponse {
   months: MonthTotals[];
 }
+
+export interface InsightProduct {
+  id: number;
+  name: string;
+  code: string;
+  stock: number;
+  price: number;
+  priceSell: number;
+}
+
+export interface InsightGroup<T> {
+  total: number;
+  items: T[];
+}
+
+export type MissingField = 'category' | 'provider' | 'image' | 'description';
+
+/** What the API finds worth a look in the catalogue */
+export interface ProductInsights {
+  windowDays: number;
+  runningOutDays: number;
+  belowCost: InsightGroup<InsightProduct & { margin: number }>;
+  noRecentSales: InsightGroup<InsightProduct & { lastSale: string | null; stockValue: number }>;
+  runningOut: InsightGroup<InsightProduct & { sold: number; daysLeft: number }>;
+  incomplete: InsightGroup<InsightProduct & { missing: MissingField[] }>;
+}
+
+export interface ProductInsightsResponse {
+  insights: ProductInsights;
+}

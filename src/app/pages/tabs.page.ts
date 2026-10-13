@@ -9,7 +9,7 @@ import { AuthService } from '../auth/services/auth.service';
   styleUrls: ['tabs.page.scss'],
 })
 export class TabsPage {
-  //Only an admin gets the reports tab, the API answers nobody else
+  //Only an admin gets the reports and assistant tabs, the API answers nobody else
   public isAdmin$: Observable<boolean> = this.authService.user$.pipe(
     map(user => String(user?.role?.name ?? '').toUpperCase() === 'ADMIN')
   );

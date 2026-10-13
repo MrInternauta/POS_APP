@@ -1,0 +1,107 @@
+<ion-header [translucent]="false" class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>{{ 'assistant.title' | transloco }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="mx-auto flex w-full max-w-2xl flex-col gap-3 px-4 py-4">
+    <ng-container *ngFor="let message of messages; trackBy: trackByMessage">
+      <!-- What was asked -->
+      <div *ngIf="message.from === 'user'" class="flex justify-end">
+        <p class="bubble bubble-user">{{ message.text }}</p>
+      </div>
+
+      <!-- The answer -->
+      <div *ngIf="message.from === 'assistant'" class="flex items-start gap-2">
+        <div class="avatar" aria-hidden="true"><ion-icon name="sparkles"></ion-icon></div>
+        <div class="flex min-w-0 flex-1 flex-col gap-2">
+          <div
+            *ngIf="message.typing"
+            class="bubble bubble-assistant typing"
+            [attr.aria-label]="'assistant.typing' | transloco">
+            <span></span><span></span><span></span>
+          </div>
+
+          <ng-container *ngIf="!message.typing">
+            <p class="bubble bubble-assistant">{{ message.text }}</p>
+
+            <ng-container *ngFor="let block of message.blocks">
+              <div *ngIf="block.kind === 'kpis'" class="grid grid-cols-2 gap-2">
+                <div *ngFor="let kpi of block.items" class="card p-3">
+                  <p class="text-xs uppercase tracking-wide opacity-70">{{ kpi.label }}</p>
+                  <p class="mt-1 text-lg font-bold tabular-nums">{{ kpi.value }}</p>
+                  <p
+                    *ngIf="kpi.change !== null"
+                    class="text-xs tabular-nums"
+                    [ngClass]="kpi.change >= 0 ? 'text-green-600' : 'text-red-600'">
+                    {{ kpi.change >= 0 ? '▲' : '▼' }} {{ kpi.change >= 0 ? kpi.change : -kpi.change }}%
+                  </p>
+                </div>
+              </div>
+
+              <div *ngIf="block.kind === 'list'" class="card">
+                <p *ngIf="block.title" class="px-3 pt-3 text-sm font-semibold">{{ block.title }}</p>
+                <div *ngFor="let item of block.items" class="row">
+                  <div class="min-w-0 flex-1">
+                    <p class="truncate text-sm">{{ item.title }}</p>
+                    <p *ngIf="item.subtitle" class="truncate text-xs opacity-70">{{ item.subtitle }}</p>
+                  </div>
+                  <p
+                    *ngIf="item.value"
+                    class="whitespace-nowrap text-sm font-semibold tabular-nums"
+                    [ngClass]="{
+                      'text-red-600': item.tone === 'bad',
+                      'text-orange-500': item.tone === 'warn',
+                      'text-green-600': item.tone === 'good'
+                    }">
+                    {{ item.value }}
+                  </p>
+                </div>
+                <p *ngIf="block.more" class="px-3 pb-3 text-xs opacity-70">{{ block.more }}</p>
+              </div>
+
+              <ion-button
+                *ngIf="block.kind === 'pdf'"
+                class="self-start"
+                [disabled]="!!exporting"
+                (click)="exportPdf(block.period)">
+                <ion-spinner *ngIf="exporting === block.period" slot="start" name="crescent"></ion-spinner>
+                <ion-icon *ngIf="exporting !== block.period" slot="start" name="document-text-outline"></ion-icon>
+                {{ block.label }}
+              </ion-button>
+            </ng-container>
+
+            <div *ngIf="isLast(message) && message.followUps?.length" class="flex flex-wrap gap-1">
+              <ion-chip
+                *ngFor="let intent of message.followUps"
+                class="suggestion"
+                [disabled]="busy"
+                (click)="pick(intent)">
+                {{ 'assistant.options.' + intent | transloco }}
+              </ion-chip>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <form class="mx-auto flex w-full max-w-2xl items-center gap-2 px-2" (ngSubmit)="send()">
+      <ion-input
+        name="question"
+        class="question"
+        [(ngModel)]="draft"
+        [placeholder]="'assistant.placeholder' | transloco"
+        [maxlength]="300"
+        enterkeyhint="send"
+        (keyup.enter)="send()"></ion-input>
+      <ion-button type="submit" shape="round" [disabled]="busy || !draft.trim()" [title]="'assistant.send' | transloco">
+        <ion-icon slot="icon-only" name="send"></ion-icon>
+      </ion-button>
+    </form>
+  </ion-toolbar>
+</ion-footer>
