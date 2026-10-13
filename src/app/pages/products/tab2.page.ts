@@ -2,7 +2,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CapacitorBarcodeScanner, CapacitorBarcodeScannerTypeHint } from '@capacitor/barcode-scanner';
-import { AlertController, InfiniteScrollCustomEvent, ModalController, ToastController } from '@ionic/angular';
+import {
+  ActionSheetController,
+  AlertController,
+  InfiniteScrollCustomEvent,
+  ModalController,
+  ToastController,
+} from '@ionic/angular';
 import { TranslocoService } from '@jsverse/transloco';
 import { Store } from '@ngrx/store';
 // eslint-disable-next-line
@@ -13,8 +19,15 @@ import { ModalInfoService } from '../../core/services/modal.service';
 import { AppState } from '../../core/state/app.reducer';
 import { AddProductCart } from '../cart/state/cart.actions';
 import { selectListCart } from '../cart/state/cart.selector';
+import { CatalogComponent, CatalogKind } from './catalog/catalog.component';
 import { DetailComponent } from './detail/detail.component';
-import { ArticleCreate, ArticleItemResponse, CategoryItemResponse, ProductImportSummary } from './models';
+import {
+  ArticleCreate,
+  ArticleItemResponse,
+  CategoryItemResponse,
+  ProductImportSummary,
+  ProviderItemResponse,
+} from './models';
 import { ProductsFilterDto } from './models/productFilter.dto';
 import { WorkoutService } from './services/workout.service';
 import { loadedExercise, loadedMoreExercise } from './state/workout.actions';
@@ -44,11 +57,15 @@ export class Tab2Page implements OnDestroy, OnInit {
   subscriptionCategories$!: Subscription;
   importSubscription$!: Subscription;
   public categories!: Array<CategoryItemResponse>;
+  /** Stays empty for anyone who is not an admin, the API only answers them */
+  public providers: Array<ProviderItemResponse> = [];
+  subscriptionProviders$!: Subscription;
+  subscriptionAdmin$!: Subscription;
   /** False once every product matching the current filter is already loaded */
   public hasMoreProducts = true;
   public loading = false;
-  /** Importing rewrites the catalogue, which only an admin is allowed to do */
-  public canImport$!: Observable<boolean>;
+  /** Importing and managing categories or providers rewrite the catalogue, only an admin may */
+  public isAdmin$!: Observable<boolean>;
   private searchTerm$ = new Subject<string>();
   constructor(
     private toastController: ToastController,
@@ -60,18 +77,24 @@ export class Tab2Page implements OnDestroy, OnInit {
     private modalInfoService: ModalInfoService,
     private modalCtrl: ModalController,
     private productService: WorkoutService,
-    private transloco: TranslocoService
+    private transloco: TranslocoService,
+    private actionSheetController: ActionSheetController
   ) {
     this.$observable = this.store.select('exercises');
-    this.canImport$ = this.store
-      .select(selectUser)
-      .pipe(map(user => String(user?.role?.name || '').toLowerCase() === 'admin'));
+    this.isAdmin$ = this.store.select(selectUser).pipe(
+      map(user => String(user?.role?.name || '').toLowerCase() === 'admin'),
+      distinctUntilChanged()
+    );
   }
 
   ngOnInit(): void {
     this.setDefaultFilter();
     this.listenSearch();
     this.getCategories();
+    //Asking for the providers without being an admin answers 401, and that logs the user out
+    this.subscriptionAdmin$ = this.isAdmin$.subscribe(isAdmin =>
+      isAdmin ? this.getProviders() : (this.providers = [])
+    );
     this.loadProducts();
   }
 
@@ -92,6 +115,8 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.productSuscription$?.unsubscribe();
     this.subscriptionCategories$?.unsubscribe();
     this.importSubscription$?.unsubscribe();
+    this.subscriptionProviders$?.unsubscribe();
+    this.subscriptionAdmin$?.unsubscribe();
   }
 
   /** Hands the chosen file to the API and says what it did with it */
@@ -145,6 +170,7 @@ export class Tab2Page implements OnDestroy, OnInit {
       limit: PAGE_SIZE,
       offset: 0,
       categoryId: '',
+      providerId: '',
       orderBy: 'name',
       order: 'ASC',
       //The text typed in the searchbar survives a filter change
@@ -467,7 +493,62 @@ export class Tab2Page implements OnDestroy, OnInit {
     this.reloadFirstPage();
   }
 
+  clickedProvider(value: string) {
+    this.filter = { ...this.filter, providerId: value, offset: 0 };
+    this.reloadFirstPage();
+  }
+
+  /** Lets an admin pick which list to manage */
+  async openCatalogs() {
+    //Ionic waits for a handler's promise before closing the sheet, and openCatalog only settles when
+    //the catalog is closed, so the handlers start it without handing the promise back
+    const sheet = await this.actionSheetController.create({
+      header: this.transloco.translate('catalog.manage'),
+      buttons: [
+        {
+          text: this.transloco.translate('catalog.title.categories'),
+          handler: () => void this.openCatalog('categories'),
+        },
+        {
+          text: this.transloco.translate('catalog.title.providers'),
+          handler: () => void this.openCatalog('providers'),
+        },
+        { text: this.transloco.translate('common.cancel'), role: 'cancel' },
+      ],
+    });
+    await sheet.present();
+  }
+
+  async openCatalog(kind: CatalogKind) {
+    const modal = await this.modalCtrl.create({
+      component: CatalogComponent,
+      componentProps: { kind },
+    });
+    await modal.present();
+
+    const { role } = await modal.onWillDismiss();
+    if (role !== 'changed') {
+      return;
+    }
+
+    //A removed category or provider may be the one the list is filtered by, or one a product shows
+    if (kind === 'categories') {
+      this.getCategories();
+    } else {
+      this.getProviders();
+    }
+    this.reloadFirstPage();
+  }
+
+  getProviders() {
+    this.subscriptionProviders$?.unsubscribe();
+    this.subscriptionProviders$ = this.productService.getProviders().subscribe(response => {
+      this.providers = response?.providers || [];
+    });
+  }
+
   getCategories() {
+    this.subscriptionCategories$?.unsubscribe();
     this.subscriptionCategories$ = this.productService.getCategories().subscribe(categoriesResponse => {
       this.categories = categoriesResponse?.categories || [];
     });

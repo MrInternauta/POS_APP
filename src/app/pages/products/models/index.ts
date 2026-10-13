@@ -17,6 +17,8 @@ export interface ArticleItemResponse {
   price: string;
   priceSell: string;
   category?: CategoryItemResponse;
+  /** The list is public, so it only brings the id. The provider itself is read by an admin */
+  providerId?: number | null;
 }
 
 export interface ArticleCreate {
@@ -27,7 +29,10 @@ export interface ArticleCreate {
   description: string;
   price: string;
   priceSell: string;
-  categoryId?: string | number;
+  /** null takes the category off, leaving it out keeps the one the product has */
+  categoryId?: string | number | null;
+  /** null takes the provider off, leaving it out keeps the one the product has */
+  providerId?: string | number | null;
 }
 
 export interface CategoryResponse {
@@ -38,6 +43,26 @@ export interface CategoryItemResponse {
   id: number;
   name: string;
   image: string;
+}
+
+export interface ProviderResponse {
+  providers: ProviderItemResponse[];
+}
+
+export interface ProviderItemResponse {
+  id: number;
+  name: string;
+  contactName?: string | null;
+  phone?: string | null;
+  email?: string | null;
+}
+
+/** null clears a field on an edit */
+export interface CreateProviderDto {
+  name: string;
+  contactName?: string | null;
+  phone?: string | null;
+  email?: string | null;
 }
 
 export interface ProductImportError {

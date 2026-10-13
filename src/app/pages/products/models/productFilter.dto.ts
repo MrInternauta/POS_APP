@@ -12,6 +12,7 @@ export interface ProductsFilterDto {
   offset: number;
 
   categoryId?: string;
+  providerId?: string;
 
   /** Ask for an exact set of products, used to refresh what the cart holds */
   codes?: string[];

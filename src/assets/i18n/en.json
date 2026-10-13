@@ -56,7 +56,11 @@
     "import": "Import CSV",
     "importDone": "Import finished",
     "importSummary": "{{created}} created, {{updated}} updated, {{failed}} failed",
-    "importEmpty": "The file has no rows to import"
+    "importEmpty": "The file has no rows to import",
+    "noCategory": "No category",
+    "noProvider": "No provider",
+    "providerLabel": "Provider",
+    "providerPlaceholder": "Select provider"
   },
   "filters": {
     "filter": "Filter",
@@ -67,7 +71,8 @@
     "lessStock": "Least stock",
     "filterBy": "Filter by",
     "categories": "Categories",
-    "clear": "Clear filters"
+    "clear": "Clear filters",
+    "providers": "Providers"
   },
   "cart": {
     "title": "Shopping cart",
@@ -143,7 +148,8 @@
     "noConnection": "No connection",
     "noConnectionMessage": "Please check your internet connection",
     "updateApp": "Update the app",
-    "updateAppMessage": "You are on an older version, please update the app to keep using the service"
+    "updateAppMessage": "You are on an older version, please update the app to keep using the service",
+    "email must be an email": "The email is not valid"
   },
   "reports": {
     "title": "Reports",
@@ -169,5 +175,36 @@
     "empty": "No sales this month yet",
     "unit": "unit",
     "units": "units"
+  },
+  "catalog": {
+    "manage": "Catalogs",
+    "close": "Close",
+    "title": {
+      "categories": "Categories",
+      "providers": "Providers"
+    },
+    "add": {
+      "categories": "Add category",
+      "providers": "Add provider"
+    },
+    "edit": {
+      "categories": "Edit category",
+      "providers": "Edit provider"
+    },
+    "remove": {
+      "categories": "Remove category",
+      "providers": "Remove provider"
+    },
+    "empty": {
+      "categories": "There are no categories yet",
+      "providers": "There are no providers yet"
+    },
+    "name": "Name",
+    "contactName": "Contact name",
+    "phone": "Phone",
+    "email": "Email",
+    "nameTooShort": "The name needs at least {{min}} characters",
+    "removeMessage": "{{name}} will no longer show up. Its products keep their data.",
+    "removeConfirm": "Remove"
   }
 }

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 
-import { CategoryItemResponse } from '../../../pages/products/models/index';
+import { CategoryItemResponse, ProviderItemResponse } from '../../../pages/products/models/index';
 
 @Component({
   selector: 'app-filter-popover',
@@ -9,8 +9,12 @@ import { CategoryItemResponse } from '../../../pages/products/models/index';
 })
 export class FilterPopoverComponent implements OnInit, OnDestroy {
   @Input() categories!: Array<CategoryItemResponse>;
+  /** Only an admin gets any, without them the provider filter is not shown */
+  @Input() providers: Array<ProviderItemResponse> = [];
   @Input() selectedFilteritem!: string;
+  @Input() selectedProviderId = '';
   @Output() clickedCategory = new EventEmitter<string>();
+  @Output() clickedProvider = new EventEmitter<string>();
   @Output() clickedItem = new EventEmitter<string>();
   @ViewChild('popover') popover: any;
   isOpen = false;
@@ -29,6 +33,10 @@ export class FilterPopoverComponent implements OnInit, OnDestroy {
     return category?.id;
   }
 
+  trackByProvider(_index: number, provider: ProviderItemResponse) {
+    return provider?.id;
+  }
+
   presentPopover(e: Event) {
     this.popover.event = e;
     this.isOpen = true;
@@ -42,5 +50,10 @@ export class FilterPopoverComponent implements OnInit, OnDestroy {
   onCategoryClicked(categoryId?: number) {
     this.isOpen = false;
     this.clickedCategory.emit(categoryId?.toString());
+  }
+
+  onProviderClicked(providerId?: number) {
+    this.isOpen = false;
+    this.clickedProvider.emit(providerId?.toString());
   }
 }
