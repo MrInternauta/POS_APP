@@ -174,7 +174,11 @@
     "byRevenue": "By revenue",
     "empty": "No sales this month yet",
     "unit": "unit",
-    "units": "units"
+    "units": "units",
+    "exportPdf": "Export PDF",
+    "exporting": "Preparing…",
+    "exportFailed": "The report could not be saved",
+    "shareTitle": "Sales report"
   },
   "catalog": {
     "manage": "Catalogs",
