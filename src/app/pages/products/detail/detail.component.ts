@@ -57,7 +57,7 @@ export class DetailComponent implements OnDestroy, OnInit {
       return false;
     }
 
-    if (!this.stock) {
+    if (!isStock(this.stock)) {
       return false;
     }
 
@@ -267,4 +267,11 @@ export class DetailComponent implements OnDestroy, OnInit {
 function toRelationId(value?: string): number | null | undefined {
   if (value === undefined || value === null) return undefined;
   return value === '' ? null : Number(value);
+}
+
+/** 0 is a real stock, the product ran out; empty, negative or fractional is not */
+export function isStock(value: unknown): boolean {
+  if (value === null || value === undefined || String(value).trim() === '') return false;
+  const units = Number(value);
+  return Number.isInteger(units) && units >= 0;
 }

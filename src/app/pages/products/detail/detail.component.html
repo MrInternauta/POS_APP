@@ -47,7 +47,7 @@
             [label]="'products.stockLabel' | transloco"
             [required]="false"
             [maxLength]="100"
-            [inputValue]="stock || ''"
+            [inputValue]="stock ?? ''"
             (inputValueChange)="changeStock($event)"></app-input>
         </div>
       </div>
