@@ -60,7 +60,9 @@
     "noCategory": "Sin categoría",
     "noProvider": "Sin proveedor",
     "providerLabel": "Proveedor",
-    "providerPlaceholder": "Seleccionar proveedor"
+    "providerPlaceholder": "Seleccionar proveedor",
+    "isPublic": "Mostrar en el catálogo público",
+    "isPublicHelp": "Cualquiera con el enlace de la tienda verá su nombre, precio y si hay existencias"
   },
   "filters": {
     "filter": "Filtrar",
@@ -154,7 +156,13 @@
     "Choose or create a store first": "Primero crea o elige una tienda",
     "You do not belong to this store": "No perteneces a esta tienda",
     "This store is switched off": "Esta tienda está desactivada",
-    "The default customer cannot be deleted": "El cliente predeterminado no se puede eliminar"
+    "The default customer cannot be deleted": "El cliente predeterminado no se puede eliminar",
+    "The current password is wrong": "La contraseña actual es incorrecta",
+    "The store needs at least one owner": "La tienda necesita al menos un dueño",
+    "A new account needs a name and a temporary password": "Para una cuenta nueva escribe su nombre y una contraseña temporal",
+    "This person already works in the store": "Esa persona ya trabaja en la tienda",
+    "This email cannot be added": "Ese correo no se puede agregar",
+    "Store not found": "Tienda no encontrada"
   },
   "reports": {
     "title": "Reportes",
@@ -333,6 +341,75 @@
     "remove": "Eliminar cliente",
     "removeMessage": "{{name}} ya no aparecerá. Sus ventas pasadas lo conservan.",
     "removeConfirm": "Eliminar",
+    "more": "y {{count}} más: busca para encontrarlos"
+  },
+  "myStore": {
+    "title": "Mi tienda",
+    "superAdmin": "Super admin",
+    "details": "Datos de la tienda",
+    "team": "Equipo",
+    "customers": "Clientes",
+    "catalog": "Catálogo público",
+    "catalogHelp": "Lo que cualquiera ve con el enlace de tu tienda",
+    "catalogOpen": "Abrir catálogo",
+    "catalogCopy": "Copiar enlace",
+    "catalogCopied": "Enlace copiado",
+    "switch": "Cambiar de tienda",
+    "switched": "Ahora trabajas en {{name}}",
+    "create": "Crear otra tienda",
+    "saved": "Datos de la tienda guardados"
+  },
+  "team": {
+    "title": "Equipo",
+    "add": "Agregar a alguien",
+    "addHelp": "Si el correo ya tiene cuenta, se suma con su propia contraseña. Si no, se crea con la contraseña temporal que le des.",
+    "addConfirm": "Agregar",
+    "email": "Correo electrónico",
+    "name": "Nombre (cuenta nueva)",
+    "lastName": "Apellido",
+    "phone": "Teléfono",
+    "tempPassword": "Contraseña temporal (cuenta nueva)",
+    "tempPasswordHelp": "8 caracteres o más. Pídele que la cambie al entrar.",
+    "emailRequired": "Escribe el correo de la persona",
+    "passwordShort": "La contraseña temporal necesita al menos {{min}} caracteres",
+    "added": "Persona agregada",
+    "you": "tú",
+    "changeRole": "Cambiar rol",
+    "changeRoleMessage": "{{name}} pasará a ser {{role}}.",
+    "changeRoleConfirm": "Cambiar",
+    "remove": "Quitar del equipo",
+    "removeMessage": "{{name}} ya no podrá trabajar en esta tienda. Su cuenta sigue existiendo.",
+    "removeConfirm": "Quitar",
+    "slideHelp": "Desliza a una persona para cambiar su rol o quitarla.",
+    "roles": {
+      "OWNER": "Dueño",
+      "CASHIER": "Cajero"
+    }
+  },
+  "adminStores": {
+    "title": "Tiendas",
+    "count": "{{count}} tiendas en la plataforma",
+    "members": "{{count}} personas",
+    "noOwner": "Sin dueño",
+    "active": "Activa",
+    "enter": "Entrar"
+  },
+  "password": {
+    "change": "Cambiar contraseña",
+    "current": "Contraseña actual",
+    "new": "Contraseña nueva",
+    "repeat": "Repite la contraseña nueva",
+    "tooShort": "La contraseña nueva necesita al menos {{min}} caracteres",
+    "mismatch": "Las contraseñas nuevas no coinciden",
+    "changed": "Contraseña cambiada"
+  },
+  "publicCatalog": {
+    "title": "Catálogo",
+    "search": "Buscar producto…",
+    "notFound": "Esta tienda no existe o no está disponible",
+    "empty": "Esta tienda todavía no tiene productos públicos",
+    "inStock": "Disponible",
+    "outOfStock": "Agotado",
     "more": "y {{count}} más: busca para encontrarlos"
   }
 }

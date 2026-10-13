@@ -11,6 +11,11 @@ const routes: Routes = [
     loadChildren: () => import('./pages/tabs.module').then(m => m.TabsPageModule),
   },
   {
+    //A store's public catalogue: anyone with the link, no login
+    path: 'catalogo/:slug',
+    loadChildren: () => import('./pages/public-catalog/public-catalog.module').then(m => m.PublicCatalogPageModule),
+  },
+  {
     //Signed in, with or without a store yet
     canActivate: [LoginGuardGuard],
     path: 'store/new',

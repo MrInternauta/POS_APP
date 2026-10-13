@@ -60,7 +60,9 @@
     "noCategory": "No category",
     "noProvider": "No provider",
     "providerLabel": "Provider",
-    "providerPlaceholder": "Select provider"
+    "providerPlaceholder": "Select provider",
+    "isPublic": "Show in the public catalog",
+    "isPublicHelp": "Anyone with the store link will see its name, price and whether it is in stock"
   },
   "filters": {
     "filter": "Filter",
@@ -154,7 +156,13 @@
     "Choose or create a store first": "Create or choose a store first",
     "You do not belong to this store": "You don't belong to this store",
     "This store is switched off": "This store is switched off",
-    "The default customer cannot be deleted": "The default customer can't be deleted"
+    "The default customer cannot be deleted": "The default customer can't be deleted",
+    "The current password is wrong": "The current password is wrong",
+    "The store needs at least one owner": "The store needs at least one owner",
+    "A new account needs a name and a temporary password": "A new account needs a name and a temporary password",
+    "This person already works in the store": "This person already works in the store",
+    "This email cannot be added": "This email can't be added",
+    "Store not found": "Store not found"
   },
   "reports": {
     "title": "Reports",
@@ -333,6 +341,75 @@
     "remove": "Remove customer",
     "removeMessage": "{{name}} will no longer show up. Their past sales keep them.",
     "removeConfirm": "Remove",
+    "more": "and {{count}} more: search to find them"
+  },
+  "myStore": {
+    "title": "My store",
+    "superAdmin": "Super admin",
+    "details": "Store details",
+    "team": "Team",
+    "customers": "Customers",
+    "catalog": "Public catalog",
+    "catalogHelp": "What anyone sees with your store link",
+    "catalogOpen": "Open catalog",
+    "catalogCopy": "Copy link",
+    "catalogCopied": "Link copied",
+    "switch": "Switch store",
+    "switched": "Now working in {{name}}",
+    "create": "Create another store",
+    "saved": "Store details saved"
+  },
+  "team": {
+    "title": "Team",
+    "add": "Add someone",
+    "addHelp": "If the email already has an account, they join with their own password. If not, it's created with the temporary password you give.",
+    "addConfirm": "Add",
+    "email": "Email",
+    "name": "Name (new account)",
+    "lastName": "Last name",
+    "phone": "Phone",
+    "tempPassword": "Temporary password (new account)",
+    "tempPasswordHelp": "8 characters or more. Ask them to change it when they log in.",
+    "emailRequired": "Type the person's email",
+    "passwordShort": "The temporary password needs at least {{min}} characters",
+    "added": "Person added",
+    "you": "you",
+    "changeRole": "Change role",
+    "changeRoleMessage": "{{name}} will become {{role}}.",
+    "changeRoleConfirm": "Change",
+    "remove": "Remove from team",
+    "removeMessage": "{{name}} won't be able to work in this store any more. Their account stays.",
+    "removeConfirm": "Remove",
+    "slideHelp": "Swipe a person to change their role or remove them.",
+    "roles": {
+      "OWNER": "Owner",
+      "CASHIER": "Cashier"
+    }
+  },
+  "adminStores": {
+    "title": "Stores",
+    "count": "{{count}} stores on the platform",
+    "members": "{{count}} people",
+    "noOwner": "No owner",
+    "active": "Active",
+    "enter": "Enter"
+  },
+  "password": {
+    "change": "Change password",
+    "current": "Current password",
+    "new": "New password",
+    "repeat": "Repeat the new password",
+    "tooShort": "The new password needs at least {{min}} characters",
+    "mismatch": "The new passwords don't match",
+    "changed": "Password changed"
+  },
+  "publicCatalog": {
+    "title": "Catalog",
+    "search": "Search products…",
+    "notFound": "This store doesn't exist or isn't available",
+    "empty": "This store has no public products yet",
+    "inStock": "Available",
+    "outOfStock": "Sold out",
     "more": "and {{count}} more: search to find them"
   }
 }

@@ -1,0 +1,26 @@
+.store-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.9rem;
+  opacity: 0.8;
+
+  a {
+    color: inherit;
+  }
+}
+
+.product {
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--ion-color-step-150, #e5e7eb);
+  background: var(--ion-color-step-50, #fafafa);
+  color: var(--ion-text-color);
+
+  img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background: #ffffff;
+  }
+}

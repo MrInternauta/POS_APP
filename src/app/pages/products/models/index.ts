@@ -19,6 +19,8 @@ export interface ArticleItemResponse {
   category?: CategoryItemResponse;
   /** The list is public, so it only brings the id. The provider itself is read by an admin */
   providerId?: number | null;
+  /** Shown in the store's public catalogue */
+  isPublic?: boolean;
 }
 
 export interface ArticleCreate {
@@ -33,6 +35,7 @@ export interface ArticleCreate {
   categoryId?: string | number | null;
   /** null takes the provider off, leaving it out keeps the one the product has */
   providerId?: string | number | null;
+  isPublic?: boolean;
 }
 
 export interface CategoryResponse {
