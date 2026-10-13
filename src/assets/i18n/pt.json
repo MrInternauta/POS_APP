@@ -56,7 +56,11 @@
     "import": "Importar CSV",
     "importDone": "Importação concluída",
     "importSummary": "{{created}} criados, {{updated}} atualizados, {{failed}} com erro",
-    "importEmpty": "O arquivo não tem linhas para importar"
+    "importEmpty": "O arquivo não tem linhas para importar",
+    "noCategory": "Sem categoria",
+    "noProvider": "Sem fornecedor",
+    "providerLabel": "Fornecedor",
+    "providerPlaceholder": "Selecionar fornecedor"
   },
   "filters": {
     "filter": "Filtrar",
@@ -67,7 +71,8 @@
     "lessStock": "Menor estoque",
     "filterBy": "Filtrar por",
     "categories": "Categorias",
-    "clear": "Limpar filtros"
+    "clear": "Limpar filtros",
+    "providers": "Fornecedores"
   },
   "cart": {
     "title": "Carrinho de compras",
@@ -143,7 +148,8 @@
     "noConnection": "Sem conexão",
     "noConnectionMessage": "Verifique sua conexão com a internet",
     "updateApp": "Atualize o aplicativo",
-    "updateAppMessage": "Você está em uma versão anterior, atualize o aplicativo para continuar usando o serviço"
+    "updateAppMessage": "Você está em uma versão anterior, atualize o aplicativo para continuar usando o serviço",
+    "email must be an email": "O e-mail não é válido"
   },
   "reports": {
     "title": "Relatórios",
@@ -169,5 +175,36 @@
     "empty": "Ainda não há vendas este mês",
     "unit": "unidade",
     "units": "unidades"
+  },
+  "catalog": {
+    "manage": "Catálogos",
+    "close": "Fechar",
+    "title": {
+      "categories": "Categorias",
+      "providers": "Fornecedores"
+    },
+    "add": {
+      "categories": "Adicionar categoria",
+      "providers": "Adicionar fornecedor"
+    },
+    "edit": {
+      "categories": "Editar categoria",
+      "providers": "Editar fornecedor"
+    },
+    "remove": {
+      "categories": "Remover categoria",
+      "providers": "Remover fornecedor"
+    },
+    "empty": {
+      "categories": "Ainda não há categorias",
+      "providers": "Ainda não há fornecedores"
+    },
+    "name": "Nome",
+    "contactName": "Nome do contato",
+    "phone": "Telefone",
+    "email": "E-mail",
+    "nameTooShort": "O nome precisa de pelo menos {{min}} caracteres",
+    "removeMessage": "{{name}} não aparecerá mais. Seus produtos mantêm seus dados.",
+    "removeConfirm": "Remover"
   }
 }

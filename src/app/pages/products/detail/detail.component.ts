@@ -1,11 +1,14 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Subscription, map, take } from 'rxjs';
 
 import { TranslocoService } from '@jsverse/transloco';
+import { selectUser } from '../../../auth/state/auth.state';
 import { ISelectItem } from '../../../core/models/iselect.item';
 import { ModalInfoService } from '../../../core/services/modal.service';
 import { PictureService } from '../../../core/services/picture.service';
+import { AppState } from '../../../core/state/app.reducer';
 import { ArticleCreate, ArticleItemResponse } from '../models';
 import { WorkoutService } from '../services/workout.service';
 
@@ -22,17 +25,24 @@ export class DetailComponent implements OnDestroy, OnInit {
   price!: string;
   price_sell!: string;
   description!: string;
-  categoryId!: string;
+  /** Left undefined until it is picked, so saving keeps what the product has. '' means none */
+  categoryId?: string;
+  providerId?: string;
   subscription$!: Subscription;
   subscriptionCategories$!: Subscription;
   categories!: Array<ISelectItem>;
+  subscriptionProviders$!: Subscription;
+  /** Only an admin can read the providers, so for anyone else the field is not shown */
+  providers: Array<ISelectItem> = [];
+  isAdmin = false;
   didSomeChange!: boolean;
   constructor(
     private productService: WorkoutService,
     private modalInfoService: ModalInfoService,
     private modalCtrl: ModalController,
     private pictureService: PictureService,
-    private transloco: TranslocoService
+    private transloco: TranslocoService,
+    private store: Store<AppState>
   ) {
     this.getCategories();
   }
@@ -70,9 +80,20 @@ export class DetailComponent implements OnDestroy, OnInit {
       this.price = this.product?.price;
       this.price_sell = this.product?.priceSell;
       this.description = this.product?.description;
-      this.categoryId = this.product?.categoryId;
       console.log(this.product);
     }
+
+    this.store
+      .select(selectUser)
+      .pipe(
+        take(1),
+        map(user => String(user?.role?.name || '').toLowerCase() === 'admin')
+      )
+      .subscribe(isAdmin => {
+        this.isAdmin = isAdmin;
+        //Asking without being an admin answers 401, and that logs the user out
+        if (isAdmin) this.getProviders();
+      });
   }
 
   getImage() {
@@ -85,7 +106,7 @@ export class DetailComponent implements OnDestroy, OnInit {
 
   getCategories() {
     this.subscriptionCategories$ = this.productService.getCategories().subscribe(categoriesResponse => {
-      this.categories =
+      const categories =
         categoriesResponse?.categories.map(item => {
           return {
             name: item.name,
@@ -94,6 +115,19 @@ export class DetailComponent implements OnDestroy, OnInit {
               item.id?.toString()?.toLocaleLowerCase() === this.product?.category?.id?.toString()?.toLocaleLowerCase(),
           };
         }) || [];
+      //The first option takes the category off
+      this.categories = [{ name: this.transloco.translate('products.noCategory'), value: '' }, ...categories];
+    });
+  }
+
+  getProviders() {
+    this.subscriptionProviders$ = this.productService.getProviders().subscribe(response => {
+      const providers = (response?.providers || []).map(item => ({
+        name: item.name,
+        value: item.id.toString(),
+        selected: item.id === this.product?.providerId,
+      }));
+      this.providers = [{ name: this.transloco.translate('products.noProvider'), value: '' }, ...providers];
     });
   }
 
@@ -113,7 +147,8 @@ export class DetailComponent implements OnDestroy, OnInit {
         price: this.price,
         priceSell: this.price_sell,
         description: this.description,
-        categoryId: this.categoryId,
+        categoryId: toRelationId(this.categoryId),
+        providerId: toRelationId(this.providerId),
       };
 
       this.subscription$ = this.productService.postProduct(product).subscribe(
@@ -137,7 +172,8 @@ export class DetailComponent implements OnDestroy, OnInit {
       price: this.price,
       priceSell: this.price_sell,
       description: this.description,
-      categoryId: this.categoryId,
+      categoryId: toRelationId(this.categoryId),
+      providerId: toRelationId(this.providerId),
     };
     this.subscription$ = this.productService.putProduct(this.product.id, product).subscribe(
       res => {
@@ -186,6 +222,11 @@ export class DetailComponent implements OnDestroy, OnInit {
     this.didSomeChange = true;
   }
 
+  changeProvider(event: string) {
+    this.providerId = event;
+    this.didSomeChange = true;
+  }
+
   fillEmptyForm() {
     if (!this.price) {
       if (this.price_sell) {
@@ -207,6 +248,7 @@ export class DetailComponent implements OnDestroy, OnInit {
   removeSubscription() {
     this.subscription$?.unsubscribe();
     this.subscriptionCategories$?.unsubscribe();
+    this.subscriptionProviders$?.unsubscribe();
     this.name = '';
     this.code = '';
     this.stock = '';
@@ -219,4 +261,10 @@ export class DetailComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this?.removeSubscription();
   }
+}
+
+/** Not picked keeps what the product has, the empty option takes it off */
+function toRelationId(value?: string): number | null | undefined {
+  if (value === undefined || value === null) return undefined;
+  return value === '' ? null : Number(value);
 }

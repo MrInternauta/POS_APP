@@ -3,11 +3,23 @@ import { Injectable } from '@angular/core';
 import { API_PREFIX } from 'src/app/core/constants';
 
 import { environment } from '../../../../environments/environment';
-import { ArticleCreate, ArticleResponse, CategoryResponse, ProductImportSummary } from '../models';
+import {
+  ArticleCreate,
+  ArticleResponse,
+  CategoryItemResponse,
+  CategoryResponse,
+  CreateProviderDto,
+  ProductImportSummary,
+  ProviderItemResponse,
+  ProviderResponse,
+} from '../models';
+import { CreateCategoryDto } from '../models/category.dto';
 import { ProductsFilterDto } from '../models/productFilter.dto';
 
 const API_URL = `${environment.url}${API_PREFIX}products`;
 const API_URL_CATEGORY = `${environment.url}${API_PREFIX}categories`;
+/** Only an admin may call these, anyone else gets a 401 and the interceptor logs them out */
+const API_URL_PROVIDER = `${environment.url}${API_PREFIX}providers`;
 
 /** The API refuses to return more than a page of products at once */
 const MAX_CODES = 50;
@@ -22,6 +34,34 @@ export class WorkoutService {
     return this.http.get<CategoryResponse | null>(API_URL_CATEGORY, {
       params: toHttpParams(params),
     });
+  }
+
+  postCategory(category: CreateCategoryDto) {
+    return this.http.post<{ product: CategoryItemResponse }>(API_URL_CATEGORY, category);
+  }
+
+  putCategory(categoryId: number, category: Partial<CreateCategoryDto>) {
+    return this.http.put<{ category: CategoryItemResponse }>(`${API_URL_CATEGORY}/${categoryId}`, category);
+  }
+
+  deleteCategory(categoryId: number) {
+    return this.http.delete<{ message: string }>(`${API_URL_CATEGORY}/${categoryId}`);
+  }
+
+  getProviders() {
+    return this.http.get<ProviderResponse | null>(API_URL_PROVIDER);
+  }
+
+  postProvider(provider: CreateProviderDto) {
+    return this.http.post<{ provider: ProviderItemResponse }>(API_URL_PROVIDER, provider);
+  }
+
+  putProvider(providerId: number, provider: Partial<CreateProviderDto>) {
+    return this.http.put<{ provider: ProviderItemResponse }>(`${API_URL_PROVIDER}/${providerId}`, provider);
+  }
+
+  deleteProvider(providerId: number) {
+    return this.http.delete<{ message: string }>(`${API_URL_PROVIDER}/${providerId}`);
   }
 
   getProducts(params?: ProductsFilterDto) {

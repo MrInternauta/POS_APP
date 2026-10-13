@@ -3,7 +3,15 @@
     <ion-title>{{ 'products.title' | transloco }}</ion-title>
     <ion-buttons slot="end">
       <ion-button
-        *ngIf="canImport$ | async"
+        *ngIf="isAdmin$ | async"
+        color="primary"
+        [title]="'catalog.manage' | transloco"
+        (click)="openCatalogs()">
+        <span class="hidden sm:inline">{{ 'catalog.manage' | transloco }}</span>
+        <ion-icon slot="end" name="albums-outline"></ion-icon>
+      </ion-button>
+      <ion-button
+        *ngIf="isAdmin$ | async"
         color="primary"
         [title]="'products.import' | transloco"
         (click)="csvInput.click()">
@@ -11,7 +19,14 @@
         <span class="hidden sm:inline">{{ 'products.import' | transloco }}</span>
         <ion-icon slot="end" name="cloud-upload-outline"></ion-icon>
       </ion-button>
-      <app-filter-popover [categories]="categories" (clickedItem)="clickedItem($event)" (clickedCategory)="clickedCategory($event)" [selectedFilteritem]="selectedFilteritem || filter.categoryId || ''"></app-filter-popover>
+      <app-filter-popover
+        [categories]="categories"
+        [providers]="providers"
+        (clickedItem)="clickedItem($event)"
+        (clickedCategory)="clickedCategory($event)"
+        (clickedProvider)="clickedProvider($event)"
+        [selectedProviderId]="filter.providerId || ''"
+        [selectedFilteritem]="selectedFilteritem || filter.categoryId || ''"></app-filter-popover>
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar>

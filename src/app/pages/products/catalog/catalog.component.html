@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">{{ "catalog.close" | transloco }}</ion-button>
+    </ion-buttons>
+    <ion-title>{{ "catalog.title." + kind | transloco }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="primary" [title]="'catalog.add.' + kind | transloco" (click)="edit()">
+        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      [(ngModel)]="searchTerm"
+      class="sm:mx-[25%] sm:w-auto"
+      [placeholder]="'common.searchPlaceholder' | transloco"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md px-4 py-4">
+    <div *ngIf="!loading && !visibleItems.length" class="flex flex-col items-center mt-8">
+      <p class="text-center text-lg font-bold">{{ "catalog.empty." + kind | transloco }}</p>
+      <ion-button class="mt-4" (click)="edit()">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        {{ "catalog.add." + kind | transloco }}
+      </ion-button>
+    </div>
+
+    <ion-list *ngIf="visibleItems.length">
+      <ion-item-sliding *ngFor="let item of visibleItems; trackBy: trackByItem">
+        <ion-item [button]="true" [detail]="false" (click)="edit(item)">
+          <ion-label>
+            <h2 class="catalog-name">{{ item.name }}</h2>
+            <p *ngIf="item.contactName">{{ item.contactName }}</p>
+            <p *ngIf="item.email">{{ item.email }}</p>
+          </ion-label>
+          <!-- A provider is mostly opened to call them, so the phone goes straight to the dialer -->
+          <ion-button
+            *ngIf="item.phone"
+            slot="end"
+            fill="clear"
+            [href]="'tel:' + item.phone"
+            (click)="$event.stopPropagation()">
+            <ion-icon slot="start" name="call-outline"></ion-icon>
+            {{ item.phone }}
+          </ion-button>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="warning" (click)="edit(item)">
+            <ion-icon slot="start" name="pencil-outline"></ion-icon>
+            {{ "common.edit" | transloco }}
+          </ion-item-option>
+          <ion-item-option color="danger" (click)="remove(item)">
+            <ion-icon slot="start" name="trash-outline"></ion-icon>
+            {{ "catalog.removeConfirm" | transloco }}
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </div>
+</ion-content>
