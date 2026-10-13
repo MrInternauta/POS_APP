@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">{{ "customers.close" | transloco }}</ion-button>
+    </ion-buttons>
+    <ion-title>{{ (mode === "pick" ? "customers.pickTitle" : "customers.title") | transloco }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="primary" [title]="'customers.add' | transloco" (click)="edit()">
+        <ion-icon slot="icon-only" name="person-add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      [ngModel]="search"
+      (ngModelChange)="onSearch($event)"
+      class="sm:mx-[25%] sm:w-auto"
+      [placeholder]="'customers.searchPlaceholder' | transloco"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md px-4 py-4">
+    <div *ngIf="!loading && !customers.length" class="flex flex-col items-center mt-8 gap-4">
+      <p class="text-center text-lg font-bold">{{ "customers.empty" | transloco }}</p>
+      <ion-button (click)="edit()">
+        <ion-icon slot="start" name="person-add-outline"></ion-icon>
+        {{ "customers.add" | transloco }}
+      </ion-button>
+    </div>
+
+    <ion-list *ngIf="customers.length">
+      <ion-item-sliding *ngFor="let customer of customers; trackBy: trackById" [disabled]="mode === 'pick'">
+        <ion-item [button]="true" [detail]="false" (click)="choose(customer)">
+          <ion-icon
+            slot="start"
+            [name]="customer.isDefault ? 'people-outline' : 'person-outline'"
+            class="opacity-70"></ion-icon>
+          <ion-label>
+            <h2 class="customer-name">{{ customer.name }}</h2>
+            <p *ngIf="customer.isDefault">{{ "customers.default" | transloco }}</p>
+            <p *ngIf="customer.phone || customer.email">
+              {{ customer.phone }}<span *ngIf="customer.phone && customer.email"> · </span>{{ customer.email }}
+            </p>
+          </ion-label>
+          <ion-icon
+            *ngIf="mode === 'pick' && selectedId === customer.id"
+            slot="end"
+            name="checkmark"
+            color="success"></ion-icon>
+        </ion-item>
+        <ion-item-options side="end" *ngIf="mode === 'manage'">
+          <ion-item-option color="warning" (click)="edit(customer)">
+            <ion-icon slot="start" name="pencil-outline"></ion-icon>
+            {{ "common.edit" | transloco }}
+          </ion-item-option>
+          <ion-item-option *ngIf="canDelete && !customer.isDefault" color="danger" (click)="remove(customer)">
+            <ion-icon slot="start" name="trash-outline"></ion-icon>
+            {{ "customers.removeConfirm" | transloco }}
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+    <p *ngIf="total > customers.length" class="mt-2 text-xs opacity-70">
+      {{ "customers.more" | transloco: { count: total - customers.length } }}
+    </p>
+  </div>
+</ion-content>

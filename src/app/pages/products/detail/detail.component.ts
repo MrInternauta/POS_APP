@@ -1,10 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
-import { Subscription, map, take } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 
 import { TranslocoService } from '@jsverse/transloco';
-import { selectUser } from '../../../auth/state/auth.state';
+import { selectCanManage } from '../../../auth/state/auth.state';
 import { ISelectItem } from '../../../core/models/iselect.item';
 import { ModalInfoService } from '../../../core/services/modal.service';
 import { PictureService } from '../../../core/services/picture.service';
@@ -84,14 +84,11 @@ export class DetailComponent implements OnDestroy, OnInit {
     }
 
     this.store
-      .select(selectUser)
-      .pipe(
-        take(1),
-        map(user => String(user?.role?.name || '').toLowerCase() === 'admin')
-      )
+      .select(selectCanManage)
+      .pipe(take(1))
       .subscribe(isAdmin => {
         this.isAdmin = isAdmin;
-        //Asking without being an admin answers 401, and that logs the user out
+        //Providers carry contact details: only whoever runs the store reads them
         if (isAdmin) this.getProviders();
       });
   }

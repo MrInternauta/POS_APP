@@ -1,6 +1,6 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { TranslocoService } from '@jsverse/transloco';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription, map, take } from 'rxjs';
@@ -8,6 +8,8 @@ import { Observable, Subscription, map, take } from 'rxjs';
 import { AuthService } from '../../auth/services';
 import { ModalInfoService } from '../../core/services/modal.service';
 import { AppState } from '../../core/state/app.reducer';
+import { Customer } from '../customers/customer.model';
+import { CustomersComponent } from '../customers/customers.component';
 import { ArticleItemResponse } from '../products/models';
 import { WorkoutService } from '../products/services/workout.service';
 import { ICheckoutRequest } from './models/checkout';
@@ -30,6 +32,8 @@ export class Tab2Page implements OnDestroy, OnInit {
   public historyWorkout!: Array<any>;
 
   private stockSubscription$!: Subscription;
+  /** Who this sale is for; nobody picked means the store's default customer */
+  public customer: Customer | null = null;
 
   constructor(
     private store: Store<AppState>,
@@ -38,7 +42,8 @@ export class Tab2Page implements OnDestroy, OnInit {
     private modalInfoService: ModalInfoService,
     private authService: AuthService,
     private productService: WorkoutService,
-    private transloco: TranslocoService
+    private transloco: TranslocoService,
+    private modalCtrl: ModalController
   ) {
     this.$observable = this.store.select('cart').pipe(
       map(item => {
@@ -140,6 +145,7 @@ export class Tab2Page implements OnDestroy, OnInit {
         });
         const dataCheckout: ICheckoutRequest = {
           userId: this.authService?._auth?.id || '',
+          ...(this.customer ? { customerId: this.customer.id } : {}),
           items,
         };
 
@@ -149,9 +155,24 @@ export class Tab2Page implements OnDestroy, OnInit {
           .subscribe(() => {
             this.modalInfoService.success(this.transloco.translate('cart.saved'), '');
             this.store.dispatch(CleanCart());
+            //The next sale starts again with nobody in particular
+            this.customer = null;
           });
         return value;
       });
+  }
+
+  async pickCustomer() {
+    const modal = await this.modalCtrl.create({
+      component: CustomersComponent,
+      componentProps: { mode: 'pick', selectedId: this.customer?.id ?? null },
+    });
+    await modal.present();
+    const { data, role } = await modal.onWillDismiss<Customer>();
+    if (role === 'picked' && data) {
+      //The default customer is what an order gets anyway: keep it as "nobody picked"
+      this.customer = data.isDefault ? null : data;
+    }
   }
 
   update(article: ArticleItemResponse, quantity: number) {

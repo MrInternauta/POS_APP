@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { EMPTY } from 'rxjs';
-import { map, mergeMap, catchError, take } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { AuthService } from '../services';
 import { loadPermissionsType, loadedPermissionsType } from './auth.actions';
 
@@ -11,21 +11,22 @@ export class PermissionsEffects {
     this.actions$.pipe(
       ofType(loadPermissionsType),
       mergeMap(() =>
-        this.authService
-          .getPerssions(this.authService.user?.id?.toString() || '')
-          .pipe(
-            map((response) => ({
-              type: loadedPermissionsType,
-              Permissions: response,
-            })),
-            catchError((e) => {
-              console.log(e);
-              return EMPTY;
-            })
-          )
+        this.authService.getPerssions(this.authService.user?.id?.toString() || '').pipe(
+          map(response => ({
+            type: loadedPermissionsType,
+            Permissions: response,
+          })),
+          catchError(e => {
+            console.log(e);
+            return EMPTY;
+          })
+        )
       )
     )
   );
 
-  constructor(private actions$: Actions, private authService: AuthService) {}
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService
+  ) {}
 }

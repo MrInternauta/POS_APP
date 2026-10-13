@@ -81,7 +81,8 @@
     "cleanQuestion": "Are you sure you want to empty the cart?",
     "slideToCheckout": "Slide to save the sale",
     "saved": "Order saved successfully",
-    "invalidQuantity": "That quantity is not valid"
+    "invalidQuantity": "That quantity is not valid",
+    "customer": "Customer"
   },
   "orders": {
     "title": "Purchase history",
@@ -149,7 +150,11 @@
     "noConnectionMessage": "Please check your internet connection",
     "updateApp": "Update the app",
     "updateAppMessage": "You are on an older version, please update the app to keep using the service",
-    "email must be an email": "The email is not valid"
+    "email must be an email": "The email is not valid",
+    "Choose or create a store first": "Create or choose a store first",
+    "You do not belong to this store": "You don't belong to this store",
+    "This store is switched off": "This store is switched off",
+    "The default customer cannot be deleted": "The default customer can't be deleted"
   },
   "reports": {
     "title": "Reports",
@@ -297,5 +302,37 @@
       "other": "{{count}} orders"
     },
     "more": "and {{count}} more"
+  },
+  "storeSetup": {
+    "title": "Create your store",
+    "subtitle": "To start selling, open your store. You'll be its owner and can add your team.",
+    "name": "Store name",
+    "namePlaceholder": "e.g. Lupe's Corner Shop",
+    "nameRequired": "Type the store name",
+    "phone": "Phone",
+    "address": "Address",
+    "create": "Create store",
+    "creating": "Creating…",
+    "logout": "Log out"
+  },
+  "customers": {
+    "title": "Customers",
+    "pickTitle": "Pick a customer",
+    "close": "Close",
+    "add": "New customer",
+    "edit": "Edit customer",
+    "name": "Name",
+    "phone": "Phone",
+    "email": "Email",
+    "notes": "Notes",
+    "nameRequired": "Type the customer's name",
+    "searchPlaceholder": "Search by name, phone or email…",
+    "empty": "No customers match that search",
+    "default": "Default customer: what a sale gets when nobody is picked",
+    "defaultName": "General public",
+    "remove": "Remove customer",
+    "removeMessage": "{{name}} will no longer show up. Their past sales keep them.",
+    "removeConfirm": "Remove",
+    "more": "and {{count}} more: search to find them"
   }
 }

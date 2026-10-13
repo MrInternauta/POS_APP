@@ -2,7 +2,10 @@ export interface JwtPayload {
   exp?: number;
   iat?: number;
   sub?: number;
-  role?: string;
+  /** Tokens from before stores existed have no storeId at all */
+  storeId?: number | null;
+  storeRole?: string | null;
+  superAdmin?: boolean;
 }
 
 /** Seconds before the real expiration at which a token is already considered dead */

@@ -1,5 +1,3 @@
-
-
 export interface UserDto {
   id?: number;
 
@@ -20,8 +18,10 @@ export interface UserDto {
   };
 
   image?: string;
-}
 
+  /** Runs the platform: sees every store */
+  isSuperAdmin?: boolean;
+}
 
 export interface UserUpdateDto {
   name?: string;

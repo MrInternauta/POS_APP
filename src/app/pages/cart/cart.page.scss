@@ -151,3 +151,10 @@ ion-card {
         color: #3ab54a;
     }
 }
+
+//The assistant's purple, so the customer reads as something to tap
+.customer-chip {
+  --background: rgba(130, 49, 211, 0.14);
+  --color: #a46ae6;
+  border: 1px solid rgba(130, 49, 211, 0.45);
+}

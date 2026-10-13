@@ -12,7 +12,9 @@ import { API_PREFIX } from '../../core/constants/api-prefix';
 import { ConstantsHelper } from '../../core/constants/constants.helper';
 import { StorageService } from '../../core/services/storage.service';
 import { isTokenExpired } from '../../core/util';
+import { decodeToken } from '../../core/util/jwt.helper';
 import { AuthSuccess } from '../model/Auth';
+import { CreateStoreDto, StoreSummary } from '../model/store';
 import { UserDto } from '../model/user.dto';
 import { IAuthState, selectUser, setUser, unUser } from '../state';
 
@@ -53,15 +55,31 @@ export class AuthService {
       this.storage.setLocal('email', null);
     }
 
-    return this.http.post<any>(`${API_URL}auth`, user).pipe(
-      map((resp: AuthSuccess) => {
-        if (resp && resp.user.id && resp.user.name) {
-          this.saveStorage(resp.user?.id.toString(), resp.access_token, resp.user);
-          return true;
-        }
-        return false;
-      })
-    );
+    return this.http.post<AuthSuccess>(`${API_URL}auth`, user).pipe(map(resp => this.applyAuth(resp)));
+  }
+
+  /** The store being worked in, null for someone who has none yet */
+  get activeStore(): StoreSummary | null {
+    return this._auth?.store ?? null;
+  }
+
+  /** Opens a store; the API answers like a login, working in it */
+  createStore(dto: CreateStoreDto) {
+    return this.http.post<AuthSuccess>(`${API_URL}stores`, dto).pipe(map(resp => this.applyAuth(resp)));
+  }
+
+  /** A new token for another store the user belongs to (any store, for a super admin) */
+  switchStore(storeId: number) {
+    return this.http.post<AuthSuccess>(`${API_URL}auth/switch`, { storeId }).pipe(map(resp => this.applyAuth(resp)));
+  }
+
+  /** Keeps the session that a login, a store switch or a new store answered */
+  private applyAuth(resp: AuthSuccess): boolean {
+    if (!resp?.user?.id || !resp.access_token) {
+      return false;
+    }
+    this.saveStorage(resp.user.id.toString(), resp.access_token, resp.user, resp.store, resp.stores);
+    return true;
   }
 
   signUp(user: UserDto) {
@@ -129,7 +147,8 @@ export class AuthService {
         return;
       }
 
-      if (isTokenExpired(localStorageSession.token)) {
+      //A token from before stores existed carries none: the API would turn every request away
+      if (isTokenExpired(localStorageSession.token) || !('storeId' in (decodeToken(localStorageSession.token) ?? {}))) {
         this.clearSession();
         return;
       }
@@ -145,12 +164,20 @@ export class AuthService {
    * The only way the session changes: memory, local storage and the store move together, which is
    * what makes an edit of the profile show up without a reload.
    */
-  saveStorage(id: string, token: string, usuario: UserDto) {
-    this.setSession({ id, token, user: usuario, permissions: this._auth?.permissions || [] });
+  saveStorage(
+    id: string,
+    token: string,
+    usuario: UserDto,
+    store: StoreSummary | null = this._auth?.store ?? null,
+    stores: StoreSummary[] = this._auth?.stores ?? []
+  ) {
+    this.setSession({ id, token, user: usuario, permissions: this._auth?.permissions || [], store, stores });
     this.storage.setLocal(ConstantsHelper.USER_DATA_KEY_STORAGE, {
       id,
       token,
       user: usuario,
+      store,
+      stores,
     });
   }
 
@@ -161,6 +188,8 @@ export class AuthService {
         user: session.user as UserDto,
         id: session.id,
         token: session.token,
+        store: session.store ?? null,
+        stores: session.stores ?? [],
       })
     );
   }
