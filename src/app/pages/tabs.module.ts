@@ -1,23 +1,16 @@
-import { IonicModule } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { CommonModule, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgApexchartsModule } from "ng-apexcharts";
-import { FullCalendarModule } from '@fullcalendar/angular';
+import { IonicModule } from '@ionic/angular';
 
-import { TabsPageRoutingModule } from './tabs-routing.module';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { TabsPageRoutingModule } from './tabs-routing.module';
 
-import { TabsPage } from './tabs.page';
-import { ErrorPageComponent } from './error-page/error-page.component';
-import { CommonLayoutComponent } from '../layouts/common-layout/common-layout.component';
-import { ThemeConstantService } from '../shared/services/theme-constant.service';
-import { TemplateModule } from '../shared/template/template.module';
-import { SharedModule } from '../shared/shared.module';
-import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { NgChartsModule } from 'ng2-charts';
 import { RouterModule } from '@angular/router';
+import { SharedModule } from '../shared/shared.module';
+import { TemplateModule } from '../shared/template/template.module';
+import { ErrorPageComponent } from './error-page/error-page.component';
+import { TabsPage } from './tabs.page';
 
 @NgModule({
   imports: [

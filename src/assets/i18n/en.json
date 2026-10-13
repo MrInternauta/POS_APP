@@ -144,5 +144,30 @@
     "noConnectionMessage": "Please check your internet connection",
     "updateApp": "Update the app",
     "updateAppMessage": "You are on an older version, please update the app to keep using the service"
+  },
+  "reports": {
+    "title": "Reports",
+    "revenue": "Revenue",
+    "profit": "Profit",
+    "orders": "Orders",
+    "averageTicket": "Average ticket",
+    "periods": {
+      "day": "Today",
+      "week": "Week",
+      "month": "Month"
+    },
+    "vsPrevious": {
+      "day": "vs. yesterday by now",
+      "week": "vs. last week",
+      "month": "vs. last month"
+    },
+    "monthly": "Last 12 months",
+    "topProducts": "Best sellers",
+    "thisMonth": "This month",
+    "byQuantity": "By units",
+    "byRevenue": "By revenue",
+    "empty": "No sales this month yet",
+    "unit": "unit",
+    "units": "units"
   }
 }

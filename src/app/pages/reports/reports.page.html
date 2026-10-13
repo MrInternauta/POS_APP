@@ -1,0 +1,94 @@
+<ion-header [translucent]="false" class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>{{ 'reports.title' | transloco }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="flex min-h-full flex-col justify-start px-4 py-4 lg:px-6">
+    <div class="flex flex-col gap-6 sm:mx-auto sm:w-full sm:max-w-md md:max-w-2xl">
+      <section>
+        <ion-segment [value]="period" (ionChange)="changePeriod($event)">
+          <ion-segment-button value="day">
+            <ion-label>{{ 'reports.periods.day' | transloco }}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="week">
+            <ion-label>{{ 'reports.periods.week' | transloco }}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="month">
+            <ion-label>{{ 'reports.periods.month' | transloco }}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+
+        <div class="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <div
+            *ngFor="let kpi of kpis; trackBy: trackByKpi"
+            class="kpi rounded-lg border border-gray-200 p-3 dark:border-gray-700">
+            <p class="text-xs uppercase tracking-wide opacity-70">{{ 'reports.' + kpi.key | transloco }}</p>
+            <p class="mt-1 text-xl font-bold tabular-nums">
+              {{ kpi.money ? '$' : '' }}{{ kpi.value | number: '1.0-0' }}
+            </p>
+            <p class="mt-1 text-xs tabular-nums" [ngClass]="kpi.change === null ? 'opacity-60' : kpi.change >= 0 ? 'text-green-600' : 'text-red-600'">
+              <ng-container *ngIf="kpi.change !== null; else noCompare">
+                {{ kpi.change >= 0 ? '▲' : '▼' }} {{ (kpi.change >= 0 ? kpi.change : -kpi.change) | number: '1.0-0' }}%
+              </ng-container>
+              <ng-template #noCompare>—</ng-template>
+              <span class="opacity-70"> {{ 'reports.vsPrevious.' + period | transloco }}</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-bold">{{ 'reports.monthly' | transloco }}</h2>
+        <apx-chart
+          *ngIf="chart"
+          [series]="chart.series"
+          [chart]="chart.chart"
+          [colors]="chart.colors"
+          [theme]="chart.theme"
+          [plotOptions]="chart.plotOptions"
+          [dataLabels]="chart.dataLabels"
+          [legend]="chart.legend"
+          [grid]="chart.grid"
+          [xaxis]="chart.xaxis"
+          [yaxis]="chart.yaxis"
+          [tooltip]="chart.tooltip"></apx-chart>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-bold">{{ 'reports.topProducts' | transloco }}</h2>
+        <p class="text-xs opacity-70">{{ 'reports.thisMonth' | transloco }}</p>
+        <ion-segment class="mt-2" [value]="topBy" (ionChange)="changeTopBy($event)">
+          <ion-segment-button value="qty">
+            <ion-label>{{ 'reports.byQuantity' | transloco }}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="revenue">
+            <ion-label>{{ 'reports.byRevenue' | transloco }}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+
+        <ion-list *ngIf="topProducts.length; else noSales" class="mt-2">
+          <ion-item *ngFor="let product of topProducts; let i = index; trackBy: trackByProduct">
+            <span slot="start" class="w-5 text-center font-bold opacity-60 tabular-nums">{{ i + 1 }}</span>
+            <app-avatar slot="start" [img]="product.image" type="product" [hiddenBorder]="true"></app-avatar>
+            <ion-label>
+              <p class="font-semibold">{{ product.name }}</p>
+              <p>
+                {{ product.quantity | number }} {{ (product.quantity === 1 ? 'reports.unit' : 'reports.units') | transloco }} ·
+                ${{ product.revenue | number: '1.0-0' }}
+              </p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        <ng-template #noSales>
+          <p *ngIf="!loading" class="mt-4 text-center opacity-70">{{ 'reports.empty' | transloco }}</p>
+        </ng-template>
+      </section>
+    </div>
+  </div>
+</ion-content>
