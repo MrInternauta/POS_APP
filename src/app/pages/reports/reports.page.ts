@@ -4,8 +4,10 @@ import { TranslocoService } from '@jsverse/transloco';
 import { ApexOptions } from 'ng-apexcharts';
 import { Subscription, combineLatest, finalize, forkJoin } from 'rxjs';
 
+import { ModalInfoService } from '../../core/services/modal.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { MonthTotals, PeriodTotals, ReportPeriod, SalesTotals, TopProduct, TopProductsBy } from './models/report.model';
+import { ReportPdfService } from './services/report-pdf.service';
 import { ReportsService } from './services/reports.service';
 
 export interface Kpi {
@@ -58,6 +60,7 @@ export class ReportsPage implements OnDestroy {
   public months: MonthTotals[] = [];
   public chart: BarChart | null = null;
   public loading = false;
+  public exporting = false;
 
   private subscriptions = new Subscription();
   private summarySub?: Subscription;
@@ -66,7 +69,9 @@ export class ReportsPage implements OnDestroy {
   constructor(
     private reportsService: ReportsService,
     private themeService: ThemeService,
-    private transloco: TranslocoService
+    private transloco: TranslocoService,
+    private reportPdfService: ReportPdfService,
+    private modalInfoService: ModalInfoService
   ) {
     //The chart's labels and colors follow the language and the theme without a reload
     this.subscriptions.add(
@@ -87,6 +92,23 @@ export class ReportsPage implements OnDestroy {
 
   refresh(event: RefresherCustomEvent): void {
     this.loadAll(() => event.target.complete());
+  }
+
+  /** The PDF of the period on screen: downloaded in a browser, shared from the phone */
+  async exportPdf(): Promise<void> {
+    if (this.exporting) return;
+    this.exporting = true;
+    try {
+      await this.reportPdfService.export(this.period, this.transloco.translate('reports.shareTitle'));
+    } catch (error) {
+      //A failed request was already shown by the interceptor, which hands back its message as a string
+      if (typeof error !== 'string') {
+        console.log(error);
+        this.modalInfoService.error(this.transloco.translate('reports.exportFailed'), '');
+      }
+    } finally {
+      this.exporting = false;
+    }
   }
 
   changePeriod(event: CustomEvent): void {

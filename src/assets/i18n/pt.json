@@ -174,7 +174,11 @@
     "byRevenue": "Por vendas",
     "empty": "Ainda não há vendas este mês",
     "unit": "unidade",
-    "units": "unidades"
+    "units": "unidades",
+    "exportPdf": "Exportar PDF",
+    "exporting": "Preparando…",
+    "exportFailed": "Não foi possível salvar o relatório",
+    "shareTitle": "Relatório de vendas"
   },
   "catalog": {
     "manage": "Catálogos",
