@@ -3,41 +3,46 @@
 // every missing file — rather than letting a scene render a black phone.
 //
 // Sources root at promo/ by default; PROMO_SRC overrides it (tests use a temp dir).
-//
-// Once Task 3 lands, 'sale.mp4' and 'sale-events.json' join this map and the
-// Sale scene swaps the productos→agregar→carrito stills for the real recording.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = process.env.PROMO_SRC ?? path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
-const OUT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'public');
+const DIR = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = process.env.PROMO_SRC ?? path.join(DIR, '..', '..');
+const OUT = process.env.PROMO_OUT ?? path.join(DIR, '..', 'public');
 
+// logical name -> { source, copy }. copy:false entries already live in
+// video/public/ (record.js, Task 3, writes them there): only their existence is
+// checked, since source and destination are the same file.
 const ASSETS = {
-  'productos.png': 'screenshots/01-productos.png',
-  'agregar.png': 'screenshots/02-agregar-al-carrito.png',
-  'carrito.png': 'screenshots/03-carrito.png',
-  'historial.png': 'screenshots/04-historial.png',
-  'detalle.png': 'screenshots/05-detalle-venta.png',
-  'equipo.png': 'screenshots/06-equipo.png',
-  'clientes.png': 'screenshots/07-clientes.png',
-  'catalogo.png': 'screenshots/08-catalogo-publico.png',
-  'icon.png': 'playstore/icon-512x512.png',
-  // Pending from Task 3: 'sale.mp4': 'video/public/sale.mp4' (copied in place by record.js),
-  // 'sale-events.json': 'video/public/sale-events.json',
+  'productos.png': { source: 'screenshots/01-productos.png', copy: true },
+  'agregar.png': { source: 'screenshots/02-agregar-al-carrito.png', copy: true },
+  'carrito.png': { source: 'screenshots/03-carrito.png', copy: true },
+  'historial.png': { source: 'screenshots/04-historial.png', copy: true },
+  'detalle.png': { source: 'screenshots/05-detalle-venta.png', copy: true },
+  'equipo.png': { source: 'screenshots/06-equipo.png', copy: true },
+  'clientes.png': { source: 'screenshots/07-clientes.png', copy: true },
+  'catalogo.png': { source: 'screenshots/08-catalogo-publico.png', copy: true },
+  'icon.png': { source: 'playstore/icon-512x512.png', copy: true },
+  'sale.mp4': { source: 'video/public/sale.mp4', copy: false },
+  'sale-events.json': { source: 'video/public/sale-events.json', copy: false },
 };
 
 fs.mkdirSync(OUT, { recursive: true });
 
 const missing = [];
-for (const [logical, source] of Object.entries(ASSETS)) {
+for (const [logical, { source, copy }] of Object.entries(ASSETS)) {
   const from = path.join(ROOT, source);
   if (!fs.existsSync(from)) {
     missing.push(source);
     continue;
   }
-  fs.copyFileSync(from, path.join(OUT, logical));
-  console.log(`${source} -> public/${logical}`);
+  if (copy) {
+    fs.copyFileSync(from, path.join(OUT, logical));
+    console.log(`${source} -> public/${logical}`);
+  } else {
+    console.log(`${source} ok`);
+  }
 }
 
 if (missing.length) {
