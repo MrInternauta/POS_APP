@@ -7,21 +7,12 @@ os.makedirs(OUT, exist_ok=True)
 FONT = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
 S = 512
 
-# (id, nombre) de los productos que se ven arriba en la lista
-PRODUCTS = [
-    (130, "Aceite de oliva extra virgen 500ml"),
-    (46, "Aceitunas en salmuera vermex"),
-    (34, "Achiote"),
-    (43, "Alcaparras en vinagre"),
-    (95, "Arroz grano grande precissim"),
-    (100, "Arroz prima 250g"),
-    (104, "Arroz prima 500g"),
-    (1, "Atrapa moscas Catca Max"),
-    (2, "Atrapa moscas Trapamex"),
-    (131, "Atun en agua 140g"),
-    (31, "Axion 750"),
-    (109, "Bimbunuelos"),
-]
+# Los productos llegan de seed.js: python3 thumbs.py productos.json, con [{"id": 1, "name": "..."}]
+import json, sys
+if len(sys.argv) != 2:
+    sys.exit("uso: python3 thumbs.py productos.json")
+with open(sys.argv[1], encoding="utf-8") as fh:
+    PRODUCTS = [(p["id"], p["name"]) for p in json.load(fh)]
 
 PALETTE = [
     ((34, 197, 94), (16, 122, 78)),
