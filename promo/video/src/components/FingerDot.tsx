@@ -14,6 +14,35 @@ const isPosition = (e: GestureEvent) => e.kind === 'swipe' || e.kind === 'tap';
 // ends around x 690.
 const SLIDER_END_X = 690;
 
+/** Where the finger is at `t` seconds, in the events' own pixels */
+export function fingerPosition(events: GestureEvent[], t: number): { x: number; y: number } {
+  const positional = events.filter(isPosition);
+  const endT = (events.find(e => e.kind === 'done') ?? positional[positional.length - 1]).t;
+  // Hold on the previous event until the next one, then ease toward it
+  let prev = positional[0];
+  let next: GestureEvent | null = null;
+  for (const e of positional) {
+    if (e.t <= t) prev = e;
+    else {
+      next = e;
+      break;
+    }
+  }
+  const ease = (p: number) => {
+    const c = Math.min(1, Math.max(0, p));
+    return c * c * (3 - 2 * c);
+  };
+  if (next && prev.kind === 'swipe') {
+    const e = ease((t - prev.t) / (next.t - prev.t || 1));
+    return { x: prev.x + (next.x - prev.x) * e, y: prev.y + (next.y - prev.y) * e };
+  }
+  if (!next && prev.kind === 'swipe') {
+    // The charge slider: ride along it until 'done', then stay at its end
+    return { x: prev.x + (SLIDER_END_X - prev.x) * ease((t - prev.t) / (endT - prev.t || 1)), y: prev.y };
+  }
+  return { x: prev.x, y: prev.y };
+}
+
 /**
  * A translucent fingertip dot driven by the gesture events (sale-events.json).
  * Positions come in recording pixels and are scaled to the rendered screen width.
@@ -34,29 +63,7 @@ export const FingerDot: React.FC<{
   const endT = (events.find(e => e.kind === 'done') ?? positional[positional.length - 1]).t;
   if (!first || t < first.t - LEAD_IN || t > endT + LINGER) return null;
 
-  // Position: hold on the previous event until the next one, then ease toward it
-  let prev = first;
-  let next: GestureEvent | null = null;
-  for (const e of positional) {
-    if (e.t <= t) prev = e;
-    else {
-      next = e;
-      break;
-    }
-  }
-  let x = prev.x;
-  let y = prev.y;
-  if (next && prev.kind === 'swipe') {
-    const p = Math.min(1, Math.max(0, (t - prev.t) / (next.t - prev.t || 1)));
-    const ease = p * p * (3 - 2 * p);
-    x = prev.x + (next.x - prev.x) * ease;
-    y = prev.y + (next.y - prev.y) * ease;
-  } else if (!next && prev.kind === 'swipe' && t < endT) {
-    // The charge slider: ride along it until 'done', same y
-    const p = Math.min(1, Math.max(0, (t - prev.t) / (endT - prev.t || 1)));
-    const ease = p * p * (3 - 2 * p);
-    x = prev.x + (SLIDER_END_X - prev.x) * ease;
-  }
+  const { x, y } = fingerPosition(events, t);
 
   const opacity = interpolate(
     t,
@@ -68,7 +75,8 @@ export const FingerDot: React.FC<{
   // Ring pulse on taps (and a soft press shrink while the dot is down)
   const activeTap = positional.find(e => e.kind === 'tap' && t >= e.t && t < e.t + 0.5);
   const ring = activeTap ? (t - activeTap.t) / 0.5 : null;
-  const down = next ? 1 : interpolate(t, [endT, endT + LINGER], [1, 0.85], {
+  const moreToCome = positional.some(e => e.t > t);
+  const down = moreToCome ? 1 : interpolate(t, [endT, endT + LINGER], [1, 0.85], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });

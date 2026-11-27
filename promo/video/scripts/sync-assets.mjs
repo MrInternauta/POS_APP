@@ -26,6 +26,9 @@ const ASSETS = {
   'icon.png': { source: 'playstore/icon-512x512.png', copy: true },
   'sale.mp4': { source: 'video/public/sale.mp4', copy: false },
   'sale-events.json': { source: 'video/public/sale-events.json', copy: false },
+  'sfx/click.wav': { source: 'video/public/sfx/click.wav', copy: false },
+  'sfx/whoosh.wav': { source: 'video/public/sfx/whoosh.wav', copy: false },
+  'sfx/chime.wav': { source: 'video/public/sfx/chime.wav', copy: false },
 };
 
 fs.mkdirSync(OUT, { recursive: true });

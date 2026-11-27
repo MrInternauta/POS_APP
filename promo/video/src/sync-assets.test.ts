@@ -46,3 +46,14 @@ test('names sale.mp4 when only the recording is missing', () => {
   expect(status).not.toBe(0);
   expect(stderr).toContain('video/public/sale.mp4');
 });
+
+test('names the sound effects when they are missing', () => {
+  const empty = fs.mkdtempSync(path.join(os.tmpdir(), 'promo-nosfx-'));
+  const { stderr } = run({ ...process.env, PROMO_SRC: empty });
+  for (const f of [
+    'video/public/sfx/click.wav',
+    'video/public/sfx/whoosh.wav',
+    'video/public/sfx/chime.wav',
+  ])
+    expect(stderr).toContain(f);
+});

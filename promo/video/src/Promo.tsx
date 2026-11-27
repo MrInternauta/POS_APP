@@ -6,6 +6,12 @@ import { Intro } from './scenes/Intro';
 import { Outro } from './scenes/Outro';
 import { Sale } from './scenes/Sale';
 import { Store } from './scenes/Store';
+import { Sfx } from './components/Sfx';
+import { sfxCues } from './sfx';
+import type { GestureEvent } from './gestures';
+import events from '../public/sale-events.json';
+
+const CUES = sfxCues(events as GestureEvent[], SCENES);
 
 const asText = (caption?: string | string[]) => (Array.isArray(caption) ? caption.join(' ') : caption ?? '');
 
@@ -21,6 +27,7 @@ export const Promo: React.FC = () => {
           {scene.id === 'outro' && <Outro />}
         </Sequence>
       ))}
+      <Sfx cues={CUES} />
     </>
   );
 };
