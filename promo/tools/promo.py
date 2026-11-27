@@ -1,6 +1,7 @@
 """Genera material promocional (Play Store + GitHub) a partir de capturas reales."""
 import math
 import os
+import sys
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
@@ -182,8 +183,10 @@ SCREENS = [
     ("02-agregar-al-carrito", "Vende con\nun solo gesto", "Desliza el producto y ya está en el carrito"),
     ("03-carrito", "Cobra rápido,\nsin errores", "Totales automáticos y control de stock en vivo"),
     ("04-historial", "Todas tus ventas\nen un historial", "Consulta cada orden con su total y su fecha"),
-    ("06-detalle-venta", "El detalle de\ncada venta", "Productos, cantidades y subtotales al instante"),
-    ("05-perfil", "Tu negocio,\na tu manera", "Tema claro u oscuro y tres idiomas disponibles"),
+    ("05-detalle-venta", "El detalle de\ncada venta", "Productos, cantidades y subtotales al instante"),
+    ("06-equipo", "Tu equipo,\na tu manera", "Agrega cajeros y decide qué ve cada quien"),
+    ("07-clientes", "Conoce a\ntus clientes", "Guarda a quién le vendes"),
+    ("08-catalogo-publico", "Tu catálogo\nen línea", "Comparte un enlace con tus productos y precios"),
 ]
 
 
@@ -327,20 +330,29 @@ def store_icon():
 
 
 if __name__ == "__main__":
+    # `python3 promo.py capturas` rehace sólo las capturas de Play y las limpias; sin argumento, todo
+    only_screens = sys.argv[1:] == ["capturas"]
     for sub in ("playstore", "github", "screenshots"):
         os.makedirs(os.path.join(OUT, sub), exist_ok=True)
 
     print("Play Store:")
+    for f in os.listdir(os.path.join(OUT, "playstore")):
+        if f.startswith("screenshot-") and f.endswith(".png"):
+            os.remove(os.path.join(OUT, "playstore", f))
     for i, (key, head, sub) in enumerate(SCREENS, start=1):
         play_screenshot(i, key, head, sub)
-    feature_graphic()
-    store_icon()
+    if not only_screens:
+        feature_graphic()
+        store_icon()
 
-    print("GitHub:")
-    github_banner()
-    github_hero()
+        print("GitHub:")
+        github_banner()
+        github_hero()
 
     print("Capturas limpias:")
+    for f in os.listdir(os.path.join(OUT, "screenshots")):
+        if f.endswith(".png"):
+            os.remove(os.path.join(OUT, "screenshots", f))
     for f in sorted(os.listdir(SHOTS)):
         if f.endswith(".png"):
             Image.open(os.path.join(SHOTS, f)).save(os.path.join(OUT, "screenshots", f), optimize=True)

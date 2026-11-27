@@ -1,0 +1,13 @@
+{
+  "name": "minipos-promo-tools",
+  "private": true,
+  "description": "Demo data, screenshots and recording for the Mini POS promo material",
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "pg": "8.23.1",
+    "pg-connection-string": "^2.14.1",
+    "puppeteer-core": "24.43.1"
+  }
+}
