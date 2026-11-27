@@ -23,7 +23,6 @@ const STORE = {
 };
 
 const CUSTOMERS = [
-  { name: 'Público general' },
   { name: 'Doña Mary', phone: '55 2345 6789', notes: 'Paga los viernes' },
   { name: 'Tortillería El Maizal', phone: '55 3456 7890' },
   { name: 'Don Beto', phone: '55 4567 8901' },
@@ -48,11 +47,12 @@ const PRODUCTS = [
   { name: 'Galletas surtidas', code: '7501000000141', price: 20, priceSell: 27, stock: 28, isPublic: false },
 ];
 
-// customer and product are indexes into the lists above
+// customer and product are indexes into the lists above; customer null is the app's built-in
+// walk-in customer ("Público en general")
 const ORDERS = [
   {
     daysAgo: 6,
-    customer: 0,
+    customer: null,
     items: [
       { product: 0, quantity: 2 },
       { product: 2, quantity: 1 },
@@ -60,7 +60,7 @@ const ORDERS = [
   },
   {
     daysAgo: 6,
-    customer: 1,
+    customer: 0,
     items: [
       { product: 1, quantity: 1 },
       { product: 4, quantity: 1 },
@@ -69,7 +69,7 @@ const ORDERS = [
   },
   {
     daysAgo: 5,
-    customer: 4,
+    customer: 3,
     items: [
       { product: 5, quantity: 2 },
       { product: 3, quantity: 2 },
@@ -77,16 +77,16 @@ const ORDERS = [
   },
   {
     daysAgo: 5,
-    customer: 0,
+    customer: null,
     items: [
       { product: 6, quantity: 1 },
       { product: 13, quantity: 2 },
     ],
   },
-  { daysAgo: 4, customer: 2, items: [{ product: 12, quantity: 3 }] },
+  { daysAgo: 4, customer: 1, items: [{ product: 12, quantity: 3 }] },
   {
     daysAgo: 3,
-    customer: 3,
+    customer: 2,
     items: [
       { product: 7, quantity: 1 },
       { product: 0, quantity: 1 },
@@ -94,7 +94,7 @@ const ORDERS = [
   },
   {
     daysAgo: 3,
-    customer: 0,
+    customer: null,
     items: [
       { product: 9, quantity: 3 },
       { product: 2, quantity: 1 },
@@ -102,16 +102,16 @@ const ORDERS = [
   },
   {
     daysAgo: 2,
-    customer: 1,
+    customer: 0,
     items: [
       { product: 10, quantity: 1 },
       { product: 11, quantity: 2 },
     ],
   },
-  { daysAgo: 2, customer: 0, items: [{ product: 6, quantity: 2 }] },
+  { daysAgo: 2, customer: null, items: [{ product: 6, quantity: 2 }] },
   {
     daysAgo: 1,
-    customer: 4,
+    customer: 3,
     items: [
       { product: 1, quantity: 2 },
       { product: 5, quantity: 1 },
@@ -120,7 +120,7 @@ const ORDERS = [
   },
   {
     daysAgo: 0,
-    customer: 3,
+    customer: 2,
     items: [
       { product: 0, quantity: 1 },
       { product: 13, quantity: 1 },
@@ -128,7 +128,7 @@ const ORDERS = [
   },
   {
     daysAgo: 0,
-    customer: 0,
+    customer: null,
     items: [
       { product: 7, quantity: 1 },
       { product: 4, quantity: 2 },

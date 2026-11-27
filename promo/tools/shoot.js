@@ -1,55 +1,36 @@
-const puppeteer = require('puppeteer-core');
+// Phone screenshots of the demo store (run `node seed.js` first).
+//   node shoot.js [outDir]     → 00-login … 08-catalogo-publico, 1170×2532
+// The selling screens are taken as the cashier (4 tabs), the "Mi tienda" ones as the owner.
 const path = require('path');
 const fs = require('fs');
+const { sleep, launch, settled, go, tab, login, clickItem } = require('./lib/session');
+const { OWNER, CASHIER } = require('./demo-data');
 
-const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const BASE = 'http://localhost:8100';
 const OUT = process.argv[2] || path.join(__dirname, 'shots');
-const EMAIL = 'demo.promo@pos.local';
-const PASS = 'demo12345';
-
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+const CART_ROW = 'ion-card ion-item';
+const HISTORY_ROW = 'ion-item[detail="true"]';
 
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
-  const browser = await puppeteer.launch({
-    executablePath: CHROME,
-    headless: 'new',
-    defaultViewport: { width: 390, height: 844, deviceScaleFactor: 3, isMobile: true, hasTouch: true },
-    args: ['--hide-scrollbars', '--force-color-profile=srgb', '--no-sandbox'],
-  });
-  const page = await browser.newPage();
-  page.on('pageerror', e => console.log('[pageerror]', String(e).slice(0, 140)));
+  const { browser, page } = await launch();
   const shot = async name => {
     await page.screenshot({ path: path.join(OUT, `${name}.png`) });
     console.log('  shot', name);
   };
 
-  // Español desde el arranque
-  await page.goto(`${BASE}/authentication/login-1`, { waitUntil: 'domcontentloaded', timeout: 60000 });
-  await page.evaluate(() => localStorage.setItem('app_language', JSON.stringify('es')));
-  await page.goto(`${BASE}/authentication/login-1`, { waitUntil: 'networkidle2', timeout: 60000 });
-  await sleep(2500);
+  await page.goto('http://localhost:8100/authentication/login-1', { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => {
+    localStorage.clear();
+    localStorage.setItem('app_language', JSON.stringify('es'));
+  });
+  await go(page, '/authentication/login-1', 'input[formcontrolname="password"]');
   await shot('00-login');
 
-  const emailSel = 'input#email, input[formcontrolname="email"]';
-  await page.waitForSelector(emailSel, { timeout: 20000 });
-  await page.click(emailSel);
-  await page.type(emailSel, EMAIL, { delay: 12 });
-  const passSel = 'input[formcontrolname="password"]';
-  await page.click(passSel);
-  await page.type(passSel, PASS, { delay: 12 });
-  await sleep(300);
-  await page.click('button[type="submit"]');
-  await sleep(5000);
-  console.log('login ->', page.url());
-
-  // --- Lista de productos
-  await page.goto(`${BASE}/tabs/tab2`, { waitUntil: 'networkidle2', timeout: 60000 });
-  await sleep(4000);
+  // --- Cashier
+  await login(page, CASHIER.email, CASHIER.password);
+  await go(page, '/tabs/tab2', 'ion-item-sliding');
   await shot('01-productos');
 
-  // --- Gesto "deslizar para agregar al carrito" visible
   await page.evaluate(async () => {
     const s = document.querySelectorAll('ion-item-sliding')[1];
     if (s && s.open) await s.open('start');
@@ -57,7 +38,6 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await sleep(1200);
   await shot('02-agregar-al-carrito');
 
-  // --- Llenar el carrito
   await page.evaluate(async () => {
     const wait = ms => new Promise(r => setTimeout(r, ms));
     const slides = [...document.querySelectorAll('ion-item-sliding')];
@@ -66,38 +46,54 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       if (!s) continue;
       await s.open('start');
       await wait(350);
-      const opt = s.querySelector('ion-item-options[side="start"] ion-item-option');
-      if (opt) opt.click();
+      s.querySelector('ion-item-options[side="start"] ion-item-option')?.click();
       await wait(450);
       await s.close();
       await wait(250);
     }
   });
-  await sleep(2500);
+  await settled(page, 1500);
 
-  await page.goto(`${BASE}/tabs/tab4`, { waitUntil: 'networkidle2', timeout: 60000 });
-  await sleep(3500);
+  await tab(page, 'tab4', CART_ROW);
   await shot('03-carrito');
 
-  // --- Historial de compras
-  await page.goto(`${BASE}/tabs/tab1`, { waitUntil: 'networkidle2', timeout: 60000 });
-  await sleep(5000);
+  await tab(page, 'tab1', HISTORY_ROW);
   await shot('04-historial');
 
-  // --- Perfil / ajustes
-  await page.goto(`${BASE}/tabs/tab3`, { waitUntil: 'networkidle2', timeout: 60000 });
-  await sleep(4000);
-  await shot('05-perfil');
+  await page.evaluate(
+    sel => document.querySelector(`ion-router-outlet .ion-page:not(.ion-page-hidden) ${sel}`)?.click(),
+    HISTORY_ROW
+  );
+  await settled(page, 1500);
+  await shot('05-detalle-venta');
 
-  // --- Detalle de una venta
-  await page.goto(`${BASE}/tabs/tab1`, { waitUntil: 'networkidle2', timeout: 60000 });
-  await sleep(4500);
-  await page.evaluate(() => {
-    const row = document.querySelector('ion-item, ion-card, .order-item, li');
-    row && row.click();
+  // --- Owner
+  await login(page, OWNER.email, OWNER.password);
+  await tab(page, 'tab3', 'ion-item');
+
+  await clickItem(page, 'Equipo');
+  await page.waitForSelector('ion-modal ion-item', { visible: true, timeout: 20000 });
+  await settled(page, 900);
+  await shot('06-equipo');
+  await page.evaluate(() => document.querySelector('ion-modal')?.dismiss());
+  await sleep(800);
+
+  await clickItem(page, 'Clientes');
+  await page.waitForSelector('ion-modal ion-item', { visible: true, timeout: 20000 });
+  await settled(page, 900);
+  await shot('07-clientes');
+  await page.evaluate(() => document.querySelector('ion-modal')?.dismiss());
+  await sleep(800);
+
+  const slug = await page.evaluate(async () => {
+    const res = await fetch('http://localhost:3000/api/stores/current', {
+      headers: { authorization: `Bearer ${JSON.parse(localStorage.getItem('access_token') || '""')}` },
+    });
+    return res.ok ? (await res.json()).store?.slug : null;
   });
-  await sleep(3500);
-  await shot('06-detalle-venta');
+  await go(page, `/catalogo/${slug || 'abarrotes-la-esquina'}`, '.grid > *');
+  await page.waitForFunction(() => [...document.images].every(i => i.complete), { timeout: 20000 });
+  await shot('08-catalogo-publico');
 
   await browser.close();
   console.log('done ->', OUT);
