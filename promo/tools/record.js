@@ -95,7 +95,9 @@ async function center(page, selector, index = 0) {
     await sleep(700);
   }
 
-  // 2. Open the cart
+  // 2. Open the cart, without the last "Producto agregado" toast covering its header
+  await page.evaluate(() => Promise.all([...document.querySelectorAll('ion-toast')].map(t => t.dismiss())));
+  await sleep(450);
   const cartTab = await page.evaluate(() => {
     const r = document.querySelector('ion-tab-button[tab="tab4"]').getBoundingClientRect();
     return { x: r.x + r.width / 2, y: r.y + r.height / 2 };
