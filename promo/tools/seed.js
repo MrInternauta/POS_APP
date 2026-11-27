@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 const { Client } = require('pg');
-const { assertLocalDatabase } = require('./lib/local-db');
+const { assertLocalDatabase, assertLocalApi } = require('./lib/local-db');
 const { OWNER, CASHIER, TEAM, STORE, CUSTOMERS, PRODUCTS, ORDERS } = require('./demo-data');
 
 const API = process.env.PROMO_API || 'http://localhost:3000/api';
@@ -19,7 +19,7 @@ const PYTHON = process.env.PROMO_PYTHON || '/usr/bin/python3';
 const DEMO_EMAILS = "email LIKE 'demo.%@pos.local'";
 
 function databaseUrl() {
-  if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
+  // Always the backend's own .env: the SQL reset must hit the same database the API writes to
   const line = fs
     .readFileSync(BACKEND_ENV, 'utf8')
     .split('\n')
@@ -102,6 +102,7 @@ async function uploadThumbs(token, products) {
 
 async function main() {
   const url = databaseUrl();
+  assertLocalApi(API);
   assertLocalDatabase(url);
   const db = new Client({ connectionString: url });
   await db.connect();
