@@ -24,6 +24,7 @@ export function sfxCues(events: GestureEvent[], scenes: Scene[]): SfxCue[] {
     for (const e of events) {
       const offset = Math.round(e.t * FPS);
       if (offset < 0 || offset >= sale.durationInFrames) continue;
+      if (e.kind === 'lift') continue; // the click is when the finger goes down
       cues.push(
         e.kind === 'done'
           ? { frame: sale.from + offset, file: SFX_FILES.chime, volume: 0.45 }

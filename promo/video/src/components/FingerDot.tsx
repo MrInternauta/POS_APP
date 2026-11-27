@@ -7,18 +7,13 @@ const LEAD_IN = 0.35; // seconds the dot is visible before the first event
 const LINGER = 0.7; // and after the last one
 
 // Only swipes and taps are finger positions; 'done' just marks when the sale landed.
-const isPosition = (e: GestureEvent) => e.kind === 'swipe' || e.kind === 'tap';
+const isPosition = (e: GestureEvent) => e.kind !== 'done';
 
-// A trailing swipe with nothing after it is a slide control: the finger keeps
-// moving right until 'done'. In 780px video pixels the charge slider's knob
-// ends around x 690.
-const SLIDER_END_X = 690;
 
 /** Where the finger is at `t` seconds, in the events' own pixels */
 export function fingerPosition(events: GestureEvent[], t: number): { x: number; y: number } {
   const positional = events.filter(isPosition);
-  const endT = (events.find(e => e.kind === 'done') ?? positional[positional.length - 1]).t;
-  // Hold on the previous event until the next one, then ease toward it
+  // A drag (swipe → lift) eases from start to end; anywhere else the finger holds until the next event
   let prev = positional[0];
   let next: GestureEvent | null = null;
   for (const e of positional) {
@@ -35,10 +30,6 @@ export function fingerPosition(events: GestureEvent[], t: number): { x: number; 
   if (next && prev.kind === 'swipe') {
     const e = ease((t - prev.t) / (next.t - prev.t || 1));
     return { x: prev.x + (next.x - prev.x) * e, y: prev.y + (next.y - prev.y) * e };
-  }
-  if (!next && prev.kind === 'swipe') {
-    // The charge slider: ride along it until 'done', then stay at its end
-    return { x: prev.x + (SLIDER_END_X - prev.x) * ease((t - prev.t) / (endT - prev.t || 1)), y: prev.y };
   }
   return { x: prev.x, y: prev.y };
 }

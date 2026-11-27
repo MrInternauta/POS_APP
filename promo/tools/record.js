@@ -1,7 +1,8 @@
 // Records the cashier making a sale, for the promo video (backend + app running locally).
 //   node record.js   → ../video/public/sale.mp4 (780×1688, 30 fps, H.264) + sale-events.json
 // Every gesture is a real touch, paced for a viewer; its time and position (in video pixels) go to
-// sale-events.json so the video can draw the finger and place the sound effects.
+// sale-events.json (swipe = finger down, lift = finger up, tap, done = sale saved) so the video can
+// draw the finger and place the sound effects.
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -73,6 +74,7 @@ async function center(page, selector, index = 0) {
       await sleep(ms / steps);
     }
     await ts.touchEnd();
+    log('lift', x1, y);
   };
   const tap = async (x, y) => {
     log('tap', x, y);

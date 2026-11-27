@@ -4,7 +4,7 @@
 // Coordinates are in screenshot pixels (1170×2532).
 export interface GestureEvent {
   t: number; // seconds inside the scene
-  kind: 'swipe' | 'tap' | 'done'; // 'done': the sale confirmation in sale-events.json
+  kind: 'swipe' | 'lift' | 'tap' | 'done'; // swipe: a drag starts; lift: it ends; done: the sale is saved
   x: number;
   y: number;
 }

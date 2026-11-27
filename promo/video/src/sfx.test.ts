@@ -54,3 +54,10 @@ test('only the licensed local files are used', () => {
     'sfx/whoosh.wav',
   ]);
 });
+
+test('no sound when the finger lifts at the end of a drag', () => {
+  const lifts: GestureEvent[] = [{ t: 1.4, kind: 'lift', x: 0, y: 0 }];
+  expect(
+    sfxCues(lifts, SCENES).filter((c) => c.file !== SFX_FILES.whoosh),
+  ).toEqual([]);
+});

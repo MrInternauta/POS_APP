@@ -23,6 +23,15 @@ export const SceneShell: React.FC<{ children: React.ReactNode; caption?: React.R
   </AbsoluteFill>
 );
 
+// The slow zoom/pan, kept small: at 1.02 and ±0.45% it never crops more than ~1.5% off an edge
+// (a 1.05 zoom with a 2% pan cut "Cerrar" to "errar") and never uncovers a gap beside the screen.
+export function screenTransform(frame: number, pan: 'in' | 'left' | 'right'): { scale: number; tx: number } {
+  const clamp = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } as const;
+  if (pan === 'in') return { scale: interpolate(frame, [0, 300], [1, 1.02], clamp), tx: 0 };
+  const [a, b] = pan === 'left' ? [0.45, -0.45] : [-0.45, 0.45];
+  return { scale: 1.02, tx: interpolate(frame, [0, 300], [a, b], clamp) };
+}
+
 // A screenshot filling the phone screen, with a slow zoom/pan so the still feels alive.
 export const ScreenShot: React.FC<{
   src: string;
@@ -31,8 +40,7 @@ export const ScreenShot: React.FC<{
 }> = ({ src, width, pan = 'in' }) => {
   const frame = useCurrentFrame();
   const height = Math.round((width * 2532) / 1170);
-  const scale = pan === 'in' ? interpolate(frame, [0, 300], [1, 1.07]) : 1.05;
-  const tx = pan === 'left' ? interpolate(frame, [0, 300], [2, -2]) : pan === 'right' ? interpolate(frame, [0, 300], [-2, 2]) : 0;
+  const { scale, tx } = screenTransform(frame, pan);
   return (
     <Img
       src={staticFile(src)}
@@ -40,7 +48,7 @@ export const ScreenShot: React.FC<{
         width,
         height,
         transform: `scale(${scale}) translateX(${tx}%)`,
-        transformOrigin: 'center 30%',
+        transformOrigin: 'center top',
       }}
     />
   );
